@@ -16,12 +16,12 @@ class ReadFile:
         code = '<DOCNO> (.*?) </DOCNO>'
         for root, dirs, files in os.walk(self.rootDir):
             for name in files:
-                if name != "allDocs":
-                    list_of_files = self.create_list_of_information_by_regular_expression_tag_name(pathlib.PurePath(root, name), name, code)
-                    with open(name_of_allDocs_file, 'a') as f:
-                        for mini_list in list_of_files:
-                            f.write('%s\n' %mini_list)
-                    #allDocs.close()
+                #if name != "allDocs":
+                list_of_files = self.create_list_of_information_by_regular_expression_tag_name(pathlib.PurePath(root, name), name, code)
+                with open(name_of_allDocs_file, 'a') as f:
+                    for mini_list in list_of_files:
+                        f.write('%s\n' %mini_list)
+                #allDocs.close()
         pass
 
     def create_list_of_information_by_regular_expression_tag_name(self, path, filename, regular_expression):
