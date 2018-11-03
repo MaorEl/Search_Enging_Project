@@ -18,9 +18,9 @@ class ReadJson:
                 #if name != "allDocs":
                 list_of_files = self.create_list_of_information_by_regular_expression_tag_name(pathlib.PurePath(root, name), name, code)
                 with open(path_of_allDocs_file, 'a') as f:
-                    f.write('%s\n' % list_of_files)
-                    #for mini_list in list_of_files:
-                     #   f.write('%s\n' %mini_list)
+                    #f.write('%s\n' % list_of_files)
+                    for mini_list in list_of_files:
+                        f.write('%s\n' %mini_list)
                 #allDocs.close()
         pass
 
