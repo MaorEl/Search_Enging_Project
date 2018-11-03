@@ -22,16 +22,15 @@ def main():
 
     print (end-start)
 
-    #
-    # path=rootdir + "\\allDocs"
-    # file = open (path,'r')
-    # lines = file.readlines()
-    # file.close()
-    # for line in lines:
-    #     print (line)
-    #     data = json.loads(line)
-    # print ("c")
+
+    path=rootdir + "\\allDocs"
+    file = open (path,'r')
+    lines = file.readlines()
+    file.close()
+    for line in lines:
+        print (line)
+        data = json.loads(line)
+    print ("c")
 
 
 main()
-
