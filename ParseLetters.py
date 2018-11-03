@@ -1,3 +1,4 @@
+import datetime
 import os
 
 import nltk
@@ -9,6 +10,9 @@ def tokenizeTexttoList(text):
     return list
 
 rootdir = "C:\Retrieval_folder\corpus"
+months_choices = []
+for i in range(1,13):
+    months_choices.append(datetime.date(2008, i, 1).strftime('%B').upper())
 
 
 def isExist(term, list):
@@ -44,6 +48,34 @@ def Replace_Upper_to_Lower(term_lower_case, list):
     list.append(term_lower_case)
     pass
 
+def parse_Month (month):
+    return  {
+        "JANUARY": "01",
+        "FEBRUARY": "02",
+        "MARCH": "03",
+        "APRIL": "04",
+        "MAY": "05",
+        "JUNE": "06",
+        "JULY": "07",
+        "AUGUST": "08",
+        "SEPTEMBER": "09",
+        "OCTOBER": 10,
+        "NOVEMBER": 11,
+        "DECEMBER": 12
+    }[month]
+
+
+
+def ParseDate(month, day_or_year):
+    if len(day_or_year) == 1:
+        day_or_year = "0" + str(day_or_year)
+        return str(month) + "-" + str(day_or_year)
+    elif len(day_or_year) == 2:
+        return str(month) + "-" + str(day_or_year)
+    else:
+        return str(day_or_year)+ "-" + str(month)
+
+
 
 def write_into_terms(list):
     """
@@ -64,10 +96,16 @@ def write_into_terms(list):
 
 
     for might_be_term in list:
+        #take care of dates
+        if might_be_term.upper() in months_choices:
+            day_or_year = list.pop(1)
+            month = parse_Month(might_be_term)
+            might_be_term = ParseDate (month, day_or_year)
+
         # if the first letter is capital - change the term to upper case
-        if might_be_term[0] >= 'A' and might_be_term[0] <= 'Z':
+        elif might_be_term[0] >= 'A' and might_be_term[0] <= 'Z':
             might_be_term = might_be_term.upper()
-        else : #else , just leave it lower
+        elif might_be_term[0] >= 'a' and might_be_term[0] <= 'z': #else , just leave it lower
             might_be_term = might_be_term.lower()
 
         might_be_term_isExist = isExist(might_be_term,list_of_all_terms)
@@ -87,7 +125,7 @@ def write_into_terms(list):
 
 
 
-text = "I Cat. cat is bad."
+text = "DECEMBER 1992 kenene"
 list = tokenizeTexttoList(text)
 write_into_terms(list)
 
