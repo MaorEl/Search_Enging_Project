@@ -11,14 +11,16 @@ class ReadFile:
         return True
 
     def create_maagar_meida (self):
-        name_of_allDocs_file = self.rootDir + "\\allDocs"
+        path_of_allDocs_file = self.rootDir + "\\allDocs"
+        if os.path.exists(path_of_allDocs_file):
+            os.remove(path_of_allDocs_file)
         #allDocs = open (name_of_allDocs_file, "a"); #creates new file for all the docs
         code = '<DOCNO> (.*?) </DOCNO>'
         for root, dirs, files in os.walk(self.rootDir):
             for name in files:
                 #if name != "allDocs":
                 list_of_files = self.create_list_of_information_by_regular_expression_tag_name(pathlib.PurePath(root, name), name, code)
-                with open(name_of_allDocs_file, 'a') as f:
+                with open(path_of_allDocs_file, 'a') as f:
                     for mini_list in list_of_files:
                         f.write('%s\n' %mini_list)
                 #allDocs.close()
