@@ -1,16 +1,12 @@
 import os
 import pathlib
-import re;
+import re
 class ReadFile:
 
     def __init__(self, path):
         self.rootDir = path
 
-#Todo: to decide wheter to start with sepreate into different files or to work with those.
-    def findBeginningOfDoc(self):
-        return True
-
-    def create_maagar_meida (self):
+    def create_maagar_meida(self):
         path_of_allDocs_file = self.rootDir + "\\allDocs"
         if os.path.exists(path_of_allDocs_file):
             os.remove(path_of_allDocs_file)
@@ -26,7 +22,8 @@ class ReadFile:
                 #allDocs.close()
         pass
 
-    def create_list_of_information_by_regular_expression_tag_name(self, path, filename, regular_expression):
+    @staticmethod
+    def create_list_of_information_by_regular_expression_tag_name(path, filename, regular_expression):
         result = []
         file = open(path, 'r')
         lines_of_doc = file.readlines()
