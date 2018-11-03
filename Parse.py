@@ -1,5 +1,8 @@
 
 from nltk.tokenize import sent_tokenize, word_tokenize
+import nltk
+nltk.download('punkt')
+
 
 class Parse:
 
