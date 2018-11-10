@@ -1,7 +1,6 @@
 import os
-import concurrent.futures
 import pathlib
-import re
+import pickle
 import time
 
 from NewTry.Document import Document
@@ -11,10 +10,9 @@ corpus_path = ''
 dic_to_parse = {}
 
 
-def cleanTextOfFile():
-    # TODO: to be implemented . clean all of the shitty tags and infromation
-
-    pass
+def saveDictionaryToDisk():
+    with open('DocsDictionary', 'wb') as f:
+        pickle.dump(docs_dictionary, f, pickle.HIGHEST_PROTOCOL)
 
 class ReadOneFile:
     current_doc =""
@@ -59,21 +57,9 @@ class ReadOneFile:
             dic = dic_to_parse
             docs_dictionary[self.current_DOCNO] = Document(self.current_DATE, self.current_CITY, str(path))
 
-
-'''
-def countdocno():
-    count=0
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            with open(str(pathlib.PurePath(root, file))) as f:
-                for line in f:
-                    count += line.count("<DOCNO>")
-    return count
-'''
-
-
-class SendToParser(object):
+def SendToParser():
     #TODO: clean the dictionary and send original dictionary to parser
+    dic_to_parse.clear()
     pass
 
 
@@ -88,19 +74,11 @@ def Main():
         for file in files:
             oneFile = ReadOneFile()
             oneFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
-            cleanTextOfFile()
             SendToParser()
+
+    saveDictionaryToDisk()
     end = time.time()
     print(end-start)
-    dic = docs_dictionary
-    print(dic.__len__()) #472525
-    dic = dic_to_parse
-    print (dic_to_parse.__len__())
-    counter=0
-    for key in dic_to_parse:
-        if dic_to_parse[key]=="":
-            counter+=1
-    print (counter)
 
 
 Main()
