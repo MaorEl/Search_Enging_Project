@@ -54,13 +54,6 @@ class ReadOneFile:
             #TODO: send the text to Parser with doc number or any identifictaion
 
 
-
-
-path='C:\Retrieval_folder\corpus'
-#ReadOneFile.readFile(path)
-
-
-
 def countdocno():
     count=0
     for root, dirs, files in os.walk(path):
@@ -72,7 +65,8 @@ def countdocno():
 
 
 def Main():
-
+    path = 'C:\Retrieval_folder\corpus'
+    # ReadOneFile.readFile(path)
     start = time.time()
     global corpus_path
     corpus_path = path
