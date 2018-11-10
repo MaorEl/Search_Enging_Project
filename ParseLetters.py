@@ -98,8 +98,9 @@ def write_into_terms(list):
     for might_be_term in list:
         #take care of dates
         if might_be_term.upper() in months_choices:
-            day_or_year = list.pop(1)
-            month = parse_Month(might_be_term)
+            place_in_list = list.index(might_be_term) + 1
+            day_or_year = list.pop(place_in_list)
+            month = parse_Month(might_be_term.upper())
             might_be_term = ParseDate (month, day_or_year)
 
         # if the first letter is capital - change the term to upper case
@@ -125,7 +126,7 @@ def write_into_terms(list):
 
 
 
-text = "DECEMBER 1992 kenene"
+text = "January 1994 january 12"
 list = tokenizeTexttoList(text)
 write_into_terms(list)
 
