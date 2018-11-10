@@ -12,7 +12,8 @@ dic_to_parse = {}
 
 
 def cleanTextOfFile():
-    # TODO: to be implemented . clean all of the shitty tags and infromatiob
+    # TODO: to be implemented . clean all of the shitty tags and infromation
+
     pass
 
 class ReadOneFile:
@@ -36,7 +37,10 @@ class ReadOneFile:
             self.current_DATE = (self.current_doc.split("</DATE>", 1)[0]).split("<DATE>")[1].strip()
 
     def __extractTEXT(self):
-        text = (self.current_doc.split("</TEXT>", 1)[0]).split("<TEXT>")[1].strip()
+        if "</TEXT>" in self.current_doc:
+            text = (self.current_doc.split("</TEXT>", 1)[0]).split("<TEXT>")[1].strip()
+        else:
+            text = ""
         dic_to_parse[self.current_DOCNO] = text
 
 
@@ -52,6 +56,7 @@ class ReadOneFile:
             self.__extractCITY()
             self.__extractDATE()
             self.__extractTEXT()
+            dic = dic_to_parse
             docs_dictionary[self.current_DOCNO] = Document(self.current_DATE, self.current_CITY, str(path))
 
 
@@ -89,6 +94,14 @@ def Main():
     print(end-start)
     dic = docs_dictionary
     print(dic.__len__()) #472525
+    dic = dic_to_parse
+    print (dic_to_parse.__len__())
+    counter=0
+    for key in dic_to_parse:
+        if dic_to_parse[key]=="":
+            counter+=1
+    print (counter)
+
 
 Main()
 

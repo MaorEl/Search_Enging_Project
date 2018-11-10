@@ -257,6 +257,7 @@ def Main():
             split_doc(path,str(dir))
     end = time.time()
     print (end-start)
+    dic= docDictionary
     print (docDictionary.__len__()) #468370
             # executor.submit(takeDocsInfoFromOneFile,pathlib.PurePath(root, file))
     # parse()
