@@ -126,7 +126,7 @@ def write_into_terms(list):
 
 
 
-text = "January 1994 january 12"
+text = "January 1984 january 22"
 list = tokenizeTexttoList(text)
 write_into_terms(list)
 
