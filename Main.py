@@ -1,11 +1,16 @@
 import os
 import pathlib
 import time
+
+from pip._vendor.distlib.compat import raw_input
+
 import readJson
 import ReadFile
 import json
 import requests
 import string
+
+from Parse import text
 
 rootdir = "C:\Retrieval_folder\corpus"
 
@@ -33,4 +38,6 @@ def main():
     print ("c")
 
 
+
 main()
+
