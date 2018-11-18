@@ -14,70 +14,48 @@ def saveDictionaryToDisk():
     with open('DocsDictionary', 'wb') as f:
         pickle.dump(docs_dictionary, f, pickle.HIGHEST_PROTOCOL)
 
-class ReadOneFile:
-    current_doc =""
-    current_DOCNO=""
-    current_CITY =""
-    current_DATE=""
+current_doc =""
+current_DOCNO=""
+current_CITY =""
+current_DATE=""
 
-    def __extractDOCNO(self):
-        self.current_DOCNO = (self.current_doc.split("</DOCNO>", 1)[0]).split("<DOCNO>")[1].strip()
-        #print (self.current_DOCNO)
+def __extractDOCNO():
+    global current_DOCNO
+    current_DOCNO = (current_doc.split("</DOCNO>", 1)[0]).split("<DOCNO>")[1].strip()
 
-    def __extractCITY(self):
-        if "<F P=104>" in self.current_doc:
-            self.current_CITY = self.current_doc.split("<F P=104>")[1].split()[0]
+def __extractCITY():
+    global  current_CITY
+    if "<F P=104>" in current_doc:
+        current_CITY = current_doc.split("<F P=104>")[1].split()[0]
 
-    def __extractDATE(self):
-        if "<DATE1>" in self.current_doc:
-            self.current_DATE = (self.current_doc.split("</DATE1>", 1)[0]).split("<DATE1>")[1].strip()
-        elif "<DATE>" in self.current_doc:
-            self.current_DATE = (self.current_doc.split("</DATE>", 1)[0]).split("<DATE>")[1].strip()
+def __extractDATE():
+    global current_DATE
+    if "<DATE1>" in current_doc:
+        current_DATE = (current_doc.split("</DATE1>", 1)[0]).split("<DATE1>")[1].strip()
+    elif "<DATE>" in current_doc:
+        current_DATE = (current_doc.split("</DATE>", 1)[0]).split("<DATE>")[1].strip()
 
-    def __extractTEXT(self):
-        if "</TEXT>" in self.current_doc:
-            text = (self.current_doc.split("</TEXT>", 1)[0]).split("<TEXT>")[1].strip()
-        else:
-            text = ""
-        dic_to_parse[self.current_DOCNO] = text
-
-
-    def takeDocsInfoFromOneFile(self,path):
-        file = open(path, 'r')
-        text_of_file = "".join(file.readlines())
-        list_of_docs = text_of_file.split('</DOC>')
-        del list_of_docs[-1] #not necessary
-
-        for doc in list_of_docs:
-            self.current_doc = doc
-            self.__extractDOCNO()
-            self.__extractCITY()
-            self.__extractDATE()
-            self.__extractTEXT()
-            dic = dic_to_parse
-            docs_dictionary[self.current_DOCNO] = Document(self.current_DATE, self.current_CITY, str(path))
-
-def SendToParser():
-    #TODO: clean the dictionary and send original dictionary to parser
-    dic_to_parse.clear()
-    pass
+def __extractTEXT():
+    global  current_doc
+    if "</TEXT>" in current_doc:
+        text = (current_doc.split("</TEXT>", 1)[0]).split("<TEXT>")[1].strip()
+    else:
+        text = ""
+    dic_to_parse[current_DOCNO] = text
 
 
-def Main():
-    path = 'C:\Retrieval_folder\corpus'
-    start = time.time()
-    global corpus_path
-    corpus_path = path
-    for root, dirs, files in os.walk(corpus_path):
-        for file in files:
-            oneFile = ReadOneFile()
-            oneFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
-            SendToParser()
+def takeDocsInfoFromOneFile(path):
+    global current_doc, current_DATE, current_CITY, current_DOCNO
+    file = open(path, 'r')
+    text_of_file = "".join(file.readlines())
+    list_of_docs = text_of_file.split('</DOC>')
+    del list_of_docs[-1] #not necessary
 
-    docdoc = docs_dictionary
-    saveDictionaryToDisk()
-    end = time.time()
-    print(end-start)
+    for doc in list_of_docs:
+        current_doc = doc
+        __extractDOCNO()
+        __extractCITY()
+        __extractDATE()
+        __extractTEXT()
+        docs_dictionary[current_DOCNO] = Document(current_DATE, current_CITY, str(path))
 
-
-Main()
