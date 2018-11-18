@@ -50,19 +50,19 @@ def Replace_Upper_to_Lower(term_lower_case, list):
 
 def parse_Month (month):
     return  {
-        "JANUARY": "01",
-        "FEBRUARY": "02",
-        "MARCH": "03",
-        "APRIL": "04",
+        "JANUARY": "01", "JAN":"01",
+        "FEBRUARY": "02", "feb":"02",
+        "MARCH": "03", "MAR":"03",
+        "APRIL": "04", "APR":"04",
         "MAY": "05",
-        "JUNE": "06",
-        "JULY": "07",
-        "AUGUST": "08",
-        "SEPTEMBER": "09",
-        "OCTOBER": 10,
-        "NOVEMBER": 11,
-        "DECEMBER": 12
-    }[month]
+        "JUNE": "06", "JUN":"06",
+        "JULY": "07", "JUL":"07",
+        "AUGUST": "08", "AUG":"08",
+        "SEPTEMBER": "09", "SEP":"09",
+        "OCTOBER": 10, "OCT":10,
+        "NOVEMBER": 11, "NOV":11,
+        "DECEMBER": 12, "DEC":12
+    }[month.upper()]
 
 
 

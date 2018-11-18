@@ -65,23 +65,19 @@ def SendToParser():
 
 def Main():
     path = 'C:\Retrieval_folder\corpus'
-    # ReadOneFile.readFile(path)
     start = time.time()
     global corpus_path
     corpus_path = path
-    # executor = concurrent.futures.ThreadPoolExecutor(1)
     for root, dirs, files in os.walk(corpus_path):
         for file in files:
             oneFile = ReadOneFile()
             oneFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
             SendToParser()
 
+    docdoc = docs_dictionary
     saveDictionaryToDisk()
     end = time.time()
     print(end-start)
 
 
 Main()
-
-
-
