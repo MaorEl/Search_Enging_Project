@@ -69,13 +69,15 @@ def parse_Month (month):
 def ParseDate(month, day_or_year):
     if len(day_or_year) == 1:
         day_or_year = "0" + str(day_or_year)
-        return str(month) + "-" + str(day_or_year)
+        return str(parse_Month(month)) + "-" + str(day_or_year)
     elif len(day_or_year) == 2:
-        return str(month) + "-" + str(day_or_year)
+        return str(parse_Month(month)) + "-" + str(day_or_year)
     else:
         return str(day_or_year)+ "-" + str(month)
 
-
+def dd_month_format(day,month):
+    pass
+    #TODO: todo this
 
 def write_into_terms(list):
     """

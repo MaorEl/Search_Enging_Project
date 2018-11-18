@@ -39,7 +39,8 @@ def formatNumber(num):
 
 
 
-def changeFormatToKMB(number):
+def number_format(number):
+    number = convertToFloat(number)
     if number < 1000: # numbers smaller than 1000
         return str(formatNumber(number))
     elif number < 1000000: #numebrs between 1K to 1M
@@ -51,7 +52,7 @@ def changeFormatToKMB(number):
 
 
 #  will get a number and text like 123 Million and change to 123M
-def changenumberAndTextToKMBFormat(number, word):
+def number_kbmt_format(number, word):
     newFormat=''
     if word.lower() == 'thousand':
         newFormat =  str(number) + 'K'
@@ -65,10 +66,32 @@ def changenumberAndTextToKMBFormat(number, word):
         newFormat = str(number) + 'Q'
     return newFormat
 
+def price_format(price, bmt=''):
+    price = convertToFloat(price)
+    if bmt == '':
+        if price<1000000:
+            return str(formatNumber(price)) + ' Dollars'
+        else: return str(formatNumber(price/1000000)) + ' M Dollars'
+    elif bmt == 'M':
+        return str(formatNumber(price)) + ' M Dollars'
+    elif bmt == 'B':
+        return str(formatNumber((price*1000)))  + ' M Dollars'
+    elif bmt == 'T':
+        return str(formatNumber((price*1000000)))   + ' M Dollars'
 
-print(changeFormatToKMB(1200030000))
+def fraction_price_format(number, fraction):
+    return number + fraction
 
-
+def percentage_format(number):
+    return number + '%'
+#
+# list_of_numbers = random.sample(range(0, 1000000), 100)
+# bmt = ['B','M','T', '']
+# for i in range(len(list_of_numbers)):
+#     index = i%4;
+#     print ("Number should be: " + str(list_of_numbers[i]) + bmt[index] + "||||" + price_format(str(list_of_numbers[i]),bmt[index])    )
+#
+#
 
 
 
