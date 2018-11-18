@@ -87,10 +87,12 @@ def parse(dictionary):
                         if index + 1 != length_of_splited_text:
                             next_word = splited[index+1]
                             if isNumeric(next_word) and len(next_word)<=2:
-                                dd_month_format(next_word,term) # month DD
+                                new_term = dd_month_format(next_word,term) # month DD
                             else:
-                                month_year_format(next_word,term) # month year
-
+                                new_term = month_year_format(next_word,term) # month year
+                    #Todo: advance the index
+                    #Todo: take care of upper/lower cases
+                    #Todo: add functions as needed
 
 
 
