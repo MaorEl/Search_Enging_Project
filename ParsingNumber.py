@@ -1,3 +1,5 @@
+
+
 rootdir = "C:\Retrieval_folder\corpus"
 def write_into_terms(list):
     path = rootdir + "\\terms"
@@ -22,37 +24,49 @@ write_into_terms(['maorrrrr'])
 ### returns True only if there is only digits on the number (without ','))
 def thisIsRegularNumber(word):
     return word.isdigit() or word.replace(',','').replace('.','').isdigit()
-    pass
 
 
 def convertToFloat(word):
     return float(word.replace(',',''))
 
 
+#function to avoid ".0" in end of float numbers
+def formatNumber(num):
+        if num % 1 == 0:
+            return int(num)
+        else:
+            return num
+
+
+
 def changeFormatToKMB(number):
     if number < 1000: # numbers smaller than 1000
-        return number
-    elif number <= 1000000: #numebrs between 1K to 1M
-        return str(number/1000) + 'K'
-    elif number <= 1000000000: #numbers between 1M to 1B
-        return str(number/1000000) + 'M'
+        return str(formatNumber(number))
+    elif number < 1000000: #numebrs between 1K to 1M
+        return str(formatNumber(number/1000)) + 'K'
+    elif number < 1000000000: #numbers between 1M to 1B
+        return str(formatNumber(number/1000000)) + 'M'
     else:  # numbers > 1B
-        return str(number/1000000000) + 'B'
-    pass
+        return str(formatNumber(number/1000000000)) + 'B'
+
 
 #  will get a number and text like 123 Million and change to 123M
 def changenumberAndTextToKMBFormat(number, word):
+    newFormat=''
     if word.lower() == 'thousand':
-        return number + 'K'
+        newFormat =  str(number) + 'K'
     elif word.lower() == 'million':
-        return number + 'M'
+        newFormat =  str(number) + 'M'
     elif word.lower == 'billion':
-        return number + 'B'
+        newFormat =  str(number)+ 'B'
     elif word.lower() == 'trillion':
-        return number*1000 + 'B'
-    elif word.lower == 'quadrillion':
-        return number*1000000 + 'B'
+        newFormat =  str(number) + 'T'
+    elif word.lower() == 'quadrillion':
+        newFormat = str(number) + 'Q'
+    return newFormat
 
+
+print(changeFormatToKMB(1200030000))
 
 
 
