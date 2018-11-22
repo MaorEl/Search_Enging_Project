@@ -4,6 +4,10 @@ import os
 import nltk
 from nltk.tokenize import sent_tokenize, word_tokenize
 
+__months_set = {'january':'01', 'jan':'01', 'february':'02', 'feb':'02', 'march':'03', 'mar':'03', 'april':'04', 'apr':'04',
+                'may':'05', 'june':'06', 'jun':'06', 'july':'07', 'jul':'07', 'august':'08', 'aug':'08', 'september':'09',
+                'sep':'09', 'october':'10', 'oct':'10', 'november':'11', 'nov':'11', 'december':'12', 'dec':'12'}
+
 
 def tokenizeTexttoList(text):
     list = word_tokenize(text)
@@ -48,36 +52,16 @@ def Replace_Upper_to_Lower(term_lower_case, list):
     list.append(term_lower_case)
     pass
 
-def parse_Month (month):
-    return  {
-        "JANUARY": "01", "JAN":"01",
-        "FEBRUARY": "02", "feb":"02",
-        "MARCH": "03", "MAR":"03",
-        "APRIL": "04", "APR":"04",
-        "MAY": "05",
-        "JUNE": "06", "JUN":"06",
-        "JULY": "07", "JUL":"07",
-        "AUGUST": "08", "AUG":"08",
-        "SEPTEMBER": "09", "SEP":"09",
-        "OCTOBER": 10, "OCT":10,
-        "NOVEMBER": 11, "NOV":11,
-        "DECEMBER": 12, "DEC":12
-    }[month.upper()]
-
-
-
-def ParseDate(month, day_or_year):
-    if len(day_or_year) == 1:
-        day_or_year = "0" + str(day_or_year)
-        return str(parse_Month(month)) + "-" + str(day_or_year)
-    elif len(day_or_year) == 2:
-        return str(parse_Month(month)) + "-" + str(day_or_year)
-    else:
-        return str(day_or_year)+ "-" + str(month)
-
+#will return MM-DD date
 def dd_month_format(day,month):
-    pass
-    #TODO: todo this
+    if (len(day)==1):
+        day='0'+day
+    return __months_set[month] + '-' + day  ;
+
+#will return YYYY-MM
+def month_year_format(month, year):
+    return year + '-' +__months_set[month]
+
 
 def write_into_terms(list):
     """
