@@ -1,6 +1,7 @@
+import time
 
 __punctuations_set = {'[', '(', '{', '`', ')', '<', '|', '&', '~', '+', '^', '@', '*', '?', '.',
-                      '>', ';', '_', '\'', ':', ']', '\\', "}", '!', '=', '#', ',', '\"'}
+                      '>', ';', '_', '\'', ':', ']', '\\', "}", '!', '=', '#', ',', '\"','-','/'}
 
 __months_set = {'january':'01', 'jan':'01', 'february':'02', 'feb':'02', 'march':'03', 'mar':'03', 'april':'04', 'apr':'04',
                 'may':'05', 'june':'06', 'jun':'06', 'july':'07', 'jul':'07', 'august':'08', 'aug':'08', 'september':'09',
@@ -96,11 +97,11 @@ def number_format(number):
 def dd_month_format(day,month):
     if (len(day)==1):
         day='0'+day
-    return __months_set[month] + '-' + day
+    return __months_set[month.lower()] + '-' + day
 
 #will return YYYY-MM
 def month_year_format(month, year):
-    return year + '-' +__months_set[month]
+    return year + '-' +__months_set[month.lower()]
 
 
 def upper_lower_case_format(term):
@@ -110,8 +111,11 @@ def upper_lower_case_format(term):
 
 
 def parse(dictionary):
+    start = time.time()
+    counter = 0
     one_file_dictionary = {} # contains : key = docID , value = {term : frequency in doc}
     for doc in dictionary:
+        counter =+ 1
         one_doc_dictionary = {} # term : frequency in doc
         text = dictionary[doc]
         if text is not None or text is not "":
@@ -122,6 +126,14 @@ def parse(dictionary):
                 new_term =""
                 original_term = splited[index]
                 term = clean_term_from_punctuations(original_term)
+
+                if term == "4am" or term == "9mm":
+                    print ("4am")
+
+
+                if len(term) == 0:
+                    index = index + 1
+                    continue
                 if isNumeric(term): #for numbers , pruces, percentage, dates
                     if '$' in term:
                         if index + 1 != length_of_splited_text:
@@ -165,6 +177,9 @@ def parse(dictionary):
                                 if third_word == "dollars" and '/' in next_word and isNumeric(next_word.replace('/','')):
                                     new_term = fraction_price_format(get_clear_number(term), get_clear_number(next_word)) #number fraction dollars
                                     index = index + 3
+                                else: ####add cm m mm cases
+                                    new_term = number_format(term) # number
+                                    index = index + 1
                             elif next_word in __months_set:
                                 new_term = dd_month_format(term, next_word) # DD Month
                                 index = index + 2
@@ -182,8 +197,14 @@ def parse(dictionary):
                                 new_term = dd_month_format(next_word,term) # DD month
                                 index = index + 2
                             elif next_word.isdigit() and len(next_word)==4:
-                                new_term = month_year_format(next_word,term) # month year
+                                new_term = month_year_format(term,next_word) # month year
                                 index = index + 2
+                            else:  # upper/lower case regular word
+                                new_term = upper_lower_case_format(term)
+                                index = index + 1
+                        else:  # upper/lower case regular word
+                            new_term = upper_lower_case_format(term)
+                            index = index + 1
                     elif term.lower() == "between" and index + 3 <length_of_splited_text:
                         number1 = splited[index + 1]
                         if isNumeric(number1):
@@ -191,8 +212,17 @@ def parse(dictionary):
                             if and_ == "and":
                                 number2 = splited[index + 3]
                                 if isNumeric(number2):
-                                    new_term = "between " + number1 + " and " + number2 #between n1 and n2
+                                    new_term = "between " + clean_term_from_punctuations(number1) + " and " + clean_term_from_punctuations(number2) #between n1 and n2
                                     index = index + 4
+                                else:  # upper/lower case regular word
+                                    new_term = upper_lower_case_format(term)
+                                    index = index + 1
+                            else:  # upper/lower case regular word
+                                new_term = upper_lower_case_format(term)
+                                index = index + 1
+                        else:  # upper/lower case regular word
+                            new_term = upper_lower_case_format(term)
+                            index = index + 1
                     elif '-' in term:
                         new_term = term
                         index = index + 1
@@ -205,6 +235,8 @@ def parse(dictionary):
                 else: # not in dictionary
                     one_doc_dictionary[new_term] = 1
         one_file_dictionary[str(doc)] = one_doc_dictionary
+    end = time.time()
+    print(str(end - start) + " " + doc)
     return one_file_dictionary
 
 

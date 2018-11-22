@@ -9,7 +9,6 @@ from NewTry.ReadFile import dic_to_parse
 def SendToParser():
     #TODO: send original dictionary to parser
     one_file_dic = Parser.parse(dic_to_parse)
-    print("x")
     pass
 
 def Main():
