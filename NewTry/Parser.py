@@ -32,8 +32,87 @@ def get_bn_ot_m(word):
         return "T"
     else: return ""
 
+
+def convertToFloat(word):
+    return float(word.replace(',',''))
+
+
+#function to avoid ".0" in end of float numbers
+def formatNumber(num):
+        if num % 1 == 0:
+            return int(num)
+        else:
+            return num
+
+def price_format(price, bmt=''):
+    price = convertToFloat(price)
+    if bmt == '':
+        if price<1000000:
+            return str(formatNumber(price)) + ' Dollars'
+        else: return str(formatNumber(price/1000000)) + ' M Dollars'
+    elif bmt == 'M':
+        return str(formatNumber(price)) + ' M Dollars'
+    elif bmt == 'B':
+        return str(formatNumber((price*1000)))  + ' M Dollars'
+    elif bmt == 'T':
+        return str(formatNumber((price*1000000)))   + ' M Dollars'
+
+def fraction_price_format(number, fraction):
+    return number + fraction
+
+def percentage_format(number):
+    return number + '%'
+
+
+#  will get a number and text like 123 Million and change to 123M
+def number_kbmt_format(number, word):
+    newFormat=''
+    if word.lower() == 'thousand':
+        newFormat =  str(number) + 'K'
+    elif word.lower() == 'million':
+        newFormat =  str(number) + 'M'
+    elif word.lower == 'billion':
+        newFormat =  str(number)+ 'B'
+    elif word.lower() == 'trillion':
+        newFormat =  str(number) + 'T'
+    elif word.lower() == 'quadrillion':
+        newFormat = str(number) + 'Q'
+    return newFormat
+
+
+def number_format(number):
+    number = convertToFloat(number)
+    if number < 1000: # numbers smaller than 1000
+        return str(formatNumber(number))
+    elif number < 1000000: #numebrs between 1K to 1M
+        return str(formatNumber(number/1000)) + 'K'
+    elif number < 1000000000: #numbers between 1M to 1B
+        return str(formatNumber(number/1000000)) + 'M'
+    else:  # numbers > 1B
+        return str(formatNumber(number/1000000000)) + 'B'
+
+
+#will return MM-DD date
+def dd_month_format(day,month):
+    if (len(day)==1):
+        day='0'+day
+    return __months_set[month] + '-' + day
+
+#will return YYYY-MM
+def month_year_format(month, year):
+    return year + '-' +__months_set[month]
+
+
+def upper_lower_case_format(term):
+    if term[0] >='A' and term[0] <='Z':
+        return term.upper()
+    return term.lower()
+
+
 def parse(dictionary):
+    one_file_dictionary = {} # contains : key = docID , value = {term : frequency in doc}
     for doc in dictionary:
+        one_doc_dictionary = {} # term : frequency in doc
         text = dictionary[doc]
         if text is not None or text is not "":
             index = 0
@@ -43,7 +122,7 @@ def parse(dictionary):
                 new_term =""
                 original_term = splited[index]
                 term = clean_term_from_punctuations(original_term)
-                if isNumeric(term): #for numbers , pruces, percentage, dates(!!!!!!!!!!!!!)
+                if isNumeric(term): #for numbers , pruces, percentage, dates
                     if '$' in term:
                         if index + 1 != length_of_splited_text:
                             next_word = splited[index + 1].lower()
@@ -99,10 +178,10 @@ def parse(dictionary):
                     if term.lower() in __months_set.keys():
                         if index + 1 != length_of_splited_text:
                             next_word = splited[index+1]
-                            if next_word.isDigit() and len(next_word)<=2:
+                            if next_word.isdigit() and len(next_word)<=2:
                                 new_term = dd_month_format(next_word,term) # DD month
                                 index = index + 2
-                            elif next_word.isDigit() and len(next_word)==4:
+                            elif next_word.isdigit() and len(next_word)==4:
                                 new_term = month_year_format(next_word,term) # month year
                                 index = index + 2
                     elif term.lower() == "between" and index + 3 <length_of_splited_text:
@@ -121,7 +200,12 @@ def parse(dictionary):
                         new_term = upper_lower_case_format(term)
                         index = index + 1
                 ###################################DONE WITH PARSING########################################
-
+                if new_term in one_doc_dictionary:
+                    one_doc_dictionary[new_term] += 1
+                else: # not in dictionary
+                    one_doc_dictionary[new_term] = 1
+        one_file_dictionary[str(doc)] = one_doc_dictionary
+    return one_file_dictionary
 
 
                     #Todo: advance the index

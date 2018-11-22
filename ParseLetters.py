@@ -52,15 +52,6 @@ def Replace_Upper_to_Lower(term_lower_case, list):
     list.append(term_lower_case)
     pass
 
-#will return MM-DD date
-def dd_month_format(day,month):
-    if (len(day)==1):
-        day='0'+day
-    return __months_set[month] + '-' + day  ;
-
-#will return YYYY-MM
-def month_year_format(month, year):
-    return year + '-' +__months_set[month]
 
 
 def write_into_terms(list):

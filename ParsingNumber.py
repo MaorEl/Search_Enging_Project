@@ -26,64 +26,11 @@ def thisIsRegularNumber(word):
     return word.isdigit() or word.replace(',','').replace('.','').isdigit()
 
 
-def convertToFloat(word):
-    return float(word.replace(',',''))
-
-
-#function to avoid ".0" in end of float numbers
-def formatNumber(num):
-        if num % 1 == 0:
-            return int(num)
-        else:
-            return num
 
 
 
-def number_format(number):
-    number = convertToFloat(number)
-    if number < 1000: # numbers smaller than 1000
-        return str(formatNumber(number))
-    elif number < 1000000: #numebrs between 1K to 1M
-        return str(formatNumber(number/1000)) + 'K'
-    elif number < 1000000000: #numbers between 1M to 1B
-        return str(formatNumber(number/1000000)) + 'M'
-    else:  # numbers > 1B
-        return str(formatNumber(number/1000000000)) + 'B'
 
 
-#  will get a number and text like 123 Million and change to 123M
-def number_kbmt_format(number, word):
-    newFormat=''
-    if word.lower() == 'thousand':
-        newFormat =  str(number) + 'K'
-    elif word.lower() == 'million':
-        newFormat =  str(number) + 'M'
-    elif word.lower == 'billion':
-        newFormat =  str(number)+ 'B'
-    elif word.lower() == 'trillion':
-        newFormat =  str(number) + 'T'
-    elif word.lower() == 'quadrillion':
-        newFormat = str(number) + 'Q'
-    return newFormat
-
-def price_format(price, bmt=''):
-    price = convertToFloat(price)
-    if bmt == '':
-        if price<1000000:
-            return str(formatNumber(price)) + ' Dollars'
-        else: return str(formatNumber(price/1000000)) + ' M Dollars'
-    elif bmt == 'M':
-        return str(formatNumber(price)) + ' M Dollars'
-    elif bmt == 'B':
-        return str(formatNumber((price*1000)))  + ' M Dollars'
-    elif bmt == 'T':
-        return str(formatNumber((price*1000000)))   + ' M Dollars'
-
-def fraction_price_format(number, fraction):
-    return number + fraction
-
-def percentage_format(number):
-    return number + '%'
 #
 # list_of_numbers = random.sample(range(0, 1000000), 100)
 # bmt = ['B','M','T', '']
