@@ -80,7 +80,6 @@ def write_into_terms(list):
         list_of_all_terms = [line.rstrip() for line in open(path)]
         terms.close()
 
-
     for might_be_term in list:
         #take care of dates
         if might_be_term.upper() in months_choices:
