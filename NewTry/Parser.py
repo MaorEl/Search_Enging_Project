@@ -2,9 +2,9 @@
 __punctuations_set = {'[', '(', '{', '`', ')', '<', '|', '&', '~', '+', '^', '@', '*', '?', '.',
                       '>', ';', '_', '\'', ':', ']', '/', '\\', "}", '!', '=', '#', ',', '\"', '-'}
 
-__months_set = {'january', 'jan', 'february', 'feb', 'march', 'mar', 'april', 'apr',
-                'may', 'june', 'jun', 'july', 'jul', 'august', 'aug', 'september',
-                'sep', 'october', 'oct', 'november', 'nov', 'december', 'dec'}
+__months_set = {'january':'01', 'jan':'01', 'february':'02', 'feb':'02', 'march':'03', 'mar':'03', 'april':'04', 'apr':'04',
+                'may':'05', 'june':'06', 'jun':'06', 'july':'07', 'jul':'07', 'august':'08', 'aug':'08', 'september':'09',
+                'sep':'09', 'october':'10', 'oct':'10', 'november':'11', 'nov':'11', 'december':'12', 'dec':'12'}
 
 def clean_term_from_punctuations(term):
     length = term.__len__()
@@ -83,7 +83,7 @@ def parse(dictionary):
                         else: #last number in text
                             new_term = number_format(term) # number
                 else: # take care of words
-                    if term in __months_set:
+                    if term.lower() in __months_set.keys():
                         if index + 1 != length_of_splited_text:
                             next_word = splited[index+1]
                             if isNumeric(next_word) and len(next_word)<=2:
