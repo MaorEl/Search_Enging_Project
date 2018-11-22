@@ -110,11 +110,40 @@ def upper_lower_case_format(term):
     return term.lower()
 
 
-def parse(dictionary):
-    start = time.time()
+def size_format(term, size):
+    if size == "meters":
+        return term + "m"
+    elif size == "millimeters":
+        return term + "mm"
+    elif size == "centimeters":
+        return term + "cm"
+    elif size == "nanometers":
+        return term + "nm"
+    elif size == "kilometers":
+        return term + "km"
+
+
+def contains_char(term):
+    return not (term.replace('.', '').isdigit())
+
+
+def one_dot_in_price(term):
+    if term.count('.') >= 2:
+        one_dot = False
+        i = 0
+        for i in range(len(term) - 1):
+            if term[i] == '.' and one_dot is False:
+                one_dot = True
+            elif term[i] == '.' and one_dot is True:
+                term = term[:i] + term[i+1:]
+    return term
+
+
+def parse(dictionary, file):
     counter = 0
     one_file_dictionary = {} # contains : key = docID , value = {term : frequency in doc}
     for doc in dictionary:
+        print (doc)
         counter =+ 1
         one_doc_dictionary = {} # term : frequency in doc
         text = dictionary[doc]
@@ -127,15 +156,12 @@ def parse(dictionary):
                 original_term = splited[index]
                 term = clean_term_from_punctuations(original_term)
 
-                if term == "4am" or term == "9mm":
-                    print ("4am")
-
-
                 if len(term) == 0:
                     index = index + 1
                     continue
                 if isNumeric(term): #for numbers , pruces, percentage, dates
                     if '$' in term:
+                        term = one_dot_in_price(term)
                         if index + 1 != length_of_splited_text:
                             next_word = splited[index + 1].lower()
                             if next_word in ["million", "billion", "trillion"]:
@@ -147,8 +173,14 @@ def parse(dictionary):
                         else: #last one in text
                             new_term = price_format(get_clear_number(term)) # $ price
                             index = index + 1
+                    elif 'mm' in term or 'cm' in term or 'm' in term or 'km' in term or 'nm' in term:
+                        new_term = term
+                        index = index + 1
+                    elif term.count('.') >= 2:
+                        new_term = term
+                        index = index + 1
                     else: # no $
-                        if index + 1 != length_of_splited_text:
+                        if index + 1 < length_of_splited_text:
                             next_word = splited[index + 1].lower()
                             if next_word in ["percentage","percent"]:
                                 new_term = percentage_format(term) # number percent/percentage
@@ -157,7 +189,7 @@ def parse(dictionary):
                                 new_term = price_format(get_clear_number(term),get_bn_ot_m(term)) # price dollars
                                 index = index + 2
                             elif next_word in ["million", "billion", "trillion"]:
-                                if index + 3 != length_of_splited_text:
+                                if index + 3 < length_of_splited_text:
                                     third_word = splited[index+2]
                                     fourth_word = splited[index+3].lower()
                                     if third_word == "U.S" and fourth_word == "dollars":
@@ -172,23 +204,37 @@ def parse(dictionary):
                             elif next_word == "thousand":
                                 new_term = number_kbmt_format(term, next_word) # number thousand
                                 index = index + 2
+                            elif next_word in ["meters", "kilometers", "millimeters", "centimeters", "nanometers"]:
+                                new_term = size_format(term, next_word) # number meters, kilometers, centimeters, nanoneters, millimeters
+                                index = index + 2
                             elif index + 2 != length_of_splited_text:
                                 third_word = splited[index+2].lower()
                                 if third_word == "dollars" and '/' in next_word and isNumeric(next_word.replace('/','')):
                                     new_term = fraction_price_format(get_clear_number(term), get_clear_number(next_word)) #number fraction dollars
                                     index = index + 3
-                                else: ####add cm m mm cases
+                                elif contains_char(term):
+                                    new_term = term
+                                    index = index + 1
+                                else:
                                     new_term = number_format(term) # number
                                     index = index + 1
                             elif next_word in __months_set:
                                 new_term = dd_month_format(term, next_word) # DD Month
                                 index = index + 2
                             else:
+                                if contains_char(term):
+                                    new_term = term
+                                    index = index + 1
+                                else:
+                                    new_term = number_format(term) # number
+                                    index = index + 1
+                        else: #last number in text
+                            if contains_char(term):
+                                new_term = term
+                                index = index + 1
+                            else:
                                 new_term = number_format(term) # number
                                 index = index + 1
-                        else: #last number in text
-                            new_term = number_format(term) # number
-                            index = index + 1
                 else: # take care of words
                     if term.lower() in __months_set.keys():
                         if index + 1 != length_of_splited_text:
@@ -235,8 +281,6 @@ def parse(dictionary):
                 else: # not in dictionary
                     one_doc_dictionary[new_term] = 1
         one_file_dictionary[str(doc)] = one_doc_dictionary
-    end = time.time()
-    print(str(end - start) + " " + doc)
     return one_file_dictionary
 
 
