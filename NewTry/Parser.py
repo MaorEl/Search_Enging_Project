@@ -80,7 +80,7 @@ def fraction_price_format(number, fraction):
     if fraction.count('/') >= 2:
         fraction = eval(fraction)
         fraction = Fraction(fraction)
-    return number + ' ' + fraction + ' Dollars'
+    return number + ' ' + str(fraction) + ' Dollars'
 
 def percentage_format(number):
     return number + '%'

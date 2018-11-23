@@ -39,8 +39,8 @@ def Main():
                 counter = counter + 1
 
     #saveDictionaryToDisk()
-        end2 = time.time();
-        print((end2 - start2) / 60)
+    end2 = time.time();
+    print((end2 - start2) / 60)
 
 
 
