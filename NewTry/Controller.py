@@ -37,12 +37,10 @@ def Main():
                 SendToParser(file)
                 dic_to_parse.clear()
                 counter = counter + 1
-                print(counter)
-                if (counter==100):
-                    end2 = time.time();
-                    print((end2 - start2) / 60)
-                    docdoc = dic_to_parse
+
     #saveDictionaryToDisk()
+        end2 = time.time();
+        print((end2 - start2) / 60)
 
 
 
