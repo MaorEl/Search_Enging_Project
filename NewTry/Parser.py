@@ -1,4 +1,5 @@
 import time
+from fractions import Fraction
 
 __punctuations_set = {'[', '(', '{', '`', ')', '<', '|', '&', '~', '+', '^', '@', '*', '?', '.',
                       '>', ';', '_', '\'', ':', ']', '\\', "}", '!', '=', '#', ',', '\"','-','/'}
@@ -6,6 +7,14 @@ __punctuations_set = {'[', '(', '{', '`', ')', '<', '|', '&', '~', '+', '^', '@'
 __months_set = {'january':'01', 'jan':'01', 'february':'02', 'feb':'02', 'march':'03', 'mar':'03', 'april':'04', 'apr':'04',
                 'may':'05', 'june':'06', 'jun':'06', 'july':'07', 'jul':'07', 'august':'08', 'aug':'08', 'september':'09',
                 'sep':'09', 'october':'10', 'oct':'10', 'november':'11', 'nov':'11', 'december':'12', 'dec':'12'}
+
+__stop_words = ''
+
+def set_stop_words_file(path):
+    global __stop_words
+    with open(path,'r') as wordbook:
+        __stop_words = wordbook.read().splitlines()
+
 
 def clean_term_from_punctuations(term):
     length = term.__len__()
@@ -59,7 +68,10 @@ def price_format(price, bmt=''):
         return str(formatNumber((price*1000000)))   + ' M Dollars'
 
 def fraction_price_format(number, fraction):
-    return number + fraction
+    if fraction.count('/') >= 2:
+        fraction = eval(fraction)
+        fraction = Fraction(fraction)
+    return number + ' ' + fraction + ' Dollars'
 
 def percentage_format(number):
     return number + '%'
@@ -124,7 +136,7 @@ def size_format(term, size):
 
 
 def contains_char(term):
-    return not (term.replace('.', '').isdigit())
+    return (not (term.replace('.', '').replace(',', '').isdigit()))
 
 
 def one_dot_in_price(term):
@@ -143,7 +155,6 @@ def parse(dictionary, file):
     counter = 0
     one_file_dictionary = {} # contains : key = docID , value = {term : frequency in doc}
     for doc in dictionary:
-        print (doc)
         counter =+ 1
         one_doc_dictionary = {} # term : frequency in doc
         text = dictionary[doc]
@@ -156,6 +167,11 @@ def parse(dictionary, file):
                 original_term = splited[index]
                 term = clean_term_from_punctuations(original_term)
 
+                # #if term == '19' and splited[index + 1] == 'Jan' and splited[index+2] == '94':
+                # if term =='19' and splited[index + 1] == 'Jan':
+                #     print ('24')
+
+
                 if len(term) == 0:
                     index = index + 1
                     continue
@@ -163,7 +179,7 @@ def parse(dictionary, file):
                     if '$' in term:
                         term = one_dot_in_price(term)
                         if index + 1 != length_of_splited_text:
-                            next_word = splited[index + 1].lower()
+                            next_word = clean_term_from_punctuations(splited[index + 1].lower())
                             if next_word in ["million", "billion", "trillion"]:
                                 new_term = price_format(get_clear_number(term), next_word[0].upper()) # $ price million/billion,trillion
                                 index = index + 2
@@ -181,7 +197,7 @@ def parse(dictionary, file):
                         index = index + 1
                     else: # no $
                         if index + 1 < length_of_splited_text:
-                            next_word = splited[index + 1].lower()
+                            next_word = clean_term_from_punctuations(splited[index + 1].lower())
                             if next_word in ["percentage","percent"]:
                                 new_term = percentage_format(term) # number percent/percentage
                                 index = index + 2
@@ -190,8 +206,8 @@ def parse(dictionary, file):
                                 index = index + 2
                             elif next_word in ["million", "billion", "trillion"]:
                                 if index + 3 < length_of_splited_text:
-                                    third_word = splited[index+2]
-                                    fourth_word = splited[index+3].lower()
+                                    third_word = clean_term_from_punctuations(splited[index+2])
+                                    fourth_word = clean_term_from_punctuations(splited[index+3].lower())
                                     if third_word == "U.S" and fourth_word == "dollars":
                                         new_term = price_format(get_clear_number(term),next_word[0].upper()) # price million/trillion/billion U.S dollars
                                         index = index + 4
@@ -207,10 +223,16 @@ def parse(dictionary, file):
                             elif next_word in ["meters", "kilometers", "millimeters", "centimeters", "nanometers"]:
                                 new_term = size_format(term, next_word) # number meters, kilometers, centimeters, nanoneters, millimeters
                                 index = index + 2
+                            elif next_word in __months_set:
+                                new_term = dd_month_format(term, next_word) # DD Month
+                                index = index + 2
                             elif index + 2 != length_of_splited_text:
-                                third_word = splited[index+2].lower()
+                                third_word = clean_term_from_punctuations(splited[index+2].lower())
                                 if third_word == "dollars" and '/' in next_word and isNumeric(next_word.replace('/','')):
                                     new_term = fraction_price_format(get_clear_number(term), get_clear_number(next_word)) #number fraction dollars
+                                    index = index + 3
+                                elif next_word in ["m", "bn", "t"] and third_word == "dollars":
+                                    new_term = price_format(get_clear_number(term), get_bn_ot_m(next_word))  # price m/bn dollars
                                     index = index + 3
                                 elif contains_char(term):
                                     new_term = term
@@ -218,9 +240,6 @@ def parse(dictionary, file):
                                 else:
                                     new_term = number_format(term) # number
                                     index = index + 1
-                            elif next_word in __months_set:
-                                new_term = dd_month_format(term, next_word) # DD Month
-                                index = index + 2
                             else:
                                 if contains_char(term):
                                     new_term = term
@@ -238,7 +257,7 @@ def parse(dictionary, file):
                 else: # take care of words
                     if term.lower() in __months_set.keys():
                         if index + 1 != length_of_splited_text:
-                            next_word = splited[index+1]
+                            next_word = clean_term_from_punctuations(splited[index+1])
                             if next_word.isdigit() and len(next_word)<=2:
                                 new_term = dd_month_format(next_word,term) # DD month
                                 index = index + 2
@@ -252,11 +271,11 @@ def parse(dictionary, file):
                             new_term = upper_lower_case_format(term)
                             index = index + 1
                     elif term.lower() == "between" and index + 3 <length_of_splited_text:
-                        number1 = splited[index + 1]
+                        number1 = clean_term_from_punctuations(splited[index + 1])
                         if isNumeric(number1):
-                            and_= splited[index + 2]
+                            and_= clean_term_from_punctuations(splited[index + 2])
                             if and_ == "and":
-                                number2 = splited[index + 3]
+                                number2 = clean_term_from_punctuations(splited[index + 3])
                                 if isNumeric(number2):
                                     new_term = "between " + clean_term_from_punctuations(number1) + " and " + clean_term_from_punctuations(number2) #between n1 and n2
                                     index = index + 4
@@ -276,9 +295,9 @@ def parse(dictionary, file):
                         new_term = upper_lower_case_format(term)
                         index = index + 1
                 ###################################DONE WITH PARSING########################################
-                if new_term in one_doc_dictionary:
+                if new_term in one_doc_dictionary and new_term.lower() not in __stop_words:
                     one_doc_dictionary[new_term] += 1
-                else: # not in dictionary
+                elif new_term.lower() not in __stop_words: # not in dictionary
                     one_doc_dictionary[new_term] = 1
         one_file_dictionary[str(doc)] = one_doc_dictionary
     return one_file_dictionary
