@@ -26,7 +26,7 @@ def Main():
     global corpus_path
     corpus_path = path
     data_set_Path(path)
-    counter = 0
+    #counter = 0
     start2 = time.time()
 
     for root, dirs, files in os.walk(corpus_path):
@@ -36,7 +36,7 @@ def Main():
                 ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
                 SendToParser(file)
                 dic_to_parse.clear()
-                counter = counter + 1
+                #counter = counter + 1
 
     #saveDictionaryToDisk()
     end2 = time.time();
