@@ -8,13 +8,22 @@ __months_set = {'january':'01', 'jan':'01', 'february':'02', 'feb':'02', 'march'
                 'may':'05', 'june':'06', 'jun':'06', 'july':'07', 'jul':'07', 'august':'08', 'aug':'08', 'september':'09',
                 'sep':'09', 'october':'10', 'oct':'10', 'november':'11', 'nov':'11', 'december':'12', 'dec':'12'}
 
-__stop_words = ''
+__stop_words = []
+stop_words_dict = {}
+
 
 def set_stop_words_file(path):
     global __stop_words
     with open(path,'r') as wordbook:
         __stop_words = wordbook.read().splitlines()
+        global stop_words_dict
+        for term in __stop_words:
+            stop_words_dict[term]=0
 
+def _clean_stop_words(dictionary):
+    for term in stop_words_dict:
+        if term in dictionary:
+            dictionary.pop('key', None)
 
 def clean_term_from_punctuations(term):
     length = term.__len__()
@@ -295,9 +304,11 @@ def parse(dictionary, file):
                         new_term = upper_lower_case_format(term)
                         index = index + 1
                 ###################################DONE WITH PARSING########################################
-                if new_term in one_doc_dictionary and new_term.lower() not in __stop_words:
+                #if new_term.lower() not in __stop_words:
+                if new_term in one_doc_dictionary  and new_term.lower() not in stop_words_dict:
                     one_doc_dictionary[new_term] += 1
-                elif new_term.lower() not in __stop_words: # not in dictionary
+                elif new_term.lower() not in stop_words_dict:  # not in dictionary
+                #else:
                     one_doc_dictionary[new_term] = 1
         one_file_dictionary[str(doc)] = one_doc_dictionary
     return one_file_dictionary

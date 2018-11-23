@@ -26,17 +26,24 @@ def Main():
     global corpus_path
     corpus_path = path
     data_set_Path(path)
+    counter = 0
+    start2 = time.time()
+
     for root, dirs, files in os.walk(corpus_path):
         for file in files:
+
             if str(file) != 'stop_words.txt':
                 ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
                 SendToParser(file)
                 dic_to_parse.clear()
-
-    docdoc = dic_to_parse
+                counter = counter + 1
+                print(counter)
+                if (counter==100):
+                    end2 = time.time();
+                    print((end2 - start2) / 60)
+                    docdoc = dic_to_parse
     #saveDictionaryToDisk()
-    end = time.time()
-    print(end-start)
+
 
 
 
