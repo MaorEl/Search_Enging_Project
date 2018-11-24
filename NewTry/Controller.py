@@ -64,7 +64,7 @@ def Main():
                 if getStemmerFromUser(True) == True:
                     dictionary_of_one_file = stem_dictionary(dictionary_of_one_file,stemmer)
                 counter = counter + 1
-                print("" +str(counter) + ": " + str(time.time()-start))
+                #print("" +str(counter) + ": " + str(time.time()-start))
 
     #saveDictionaryToDisk()
     end2 = time.time();
