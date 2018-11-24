@@ -2,13 +2,16 @@ class PorterStemmer:
     def isCons(self, letter):
         if letter == 'a' or letter == 'e' or letter == 'i' or letter == 'o' or letter == 'u':
             return False
-        else:
+        elif letter == 'A' or letter == 'E' or letter == 'I' or letter == 'O' or letter == 'U':
+            return False
             return True
 
     def isConsonant(self, word, i):
         letter = word[i]
         if self.isCons(letter):
             if letter == 'y' and (-1*(i-1))>len(word) and self.isCons(word[i - 1]):
+                return False
+            elif letter == 'Y' and (-1*(i-1))>len(word) and self.isCons(word[i - 1]):
                 return False
             else:
                 return True
@@ -79,6 +82,8 @@ class PorterStemmer:
             if self.isConsonant(word, f) and self.isVowel(word, s) and self.isConsonant(word, t):
                 if third != 'w' and third != 'x' and third != 'y':
                     return True
+                elif third != 'W' and third != 'X' and third != 'Y':
+                    return True
                 else:
                     return False
             else:
@@ -119,6 +124,14 @@ class PorterStemmer:
             word = self.replace(word, 'ss', 'ss')
         elif word.endswith('s'):
             word = self.replace(word, 's', '')
+        elif word.endswith('SSES'):
+            word = self.replace(word, 'SSES', 'ss')
+        elif word.endswith('IES'):
+            word = self.replace(word, 'IES', 'I')
+        elif word.endswith('SS'):
+            word = self.replace(word, 'SS', 'SS')
+        elif word.endswith('S'):
+            word = self.replace(word, 'S', '')
         else:
             pass
         return word
@@ -143,13 +156,37 @@ class PorterStemmer:
             if self.containsVowel(base):
                 word = base
                 flag = True
+        elif word.endswith('EED'):
+            result = word.rfind('EED')
+            base = word[:result]
+            if self.getM(base) > 0:
+                word = base
+                word += 'EE'
+        elif word.endswith('ED'):
+            result = word.rfind('ED')
+            base = word[:result]
+            if self.containsVowel(base):
+                word = base
+                flag = True
+        elif word.endswith('ING'):
+            result = word.rfind('ING')
+            base = word[:result]
+            if self.containsVowel(base):
+                word = base
+                flag = True
         if flag:
             if word.endswith('at') or word.endswith('bl') or word.endswith('iz'):
                 word += 'e'
             elif self.doubleCons(word) and not self.endsWith(word, 'l') and not self.endsWith(word, 's') and not self.endsWith(word, 'z'):
                 word = word[:-1]
-            elif self.getM(word) == 1 and self.cvc(word):
+            elif not word.isupper() and self.getM(word) == 1 and self.cvc(word):
                 word += 'e'
+            elif word.endswith('AT') or word.endswith('BL') or word.endswith('IZ'):
+                word += 'e'
+            elif self.doubleCons(word) and not self.endsWith(word, 'L') and not self.endsWith(word, 'S') and not self.endsWith(word, 'Z'):
+                word = word[:-1]
+            elif word.isupper() and self.getM(word) == 1 and self.cvc(word):
+                word += 'E'
             else:
                 pass
         else:
@@ -159,6 +196,12 @@ class PorterStemmer:
     def step1c(self, word):
         if word.endswith('y'):
             result = word.rfind('y')
+            base = word[:result]
+            if self.containsVowel(base):
+                word = base
+                word += 'i'
+        elif word.endswith('Y'):
+            result = word.rfind('Y')
             base = word[:result]
             if self.containsVowel(base):
                 word = base
@@ -206,6 +249,46 @@ class PorterStemmer:
             word = self.replaceM0(word, 'iviti', 'ive')
         elif word.endswith('biliti'):
             word = self.replaceM0(word, 'biliti', 'ble')
+        if word.endswith('ATIONAL'):
+            word = self.replaceM0(word, 'ATIONAL', 'ATE')
+        elif word.endswith('TIONAL'):
+            word = self.replaceM0(word, 'TIONAL', 'TION')
+        elif word.endswith('ENCI'):
+            word = self.replaceM0(word, 'ENCI', 'ENCE')
+        elif word.endswith('ANCI'):
+            word = self.replaceM0(word, 'ANCI', 'ANCE')
+        elif word.endswith('IZER'):
+            word = self.replaceM0(word, 'IZER', 'IZE')
+        elif word.endswith('ABLI'):
+            word = self.replaceM0(word, 'ABLI', 'ABLE')
+        elif word.endswith('ALLI'):
+            word = self.replaceM0(word, 'ALLI', 'AL')
+        elif word.endswith('ENTLI'):
+            word = self.replaceM0(word, 'ENTLI', 'ENT')
+        elif word.endswith('ELI'):
+            word = self.replaceM0(word, 'ELI', 'E')
+        elif word.endswith('OUSLI'):
+            word = self.replaceM0(word, 'OUSLI', 'OUS')
+        elif word.endswith('IZATION'):
+            word = self.replaceM0(word, 'IZATION', 'IZE')
+        elif word.endswith('ATION'):
+            word = self.replaceM0(word, 'ATION', 'ATE')
+        elif word.endswith('ATOR'):
+            word = self.replaceM0(word, 'ATOR', 'ATE')
+        elif word.endswith('ALISM'):
+            word = self.replaceM0(word, 'ALISM', 'AL')
+        elif word.endswith('IVENESS'):
+            word = self.replaceM0(word, 'IVENESS', 'IVE')
+        elif word.endswith('FULNESS'):
+            word = self.replaceM0(word, 'FULNESS', 'FUL')
+        elif word.endswith('OUSNESS'):
+            word = self.replaceM0(word, 'OUSNESS', 'OUS')
+        elif word.endswith('ALITI'):
+            word = self.replaceM0(word, 'ALITI', 'AL')
+        elif word.endswith('IVITI'):
+            word = self.replaceM0(word, 'IVITI', 'IVE')
+        elif word.endswith('BILITI'):
+            word = self.replaceM0(word, 'BILITI', 'BLE')
         return word
 
     def step3(self, word):
@@ -221,6 +304,18 @@ class PorterStemmer:
             word = self.replaceM0(word, 'ful', '')
         elif word.endswith('ness'):
             word = self.replaceM0(word, 'ness', '')
+        elif word.endswith('ICATE'):
+            word = self.replaceM0(word, 'ICATE', 'IC')
+        elif word.endswith('ATIVE'):
+            word = self.replaceM0(word, 'ATIVE', '')
+        elif word.endswith('ALIZE'):
+            word = self.replaceM0(word, 'ALIZE', 'AL')
+        elif word.endswith('ICITI'):
+            word = self.replaceM0(word, 'ICITI', 'IC')
+        elif word.endswith('FUL'):
+            word = self.replaceM0(word, 'FUL', '')
+        elif word.endswith('NESS'):
+            word = self.replaceM0(word, 'NESS', '')
         return word
 
     def step4(self, word):
@@ -266,10 +361,52 @@ class PorterStemmer:
             if self.getM(base) > 1 and (self.endsWith(base, 's') or self.endsWith(base, 't')):
                 word = base
             word = self.replaceM1(word, '', '')
+        elif word.endswith('AL'):
+            word = self.replaceM1(word, 'AL', '')
+        elif word.endswith('ANCE'):
+            word = self.replaceM1(word, 'ANCE', '')
+        elif word.endswith('ENCE'):
+            word = self.replaceM1(word, 'ENCE', '')
+        elif word.endswith('ER'):
+            word = self.replaceM1(word, 'ER', '')
+        elif word.endswith('IC'):
+            word = self.replaceM1(word, 'IC', '')
+        elif word.endswith('ABLE'):
+            word = self.replaceM1(word, 'ABLE', '')
+        elif word.endswith('IBLE'):
+            word = self.replaceM1(word, 'IBLE', '')
+        elif word.endswith('ANT'):
+            word = self.replaceM1(word, 'ANT', '')
+        elif word.endswith('EMENT'):
+            word = self.replaceM1(word, 'EMENT', '')
+        elif word.endswith('MENT'):
+            word = self.replaceM1(word, 'MENT', '')
+        elif word.endswith('ENT'):
+            word = self.replaceM1(word, 'ENT', '')
+        elif word.endswith('OU'):
+            word = self.replaceM1(word, 'OU', '')
+        elif word.endswith('ISM'):
+            word = self.replaceM1(word, 'ISM', '')
+        elif word.endswith('ATE'):
+            word = self.replaceM1(word, 'ATE', '')
+        elif word.endswith('ITI'):
+            word = self.replaceM1(word, 'ITI', '')
+        elif word.endswith('OUS'):
+            word = self.replaceM1(word, 'OUS', '')
+        elif word.endswith('IVE'):
+            word = self.replaceM1(word, 'IVE', '')
+        elif word.endswith('IZE'):
+            word = self.replaceM1(word, 'IZE', '')
+        elif word.endswith('ION'):
+            result = word.rfind('ION')
+            base = word[:result]
+            if self.getM(base) > 1 and (self.endsWith(base, 'S') or self.endsWith(base, 'T')):
+                word = base
+            word = self.replaceM1(word, '', '')
         return word
 
     def step5a(self, word):
-        if word.endswith('e'):
+        if word.endswith('e') or word.endswith('E'):
             base = word[:-1]
             if self.getM(base) > 1:
                 word = base
@@ -278,7 +415,7 @@ class PorterStemmer:
         return word
 
     def step5b(self, word):
-        if self.getM(word) > 1 and self.doubleCons(word) and self.endsWith(word, 'l'):
+        if self.getM(word) > 1 and self.doubleCons(word) and (self.endsWith(word, 'l') or (self.endsWith(word, 'L'))):
             word = word[:-1]
         return word
 
@@ -292,3 +429,4 @@ class PorterStemmer:
         word = self.step5a(word)
         word = self.step5b(word)
         return word
+

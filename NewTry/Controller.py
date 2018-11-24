@@ -27,19 +27,21 @@ def getStemmerFromUser(flag):
     return flag
 
 
-# def stem_dictionary(dictionary_of_one_file,stemmer):
-#     new_dic = {}
-#     for doc in dictionary_of_one_file:
-#         for term, freqInDoc in dictionary_of_one_file[doc].items():
-#             stemmed_term = stemmer.stem(term)
-#             if (stemmed_term!=term): #if the stem has changed the term
-#                 dictionary_of_one_file[doc].pop(term)
-#                 if stemmed_term in dictionary_of_one_file[doc]: #if the stemmed term is already on this dictionary
-#                     dictionary_of_one_file[doc][stemmed_term] += freqInDoc
-#                 else:
-#                     dictionary_of_one_file[doc][stemmed_term] = freqInDoc
-#     return dictionary_of_one_file
-#
+def stem_dictionary(dictionary_of_one_file,stemmer):
+    for doc in dictionary_of_one_file:
+        new_dic_of_one_doc = {}
+        for term, freqInDoc in dictionary_of_one_file[doc].items():
+            stemmed_term = stemmer.stem(term.lower())
+            #if (stemmed_term!=term): #if the stem has changed the term
+            if term.isupper():
+                stemmed_term = stemmed_term.upper()
+            if stemmed_term in new_dic_of_one_doc: #if the stemmed term is already on this dictionary
+                new_dic_of_one_doc[stemmed_term] += freqInDoc
+            else:
+                new_dic_of_one_doc[stemmed_term] = freqInDoc
+        dictionary_of_one_file[doc]=new_dic_of_one_doc
+    return dictionary_of_one_file
+
 
 
 def Main():
@@ -48,7 +50,7 @@ def Main():
     start = time.time()
     corpus_path = path
     data_set_Path(path)
-    #counter = 0
+    counter = 0
     start2 = time.time()
 
     for root, dirs, files in os.walk(corpus_path):
