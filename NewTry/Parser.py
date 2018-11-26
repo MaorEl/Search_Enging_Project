@@ -1,5 +1,6 @@
 import time
 from fractions import Fraction
+from NewTry import PorterStemmer
 
 __punctuations_set = {'[', '(', '{', '`', ')', '<', '|', '&', '~', '+', '^', '@', '*', '?', '.',
                       '>', ';', '_', '\'', ':', ']', '\\', "}", '!', '=', '#', ',', '\"','-','/'}
@@ -10,6 +11,8 @@ __months_set = {'january':'01', 'jan':'01', 'february':'02', 'feb':'02', 'march'
 
 __stop_words = []
 stop_words_dict = {}
+stemmed_terms = {}
+stemmer = PorterStemmer.PorterStemmer()
 
 
 def set_stop_words_file(path):
@@ -147,6 +150,9 @@ def size_format(term, size):
 def contains_char(term):
     return (not (term.replace('.', '').replace(',', '').isdigit()))
 
+def contains_digit(term):
+    return any(char.isdigit() for char in term)
+
 
 def one_dot_in_price(term):
     if term.count('.') >= 2:
@@ -159,12 +165,32 @@ def one_dot_in_price(term):
                 term = term[:i] + term[i+1:]
     return term
 
+def stem_the_term(term):
+    global stemmed_terms
+    if term.isupper():
+        lower_new_term = term.lower()
+        if lower_new_term not in stemmed_terms:
+            stemmed_term = stemmer.stem(lower_new_term)
+            stemmed_terms[lower_new_term] = stemmed_term
+            new_term = stemmed_term.upper()
+        else:  # in stemmed_terms
+            new_term = stemmed_terms[lower_new_term]
+    else:  # lower case
+        if term not in stemmed_terms:
+            stemmed_term = stemmer.stem(term)
+            stemmed_terms[term] = stemmed_term
+            new_term = stemmed_term
+        else:  # in stemmed_terms
+            new_term = stemmer.stem(term)
+    return new_term
+
 
 def parse(dictionary, file):
-    counter = 0
+    #print(file)
+    global stemmed_terms
+    global stemmer
     one_file_dictionary = {} # contains : key = docID , value = {term : frequency in doc}
     for doc in dictionary:
-        counter =+ 1
         one_doc_dictionary = {} # term : frequency in doc
         text = dictionary[doc]
         if text is not None or text is not "":
@@ -172,13 +198,10 @@ def parse(dictionary, file):
             splited = text.split()
             length_of_splited_text = len(splited)
             while index < length_of_splited_text:
+                stem = False # at the end of the loop, if FALSE don't stem the term, if TRUE stem the term
                 new_term =""
                 original_term = splited[index]
                 term = clean_term_from_punctuations(original_term)
-
-                # #if term == '19' and splited[index + 1] == 'Jan' and splited[index+2] == '94':
-                # if term =='19' and splited[index + 1] == 'Jan':
-                #     print ('24')
 
 
                 if len(term) == 0:
@@ -303,20 +326,21 @@ def parse(dictionary, file):
                     else: # upper/lower case regular word
                         new_term = upper_lower_case_format(term)
                         index = index + 1
+                        if not contains_digit(new_term):
+                            stem = True
                 ###################################DONE WITH PARSING########################################
-                #if new_term.lower() not in __stop_words:
-                if new_term in one_doc_dictionary  and new_term.lower() not in stop_words_dict:
+                ###################################STEMMING SECTION#########################################
+                if stem is True and new_term.lower() not in stop_words_dict:
+                    new_term = stem_the_term(new_term)
+                ###################################END OF STEM SECTION######################################
+                if new_term in one_doc_dictionary and new_term.lower() not in stop_words_dict:
                     one_doc_dictionary[new_term] += 1
                 elif new_term.lower() not in stop_words_dict:  # not in dictionary
-                #else:
                     one_doc_dictionary[new_term] = 1
         one_file_dictionary[str(doc)] = one_doc_dictionary
     return one_file_dictionary
 
 
-                    #Todo: advance the index
-                    #Todo: take care of upper/lower cases
-                    #Todo: add functions as needed
                 #todo: check in indexer if term exist upper/lower ->> merging the keys
 
 

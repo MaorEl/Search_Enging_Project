@@ -8,7 +8,7 @@ from NewTry import Parser
 from NewTry.ReadFile import dic_to_parse
 from NewTry import PorterStemmer
 
-stemmer = PorterStemmer.PorterStemmer()
+#stemmer = PorterStemmer.PorterStemmer()
 
 
 def SendToParser(file):
@@ -26,25 +26,27 @@ def getStemmerFromUser(flag):
     #TODO: implements this from user GUI
     return flag
 
-
-def stem_dictionary(dictionary_of_one_file,stemmer):
-    for doc in dictionary_of_one_file:
-        new_dic_of_one_doc = {}
-        for term, freqInDoc in dictionary_of_one_file[doc].items():
-            stemmed_term = stemmer.stem(term.lower())
-            #if (stemmed_term!=term): #if the stem has changed the term
-            if term.isupper():
-                stemmed_term = stemmed_term.upper()
-            if stemmed_term in new_dic_of_one_doc: #if the stemmed term is already on this dictionary
-                new_dic_of_one_doc[stemmed_term] += freqInDoc
-            else:
-                new_dic_of_one_doc[stemmed_term] = freqInDoc
-        dictionary_of_one_file[doc]=new_dic_of_one_doc
-    return dictionary_of_one_file
-
-
+#
+# def stem_dictionary(dictionary_of_one_file,stemmer):
+#     for doc in dictionary_of_one_file:
+#         new_dic_of_one_doc = {}
+#         for term, freqInDoc in dictionary_of_one_file[doc].items():
+#             stemmed_term = stemmer.stem(term.lower())
+#             #if (stemmed_term!=term): #if the stem has changed the term
+#             if term.isupper():
+#                 stemmed_term = stemmed_term.upper()
+#             if stemmed_term in new_dic_of_one_doc: #if the stemmed term is already on this dictionary
+#                 new_dic_of_one_doc[stemmed_term] += freqInDoc
+#             else:
+#                 new_dic_of_one_doc[stemmed_term] = freqInDoc
+#         dictionary_of_one_file[doc]=new_dic_of_one_doc
+#     return dictionary_of_one_file
+#
+def contains_digit(term):
+    return any(char.isdigit() for char in term)
 
 def Main():
+
     global stemmer
     path = 'C:\Retrieval_folder\corpus'
     start = time.time()
@@ -57,22 +59,55 @@ def Main():
         for file in files:
 
             if str(file) != 'stop_words.txt':
-                start = time.time();
+                start = time.time()
                 ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
                 dictionary_of_one_file = SendToParser(file)
                 dic_to_parse.clear()
-                if getStemmerFromUser(True) == True:
-                    dictionary_of_one_file = stem_dictionary(dictionary_of_one_file,stemmer)
-                counter = counter + 1
-                #print("" +str(counter) + ": " + str(time.time()-start))
 
     #saveDictionaryToDisk()
     end2 = time.time();
     print((end2 - start2) / 60)
 
 
-
-
-
-
 Main()
+
+
+def debug_parser(corpus_path):
+    for root, dirs, files in os.walk(corpus_path):
+        for file in files:
+            if str(file) != 'stop_words.txt':
+                start = time.time()
+                ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
+                dictionary_of_one_file = SendToParser(file)
+                dic_to_parse.clear()
+
+def debug_dictionary_creation(dicionary):
+    pass
+
+def debug_indexer_flow(dixtionary):
+    pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
