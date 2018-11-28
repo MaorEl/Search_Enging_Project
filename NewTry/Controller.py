@@ -13,8 +13,8 @@ from NewTry.Indexer import merge_dictionaries
 from NewTry.Indexer import main_dictionary
 from NewTry.ReadFile import dic_to_parse
 from NewTry import PorterStemmer
+from NewTry.Parser import stem
 
-#stemmer = PorterStemmer.PorterStemmer()
 
 
 def SendToParser(file):
@@ -27,17 +27,17 @@ def data_set_Path(path):
     Parser.set_stop_words_file(__stopwords_path)
 
 
-def getStemmerFromUser(flag):
+def getStemmerFromUser():
 
     #TODO: implements this from user GUI
-    return flag
+    return True
 
 def contains_digit(term):
     return any(char.isdigit() for char in term)
 
 def Main():
-    global main_dictionary
-    global stemmer
+    global stem
+    stem = getStemmerFromUser()
     #path = 'C:\Retrieval_folder\corpus'
     path = 'C:\Retrieval_folder\\full_corpus'
     start = time.time()
@@ -51,15 +51,11 @@ def Main():
             if str(file) != 'stop_words.txt':
                 #start = time.time()
                 ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
-                dictionary_of_one_file = SendToParser(file)
-                #s = collections.OrderedDict(sorted(dictionary_of_one_file.items()))
-                #merge_dictionaries(s)
-                #main = main_dictionary
                 dic_to_parse.clear()
                 #end = time.time()
                 #print (end-start)
     #saveDictionaryToDisk()
-    end2 = time.time();
+    end2 = time.time()
     print((end2 - start2) / 60)
 
 

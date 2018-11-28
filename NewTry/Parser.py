@@ -2,6 +2,9 @@ import time
 from fractions import Fraction
 from NewTry import PorterStemmer
 
+#todo: try and catch - advance index by one
+
+
 __punctuations_set = {'[', '(', '{', '`', ')', '<', '|', '&', '~', '+', '^', '@', '*', '?', '.',
                       '>', ';', '_', '\'', ':', ']', '\\', "}", '!', '=', '#', ',', '\"','-','/'}
 
@@ -14,6 +17,7 @@ stop_words_dict = {}
 stemmed_terms = {} # will contain the actual term of the dictionary
 stemmer = PorterStemmer.PorterStemmer()
 one_file_dictionary = {}
+stem=False
 
 
 def set_stop_words_file(path):
@@ -166,56 +170,46 @@ def one_dot_in_price(term):
                 term = term[:i] + term[i+1:]
     return term
 
-def stem_the_term(term):
+def stem_the_term_and_take_care_of_lowerUpperCases(term):
     global stemmed_terms
-    #s = stemmed_terms # for debug
-    if term.isupper():
-        lower_new_term = term.lower()
-        if lower_new_term not in stemmed_terms:
-            stemmed_term = stemmer.stem(lower_new_term)
-            stemmed_terms[lower_new_term] = stemmed_term
-            new_term = stemmed_term.upper()
-        else:  # in stemmed_terms
-            new_term = stemmed_terms[lower_new_term]
-    else:  # lower case
-        if term not in stemmed_terms:
-            stemmed_term = stemmer.stem(term)
-            stemmed_terms[term] = stemmed_term
-            new_term = stemmed_term
-        else:  # in stemmed_terms
-            new_term = stemmer.stem(term)
-    return new_term
+    if term in stemmed_terms:
+        return stemmed_terms[term]
+    else: #if term is not stemmed yet
+        if term.isupper():
+            lower_term = term.lower()
+            if lower_term in stemmed_terms:
+                return stemmed_terms[lower_term]
+            else:
+                stemmed_terms[term]=stemmer.stem(term)
+                return stemmed_terms[term]
+        else: #if term is lower
+            upper_term = term.upper()
+            if upper_term in stemmed_terms:
+                stemmed_terms[term] = stemmed_terms[upper_term].lower()
+                del stemmed_terms[upper_term]
+                return stemmed_terms[term]
+            else:
+                stemmed_terms[term]=stemmer.stem(term)
+                return stemmed_terms[term]
+    pass
 
 def insert_to_dic(new_term, doc):
-    dic = one_file_dictionary
-    if new_term.lower() in stop_words_dict.keys():
-        return
-    if new_term in one_file_dictionary:  # term exists in dictionary
-        if doc in (one_file_dictionary[new_term]):
-            insert_to_here = one_file_dictionary[new_term]
-            insert_to_here[doc] += 1
+    if new_term in one_file_dictionary:
+        if doc in one_file_dictionary[new_term]:
+            one_file_dictionary[new_term][doc] +=1
         else:
-            insert_to_here = one_file_dictionary[new_term]
-            insert_to_here[doc] = 1
-    elif new_term.upper() in one_file_dictionary:  # in dictionary in upper case
-        data_inside = one_file_dictionary[new_term.upper()]
-        if doc in (data_inside): # just add 1
-            data_inside[doc] += 1
-            one_file_dictionary[new_term] = data_inside
-        else:
-            data_inside[doc] = 1
-            one_file_dictionary[new_term] = data_inside
-        del one_file_dictionary[new_term.upper()]
+            one_file_dictionary[new_term][doc]=1
     else:
-        one_file_dictionary[new_term] = {doc: 1}
+        one_file_dictionary[new_term]={doc:1}
 
 
 
-def parse(dictionary, file):
+def parse(dictionary):
     #print(file)
     global stemmed_terms
     global stemmer
     global one_file_dictionary
+    global stem
     one_file_dictionary = {} # contains : key = term , value = {docID : frequency in doc}
     for doc in dictionary:
         text = dictionary[doc]
@@ -224,7 +218,7 @@ def parse(dictionary, file):
             splited = text.split()
             length_of_splited_text = len(splited)
             while index < length_of_splited_text:
-                stem = False # at the end of the loop, if FALSE don't stem the term, if TRUE stem the term
+                shouleBeStemmed = False #for each word we will decide wether to stem or not
                 new_term =""
                 original_term = splited[index]
                 term = clean_term_from_punctuations(original_term)
@@ -352,11 +346,11 @@ def parse(dictionary, file):
                         new_term = upper_lower_case_format(term)
                         index = index + 1
                         if not contains_digit(new_term):
-                            stem = True
+                            shouleBeStemmed = True
                 ###################################DONE WITH PARSING########################################
                 ###################################STEMMING SECTION#########################################
-                if stem is True and new_term.lower() not in stop_words_dict.keys():
-                    new_term = stem_the_term(new_term)
+                if stem is True and shouleBeStemmed is True and new_term.lower() not in stop_words_dict.keys():
+                    new_term = stem_the_term_and_take_care_of_lowerUpperCases(new_term)
                 ###################################END OF STEM SECTION######################################
                 insert_to_dic(new_term, str(doc))
     return one_file_dictionary
