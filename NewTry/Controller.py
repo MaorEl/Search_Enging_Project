@@ -6,7 +6,7 @@ import time
 import collections
 from fractions import Fraction
 
-from NewTry import ReadFile
+from NewTry import ReadFile, tmp_parser
 from NewTry import Parser
 from NewTry import Indexer
 from NewTry.Indexer import merge_dictionaries
@@ -18,7 +18,7 @@ from NewTry import PorterStemmer
 
 
 def SendToParser(file):
-    return Parser.parse(dic_to_parse, file)
+    return tmp_parser.parse(dic_to_parse, file)
 
 
 def data_set_Path(path):
@@ -32,29 +32,13 @@ def getStemmerFromUser(flag):
     #TODO: implements this from user GUI
     return flag
 
-#
-# def stem_dictionary(dictionary_of_one_file,stemmer):
-#     for doc in dictionary_of_one_file:
-#         new_dic_of_one_doc = {}
-#         for term, freqInDoc in dictionary_of_one_file[doc].items():
-#             stemmed_term = stemmer.stem(term.lower())
-#             #if (stemmed_term!=term): #if the stem has changed the term
-#             if term.isupper():
-#                 stemmed_term = stemmed_term.upper()
-#             if stemmed_term in new_dic_of_one_doc: #if the stemmed term is already on this dictionary
-#                 new_dic_of_one_doc[stemmed_term] += freqInDoc
-#             else:
-#                 new_dic_of_one_doc[stemmed_term] = freqInDoc
-#         dictionary_of_one_file[doc]=new_dic_of_one_doc
-#     return dictionary_of_one_file
-#
 def contains_digit(term):
     return any(char.isdigit() for char in term)
 
 def Main():
     global main_dictionary
     global stemmer
-    path = 'C:\Retrieval_folder\\full_corpus'
+    path = 'C:\Retrieval_folder\corpus'
     #path = 'C:\Retrieval_folder\\full_corpus'
     start = time.time()
     corpus_path = path
@@ -68,7 +52,7 @@ def Main():
                 #start = time.time()
                 ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
                 dictionary_of_one_file = SendToParser(file)
-                s = collections.OrderedDict(sorted(dictionary_of_one_file.items()))
+                #s = collections.OrderedDict(sorted(dictionary_of_one_file.items()))
                 #merge_dictionaries(s)
                 #main = main_dictionary
                 dic_to_parse.clear()

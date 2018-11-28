@@ -1,6 +1,8 @@
+
 import time
 from fractions import Fraction
-from NewTry import PorterStemmer
+
+#TODO: do try and catch for special cases we couldn't find in our corpus. in that case we will advance index by one
 
 __punctuations_set = {'[', '(', '{', '`', ')', '<', '|', '&', '~', '+', '^', '@', '*', '?', '.',
                       '>', ';', '_', '\'', ':', ']', '\\', "}", '!', '=', '#', ',', '\"','-','/'}
@@ -11,9 +13,6 @@ __months_set = {'january':'01', 'jan':'01', 'february':'02', 'feb':'02', 'march'
 
 __stop_words = []
 stop_words_dict = {}
-stemmed_terms = {}
-stemmer = PorterStemmer.PorterStemmer()
-one_file_dictionary = {}
 
 
 def set_stop_words_file(path):
@@ -97,7 +96,7 @@ def number_kbmt_format(number, word):
         newFormat =  str(number) + 'K'
     elif word.lower() == 'million':
         newFormat =  str(number) + 'M'
-    elif word.lower() == 'billion':
+    elif word.lower == 'billion':
         newFormat =  str(number)+ 'B'
     elif word.lower() == 'trillion':
         newFormat =  str(number) + 'T'
@@ -151,9 +150,6 @@ def size_format(term, size):
 def contains_char(term):
     return (not (term.replace('.', '').replace(',', '').isdigit()))
 
-def contains_digit(term):
-    return any(char.isdigit() for char in term)
-
 
 def one_dot_in_price(term):
     if term.count('.') >= 2:
@@ -166,70 +162,29 @@ def one_dot_in_price(term):
                 term = term[:i] + term[i+1:]
     return term
 
-def stem_the_term(term):
-    global stemmed_terms
-    s = stemmed_terms
-    if term.isupper():
-        lower_new_term = term.lower()
-        if lower_new_term not in stemmed_terms:
-            stemmed_term = stemmer.stem(lower_new_term)
-            stemmed_terms[lower_new_term] = stemmed_term
-            new_term = stemmed_term.upper()
-        else:  # in stemmed_terms
-            new_term = stemmed_terms[lower_new_term]
-    else:  # lower case
-        if term not in stemmed_terms:
-            stemmed_term = stemmer.stem(term)
-            stemmed_terms[term] = stemmed_term
-            new_term = stemmed_term
-        else:  # in stemmed_terms
-            new_term = stemmer.stem(term)
-    return new_term
-
-def insert_to_dic(new_term, doc):
-    dic = one_file_dictionary
-    if new_term.lower() in stop_words_dict.keys():
-        return
-    if new_term in one_file_dictionary:  # term exists in dictionary
-        if doc in (one_file_dictionary[new_term]):
-            insert_to_here = one_file_dictionary[new_term]
-            insert_to_here[doc] += 1
-        else:
-            insert_to_here = one_file_dictionary[new_term]
-            insert_to_here[doc] = 1
-    elif new_term.upper() in one_file_dictionary:  # in dictionary in upper case
-        data_inside = one_file_dictionary[new_term.upper()]
-        if doc in (data_inside): # just add 1
-            data_inside[doc] += 1
-            one_file_dictionary[new_term] = data_inside
-        else:
-            data_inside[doc] = 1
-            one_file_dictionary[new_term] = data_inside
-        del one_file_dictionary[new_term.upper()]
-    else:
-        one_file_dictionary[new_term] = {doc: 1}
-
-
 
 def parse(dictionary, file):
-    #print(file)
-    global stemmed_terms
-    global stemmer
-    global one_file_dictionary
-    one_file_dictionary = {} # contains : key = term , value = {docID : frequency in doc}
+    counter = 0
+    one_file_dictionary = {} # contains : key = docID , value = {term : frequency in doc}
     for doc in dictionary:
+        counter =+ 1
+        one_doc_dictionary = {} # term : frequency in doc
         text = dictionary[doc]
         if text is not None or text is not "":
             index = 0
             splited = text.split()
             length_of_splited_text = len(splited)
             while index < length_of_splited_text:
-                stem = False # at the end of the loop, if FALSE don't stem the term, if TRUE stem the term
                 new_term =""
                 original_term = splited[index]
                 term = clean_term_from_punctuations(original_term)
 
-                if len(term) == 0 or term =='':
+                # #if term == '19' and splited[index + 1] == 'Jan' and splited[index+2] == '94':
+                # if term =='19' and splited[index + 1] == 'Jan':
+                #     print ('24')
+
+
+                if len(term) == 0:
                     index = index + 1
                     continue
                 if isNumeric(term): #for numbers , pruces, percentage, dates
@@ -351,24 +306,18 @@ def parse(dictionary, file):
                     else: # upper/lower case regular word
                         new_term = upper_lower_case_format(term)
                         index = index + 1
-                        if not contains_digit(new_term):
-                            stem = True
                 ###################################DONE WITH PARSING########################################
-                ###################################STEMMING SECTION#########################################
-                if stem is True and new_term.lower() not in stop_words_dict.keys():
-                    new_term = stem_the_term(new_term)
-                ###################################END OF STEM SECTION######################################
-                insert_to_dic(new_term, str(doc))
+                #if new_term.lower() not in __stop_words:
+                if new_term in one_doc_dictionary  and new_term.lower() not in stop_words_dict:
+                    one_doc_dictionary[new_term] += 1
+                elif new_term.lower() not in stop_words_dict:  # not in dictionary
+                #else:
+                    one_doc_dictionary[new_term] = 1
+        one_file_dictionary[str(doc)] = one_doc_dictionary
     return one_file_dictionary
 
 
+                    #Todo: advance the index
+                    #Todo: take care of upper/lower cases
+                    #Todo: add functions as needed
                 #todo: check in indexer if term exist upper/lower ->> merging the keys
-
-##dobug##
-# path = 'C:\Retrieval_folder\\full_corpus'
-# __stopwords_path = path + "/stop_words.txt"
-# set_stop_words_file(__stopwords_path)
-# text = "internity intern Dog dogs"
-# dic = {}
-# dic ["doc1"] = text
-# parse(dic,"m")

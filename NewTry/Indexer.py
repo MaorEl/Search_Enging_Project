@@ -1,16 +1,18 @@
+import pickle
+
 from NewTry import Term
-
-
 
 main_dictionary = {} # {term : <df , ptr to the first occurrence of this term in posting file> }
 
 
-def merge_dictionaries(dictionary):
+def merge_dictionaries(dictionary): # {term : {doc id : tf}}
     global main_dictionary
     for str_term in dictionary:
-        if str_term.lower() in main_dictionary or str_term in main_dictionary:
+        if str_term.lower() in main_dictionary or str_term in main_dictionary: #in dictionary
             term = main_dictionary[str_term]
             term.add_df(term, len(dictionary[str_term]))
+            with open(str_term.lower(),'a') as posting:
+                dic = pickle.load(posting)
             # todo: add to posting
         elif str_term.islower():
             if str_term.upper() in main_dictionary:
