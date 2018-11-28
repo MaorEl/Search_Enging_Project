@@ -308,11 +308,11 @@ def parse(dictionary, file):
                         index = index + 1
                 ###################################DONE WITH PARSING########################################
                 #if new_term.lower() not in __stop_words:
-                if new_term in one_doc_dictionary  and new_term.lower() not in stop_words_dict:
-                    one_doc_dictionary[new_term] += 1
-                elif new_term.lower() not in stop_words_dict:  # not in dictionary
-                #else:
-                    one_doc_dictionary[new_term] = 1
+                if new_term.lower() not in stop_words_dict:
+                    if new_term in one_doc_dictionary:
+                        one_doc_dictionary[new_term] += 1
+                    else:  # not in dictionary
+                        one_doc_dictionary[new_term] = 1
         one_file_dictionary[str(doc)] = one_doc_dictionary
     return one_file_dictionary
 

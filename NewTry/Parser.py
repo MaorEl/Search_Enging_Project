@@ -11,7 +11,7 @@ __months_set = {'january':'01', 'jan':'01', 'february':'02', 'feb':'02', 'march'
 
 __stop_words = []
 stop_words_dict = {}
-stemmed_terms = {}
+stemmed_terms = {} # will contain the actual term of the dictionary
 stemmer = PorterStemmer.PorterStemmer()
 one_file_dictionary = {}
 
@@ -168,7 +168,7 @@ def one_dot_in_price(term):
 
 def stem_the_term(term):
     global stemmed_terms
-    s = stemmed_terms
+    #s = stemmed_terms # for debug
     if term.isupper():
         lower_new_term = term.lower()
         if lower_new_term not in stemmed_terms:
