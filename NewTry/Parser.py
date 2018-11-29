@@ -172,6 +172,7 @@ def one_dot_in_price(term):
 
 def stem_the_term_and_take_care_of_lowerUpperCases(term):
     global stemmed_terms
+    z=stemmed_terms #for debug
     if term in stemmed_terms:
         return stemmed_terms[term]
     else: #if term is not stemmed yet
@@ -210,6 +211,7 @@ def parse(dictionary):
     global stemmer
     global one_file_dictionary
     global stem
+    x=stem
     one_file_dictionary = {} # contains : key = term , value = {docID : frequency in doc}
     for doc in dictionary:
         text = dictionary[doc]

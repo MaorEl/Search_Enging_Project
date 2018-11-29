@@ -38,49 +38,26 @@ def contains_digit(term):
 def Main():
     global stem
     Parser.stem = getStemmerFromUser()
-    #path = 'C:\Retrieval_folder\corpus'
-    path = 'C:\Retrieval_folder\\full_corpus'
+    path = 'C:\Retrieval_folder\corpus'
+    #path = 'C:\Retrieval_folder\\full_corpus'
     start = time.time()
     corpus_path = path
     data_set_Path(path)
-    counter = 0
-    start2 = time.time()
     for root, dirs, files in os.walk(corpus_path):
         for file in files:
             end2 = time.time()
-            if ((end2-start2)/60)>10 and ((end2-start2)/60) <10.10:
+            if ((end2-start)/60)>10 and ((end2-start)/60) <10.10:
                 print(str(file))
-            #print((end2 - start2) / 60)
             if str(file) != 'stop_words.txt':
-                #start = time.time()
                 ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
                 dic_of_one_file = SendToParser(file)
+
                 dic_to_parse.clear()
-                #end = time.time()
-                #print (end-start)
-    #saveDictionaryToDisk()
     end2 = time.time()
-    print((end2 - start2) / 60)
+    print((end2 - start) / 60)
 
 
 Main()
-
-
-def debug_parser(corpus_path):
-    for root, dirs, files in os.walk(corpus_path):
-        for file in files:
-            if str(file) != 'stop_words.txt':
-                start = time.time()
-                ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
-                dictionary_of_one_file = SendToParser(file)
-                dic_to_parse.clear()
-
-def debug_dictionary_creation(dicionary):
-    pass
-
-def debug_indexer_flow(dixtionary):
-    pass
-
 
 
 
