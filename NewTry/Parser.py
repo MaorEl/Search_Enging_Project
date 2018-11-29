@@ -220,141 +220,144 @@ def parse(dictionary):
             splited = text.split()
             length_of_splited_text = len(splited)
             while index < length_of_splited_text:
-                shouleBeStemmed = False #for each word we will decide wether to stem or not
-                new_term =""
-                original_term = splited[index]
-                term = clean_term_from_punctuations(original_term)
+                try:
+                    shouleBeStemmed = False #for each word we will decide wether to stem or not
+                    new_term =""
+                    original_term = splited[index]
+                    term = clean_term_from_punctuations(original_term)
 
-                if len(term) == 0 or term =='':
-                    index = index + 1
-                    continue
-                if isNumeric(term): #for numbers , pruces, percentage, dates
-                    if '$' in term:
-                        term = one_dot_in_price(term)
-                        if index + 1 != length_of_splited_text:
-                            next_word = clean_term_from_punctuations(splited[index + 1].lower())
-                            if next_word in ["million", "billion", "trillion"]:
-                                new_term = price_format(get_clear_number(term), next_word[0].upper()) # $ price million/billion,trillion
-                                index = index + 2
-                            else:
-                                new_term = price_format(get_clear_number(term)) # S price
-                                index = index + 1
-                        else: #last one in text
-                            new_term = price_format(get_clear_number(term)) # $ price
-                            index = index + 1
-                    elif 'mm' in term or 'cm' in term or 'm' in term or 'km' in term or 'nm' in term:
-                        new_term = term
+                    if len(term) == 0 or term =='':
                         index = index + 1
-                    elif term.count('.') >= 2:
-                        new_term = term
-                        index = index + 1
-                    else: # no $
-                        if index + 1 < length_of_splited_text:
-                            next_word = clean_term_from_punctuations(splited[index + 1].lower())
-                            if next_word in ["percentage","percent"]:
-                                new_term = percentage_format(term) # number percent/percentage
-                                index = index + 2
-                            elif next_word == "dollars":
-                                new_term = price_format(get_clear_number(term),get_bn_ot_m(term)) # price dollars
-                                index = index + 2
-                            elif next_word in ["million", "billion", "trillion"]:
-                                if index + 3 < length_of_splited_text:
-                                    third_word = clean_term_from_punctuations(splited[index+2])
-                                    fourth_word = clean_term_from_punctuations(splited[index+3].lower())
-                                    if third_word == "U.S" and fourth_word == "dollars":
-                                        new_term = price_format(get_clear_number(term),next_word[0].upper()) # price million/trillion/billion U.S dollars
-                                        index = index + 4
-                                    else:
-                                        new_term = number_kbmt_format(term, next_word) # number million/billion/trillion
-                                        index = index + 2
-                                else:
-                                    new_term = number_kbmt_format(term, next_word)# number million/billion/trillion
+                        continue
+                    if isNumeric(term): #for numbers , pruces, percentage, dates
+                        if '$' in term:
+                            term = one_dot_in_price(term)
+                            if index + 1 != length_of_splited_text:
+                                next_word = clean_term_from_punctuations(splited[index + 1].lower())
+                                if next_word in ["million", "billion", "trillion"]:
+                                    new_term = price_format(get_clear_number(term), next_word[0].upper()) # $ price million/billion,trillion
                                     index = index + 2
-                            elif next_word == "thousand":
-                                new_term = number_kbmt_format(term, next_word) # number thousand
-                                index = index + 2
-                            elif next_word in ["meters", "kilometers", "millimeters", "centimeters", "nanometers"]:
-                                new_term = size_format(term, next_word) # number meters, kilometers, centimeters, nanoneters, millimeters
-                                index = index + 2
-                            elif next_word in __months_set:
-                                new_term = dd_month_format(term, next_word) # DD Month
-                                index = index + 2
-                            elif index + 2 != length_of_splited_text:
-                                third_word = clean_term_from_punctuations(splited[index+2].lower())
-                                if third_word == "dollars" and '/' in next_word and isNumeric(next_word.replace('/','')):
-                                    new_term = fraction_price_format(get_clear_number(term), get_clear_number(next_word)) #number fraction dollars
-                                    index = index + 3
-                                elif next_word in ["m", "bn", "t"] and third_word == "dollars":
-                                    new_term = price_format(get_clear_number(term), get_bn_ot_m(next_word))  # price m/bn dollars
-                                    index = index + 3
-                                elif contains_char(term):
-                                    new_term = term
-                                    index = index + 1
                                 else:
-                                    new_term = number_format(term) # number
+                                    new_term = price_format(get_clear_number(term)) # S price
                                     index = index + 1
-                            else:
+                            else: #last one in text
+                                new_term = price_format(get_clear_number(term)) # $ price
+                                index = index + 1
+                        elif 'mm' in term or 'cm' in term or 'm' in term or 'km' in term or 'nm' in term:
+                            new_term = term
+                            index = index + 1
+                        elif term.count('.') >= 2:
+                            new_term = term
+                            index = index + 1
+                        else: # no $
+                            if index + 1 < length_of_splited_text:
+                                next_word = clean_term_from_punctuations(splited[index + 1].lower())
+                                if next_word in ["percentage","percent"]:
+                                    new_term = percentage_format(term) # number percent/percentage
+                                    index = index + 2
+                                elif next_word == "dollars":
+                                    new_term = price_format(get_clear_number(term),get_bn_ot_m(term)) # price dollars
+                                    index = index + 2
+                                elif next_word in ["million", "billion", "trillion"]:
+                                    if index + 3 < length_of_splited_text:
+                                        third_word = clean_term_from_punctuations(splited[index+2])
+                                        fourth_word = clean_term_from_punctuations(splited[index+3].lower())
+                                        if third_word == "U.S" and fourth_word == "dollars":
+                                            new_term = price_format(get_clear_number(term),next_word[0].upper()) # price million/trillion/billion U.S dollars
+                                            index = index + 4
+                                        else:
+                                            new_term = number_kbmt_format(term, next_word) # number million/billion/trillion
+                                            index = index + 2
+                                    else:
+                                        new_term = number_kbmt_format(term, next_word)# number million/billion/trillion
+                                        index = index + 2
+                                elif next_word == "thousand":
+                                    new_term = number_kbmt_format(term, next_word) # number thousand
+                                    index = index + 2
+                                elif next_word in ["meters", "kilometers", "millimeters", "centimeters", "nanometers"]:
+                                    new_term = size_format(term, next_word) # number meters, kilometers, centimeters, nanoneters, millimeters
+                                    index = index + 2
+                                elif next_word in __months_set:
+                                    new_term = dd_month_format(term, next_word) # DD Month
+                                    index = index + 2
+                                elif index + 2 != length_of_splited_text:
+                                    third_word = clean_term_from_punctuations(splited[index+2].lower())
+                                    if third_word == "dollars" and '/' in next_word and isNumeric(next_word.replace('/','')):
+                                        new_term = fraction_price_format(get_clear_number(term), get_clear_number(next_word)) #number fraction dollars
+                                        index = index + 3
+                                    elif next_word in ["m", "bn", "t"] and third_word == "dollars":
+                                        new_term = price_format(get_clear_number(term), get_bn_ot_m(next_word))  # price m/bn dollars
+                                        index = index + 3
+                                    elif contains_char(term):
+                                        new_term = term
+                                        index = index + 1
+                                    else:
+                                        new_term = number_format(term) # number
+                                        index = index + 1
+                                else:
+                                    if contains_char(term):
+                                        new_term = term
+                                        index = index + 1
+                                    else:
+                                        new_term = number_format(term) # number
+                                        index = index + 1
+                            else: #last number in text
                                 if contains_char(term):
                                     new_term = term
                                     index = index + 1
                                 else:
                                     new_term = number_format(term) # number
                                     index = index + 1
-                        else: #last number in text
-                            if contains_char(term):
-                                new_term = term
-                                index = index + 1
-                            else:
-                                new_term = number_format(term) # number
-                                index = index + 1
-                else: # take care of words
-                    if term.lower() in __months_set.keys():
-                        if index + 1 != length_of_splited_text:
-                            next_word = clean_term_from_punctuations(splited[index+1])
-                            if next_word.isdigit() and len(next_word)<=2:
-                                new_term = dd_month_format(next_word,term) # DD month
-                                index = index + 2
-                            elif next_word.isdigit() and len(next_word)==4:
-                                new_term = month_year_format(term,next_word) # month year
-                                index = index + 2
-                            else:  # upper/lower case regular word
-                                new_term = upper_lower_case_format(term)
-                                index = index + 1
-                        else:  # upper/lower case regular word
-                            new_term = upper_lower_case_format(term)
-                            index = index + 1
-                    elif term.lower() == "between" and index + 3 <length_of_splited_text:
-                        number1 = clean_term_from_punctuations(splited[index + 1])
-                        if isNumeric(number1):
-                            and_= clean_term_from_punctuations(splited[index + 2])
-                            if and_ == "and":
-                                number2 = clean_term_from_punctuations(splited[index + 3])
-                                if isNumeric(number2):
-                                    new_term = "between " + clean_term_from_punctuations(number1) + " and " + clean_term_from_punctuations(number2) #between n1 and n2
-                                    index = index + 4
+                    else: # take care of words
+                        if term.lower() in __months_set.keys():
+                            if index + 1 != length_of_splited_text:
+                                next_word = clean_term_from_punctuations(splited[index+1])
+                                if next_word.isdigit() and len(next_word)<=2:
+                                    new_term = dd_month_format(next_word,term) # DD month
+                                    index = index + 2
+                                elif next_word.isdigit() and len(next_word)==4:
+                                    new_term = month_year_format(term,next_word) # month year
+                                    index = index + 2
                                 else:  # upper/lower case regular word
                                     new_term = upper_lower_case_format(term)
                                     index = index + 1
                             else:  # upper/lower case regular word
                                 new_term = upper_lower_case_format(term)
                                 index = index + 1
-                        else:  # upper/lower case regular word
+                        elif term.lower() == "between" and index + 3 <length_of_splited_text:
+                            number1 = clean_term_from_punctuations(splited[index + 1])
+                            if isNumeric(number1):
+                                and_= clean_term_from_punctuations(splited[index + 2])
+                                if and_ == "and":
+                                    number2 = clean_term_from_punctuations(splited[index + 3])
+                                    if isNumeric(number2):
+                                        new_term = "between " + clean_term_from_punctuations(number1) + " and " + clean_term_from_punctuations(number2) #between n1 and n2
+                                        index = index + 4
+                                    else:  # upper/lower case regular word
+                                        new_term = upper_lower_case_format(term)
+                                        index = index + 1
+                                else:  # upper/lower case regular word
+                                    new_term = upper_lower_case_format(term)
+                                    index = index + 1
+                            else:  # upper/lower case regular word
+                                new_term = upper_lower_case_format(term)
+                                index = index + 1
+                        elif '-' in term:
+                            new_term = term
+                            index = index + 1
+                        else: # upper/lower case regular word
                             new_term = upper_lower_case_format(term)
                             index = index + 1
-                    elif '-' in term:
-                        new_term = term
-                        index = index + 1
-                    else: # upper/lower case regular word
-                        new_term = upper_lower_case_format(term)
-                        index = index + 1
-                        if not contains_digit(new_term):
-                            shouleBeStemmed = True
-                ###################################DONE WITH PARSING########################################
-                ###################################STEMMING SECTION#########################################
-                if stem is True and shouleBeStemmed is True and new_term.lower() not in stop_words_dict.keys():
-                    new_term = stem_the_term_and_take_care_of_lowerUpperCases(new_term)
-                ###################################END OF STEM SECTION######################################
-                insert_to_dic(new_term, str(doc))
+                            if not contains_digit(new_term):
+                                shouleBeStemmed = True
+                    ###################################DONE WITH PARSING########################################
+                    ###################################STEMMING SECTION#########################################
+                    if stem is True and shouleBeStemmed is True and new_term.lower() not in stop_words_dict.keys():
+                        new_term = stem_the_term_and_take_care_of_lowerUpperCases(new_term)
+                    ###################################END OF STEM SECTION######################################
+                    insert_to_dic(new_term, str(doc))
+                except:
+                    index=index+1
     return one_file_dictionary
 
 
