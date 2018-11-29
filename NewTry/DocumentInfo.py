@@ -1,5 +1,5 @@
 
-class Document:
+class DocumentInfo:
 
 
     Date = ""
