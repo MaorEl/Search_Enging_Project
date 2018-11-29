@@ -18,7 +18,7 @@ from NewTry.Parser import stem
 
 
 def SendToParser(file):
-    return tmp_parser.parse(dic_to_parse, file)
+    return Parser.parse(dic_to_parse)
 
 
 def data_set_Path(path):
