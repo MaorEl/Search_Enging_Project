@@ -38,8 +38,8 @@ def contains_digit(term):
 def Main():
     global stem
     Parser.stem = getStemmerFromUser()
-    path = 'C:\Retrieval_folder\corpus'
-    #path = 'C:\Retrieval_folder\\full_corpus'
+    # path = 'C:\Retrieval_folder\corpus'
+    path = 'C:\Retrieval_folder\\full_corpus'
     start = time.time()
     corpus_path = path
     data_set_Path(path)
