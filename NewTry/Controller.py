@@ -51,9 +51,11 @@ def Main():
             if str(file) != 'stop_words.txt':
                 ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
                 dic_of_one_file = SendToParser(file)
-
+                sorted_dictionary = collections.OrderedDict(sorted(dic_of_one_file.items())) #todo: check this on lab
+                Indexer.index_dictionary(sorted_dictionary)
                 dic_to_parse.clear()
     end2 = time.time()
+    main_dic = Indexer.main_dictionary
     print((end2 - start) / 60)
 
 
