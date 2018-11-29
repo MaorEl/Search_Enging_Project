@@ -1,5 +1,5 @@
-class Term:
-    df = 1
+class TermInfo:
+    df = 0
     post_file_ptr = None
 
     def add_df (self, number):

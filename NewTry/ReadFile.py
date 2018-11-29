@@ -3,7 +3,7 @@ import pathlib
 import pickle
 import time
 
-from NewTry.Document import Document
+from NewTry.DocumentInfo import DocumentInfo
 
 docs_dictionary = {} #Doc Number will be the key. value is a Document
 corpus_path = ''
@@ -57,5 +57,5 @@ def takeDocsInfoFromOneFile(path):
         __extractCITY()
         __extractDATE()
         __extractTEXT()
-        docs_dictionary[current_DOCNO] = Document(current_DATE, current_CITY, str(path))
+        docs_dictionary[current_DOCNO] = DocumentInfo(current_DATE, current_CITY, str(path))
 

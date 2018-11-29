@@ -5,7 +5,7 @@ import pathlib
 import pickle
 import time
 
-from NewTry import Document
+from NewTry import DocumentInfo
 
 __months_dictionary = {'january': '01', 'jan': '01', 'february': '02', 'feb': '02', 'march': '03', 'mar': '03',
                        'april': '04', 'apr': '04', 'may': '05', 'june': '06', 'jun': '06', 'july': '07',
@@ -197,7 +197,7 @@ def __createDocDictionary(idx):
 
     length = len(docNumList)
     while idx < length:
-        docDictionary[docNumList[idx]] = Document.Document(docDateList[idx],docCityList[idx], fileName)
+        docDictionary[docNumList[idx]] = DocumentInfo.DocumentInfo(docDateList[idx], docCityList[idx], fileName)
         idx += 1
 
 # Delete Reader's data structures
