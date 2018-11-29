@@ -37,7 +37,7 @@ def contains_digit(term):
 
 def Main():
     global stem
-    stem = getStemmerFromUser()
+    Parser.stem = getStemmerFromUser()
     #path = 'C:\Retrieval_folder\corpus'
     path = 'C:\Retrieval_folder\\full_corpus'
     start = time.time()
@@ -47,10 +47,14 @@ def Main():
     start2 = time.time()
     for root, dirs, files in os.walk(corpus_path):
         for file in files:
-
+            end2 = time.time()
+            if ((end2-start2)/60)>10 and ((end2-start2)/60) <10.10:
+                print(str(file))
+            #print((end2 - start2) / 60)
             if str(file) != 'stop_words.txt':
                 #start = time.time()
                 ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
+                dic_of_one_file = SendToParser(file)
                 dic_to_parse.clear()
                 #end = time.time()
                 #print (end-start)
