@@ -22,6 +22,7 @@ def __extractCITY():
     if "<F P=104>" in current_doc:
         current_CITY = current_doc.split("<F P=104>")[1].split()[0]
         if current_CITY != '</F>':
+            current_CITY = current_CITY.upper()
             if current_CITY not in city_dictionary:
                 city_dictionary[current_CITY] = City(current_CITY,current_DOCNO)
             else:
