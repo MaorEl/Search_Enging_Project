@@ -46,13 +46,13 @@ def Main(cp, ip, to_stem):
     global __corpus_path
     global __index_path
     Parser.stem = getStemmerFromUser() #todo: change to_stem
-    cp = 'C:\Retrieval_folder\corpus' #todo: to delete
+    #cp = 'C:\Retrieval_folder\corpus' #todo: to delete
     ip = 'C:\Retrieval_folder\corpus\index' #todo: to delete
-    #path = 'C:\Retrieval_folder\\full_corpus'
+    cp = 'C:\Retrieval_folder\\full_corpus'
     start = time.time()
 
     data_set_Path(cp, ip)
-
+    Indexer.create_empty_posting_files()
 
     for root, dirs, files in os.walk(__corpus_path):
         for file in files:
@@ -63,10 +63,10 @@ def Main(cp, ip, to_stem):
                 ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
                 dic_of_one_file = SendToParser(file)
                 sorted_dictionary = collections.OrderedDict(sorted(dic_of_one_file.items())) #todo: check this on lab
-                Indexer.merge_dictionaries(sorted_dictionary)
+                #Indexer.merge_dictionaries(sorted_dictionary)
                 dic_to_parse.clear()
     end2 = time.time()
-    main_dic = Indexer.main_dictionary
+    #main_dic = Indexer.main_dictionary
     print((end2 - start) / 60)
 
 

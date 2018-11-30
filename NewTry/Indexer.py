@@ -8,6 +8,36 @@ main_dictionary = {} # {term : <df , ptr to the first occurrence of this term in
 
 __punctuations_for_file_name = { '\"','*','/', ':', '"','<', '>', '|'}
 __posting_files_path = ""
+__current_posting = {}
+__current_posting_file_name = ''
+__dictionary_of_posting_pointers = {
+    'a':'\\abc','b':'\\abc','c':'\\abc','A':'\\abc','B':'\\abc','C':'\\abc',
+    'd':
+}
+
+def create_empty_posting_files():
+    global __posting_files_path
+    with open(__posting_files_path + '\\abc', 'wb') as file: # 20 percent
+        pickle.dump({}, file)
+        file.close()
+    with open(__posting_files_path + '\\defgh', 'wb') as file: # 18 percent
+        pickle.dump({}, file)
+        file.close()
+    with open(__posting_files_path + '\\ijklmn', 'wb') as file: # 18 percent
+        pickle.dump({}, file)
+        file.close()
+    with open(__posting_files_path + '\\opqrs', 'wb') as file: # 21 percent
+        pickle.dump({}, file)
+        file.close()
+    with open(__posting_files_path + '\\tuvwxyz', 'wb') as file: # 24 percent
+        pickle.dump({}, file)
+        file.close()
+    with open(__posting_files_path + '\\others', 'wb') as file:
+        pickle.dump({}, file)
+        file.close()
+
+def set_dictionary_of_posting_pointers():
+
 
 def set_path_to_postiong_files(path):
     global __posting_files_path
@@ -41,6 +71,28 @@ def insert_to_posting(term, docID_tf_dic , isExists):
     pass
 
 
+def need_to_change_posting_file (letter):
+    global __current_posting_file_name
+    if letter == __current_posting_file_name:
+        return True
+    else:
+        return False
+    pass
+
+def switch_dictionaries(letter):
+    global __posting_files_path
+    global __current_posting_file_name
+    global __current_posting
+    with open(__posting_files_path + '\\' + __current_posting_file_name, 'wb') as file:
+        pickle.dump(__current_posting, file)
+        file.close()
+    __current_posting_file_name = letter
+    with open(__posting_files_path + '\\' + __current_posting_file_name, 'rb') as file:
+        __current_posting = pickle.load(file)
+        file.close()
+
+
+
 
 def merge_dictionaries(dictionary): # {term : {doc id : tf}}
     global main_dictionary
@@ -71,6 +123,5 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
             term_info.add_df(len(dictionary[str_term]))
             main_dictionary[str_term] = term_info
             insert_to_posting(str_term, dictionary[str_term], False)
-
 
 
