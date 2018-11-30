@@ -16,37 +16,20 @@ __dictionary_of_posting_pointers = {
     't':'tuvwxyz','u':'tuvwxyz','v':'tuvwxyz','w':'tuvwxyz','x':'tuvwxyz','y':'tuvwxyz','z':'tuvwxyz','T':'tuvwxyz','U':'tuvwxyz','V':'tuvwxyz','W':'tuvwxyz','X':'tuvwxyz','Y':'tuvwxyz','Z':'tuvwxyz'
 }
 
-posting_abc = {}
-posting_defgh = {}
-posting_ijklmn = {}
-posting_opqrs = {}
-posting_tuvwxyz = {}
-posting_others=  {}
+posting_abc =  posting_defgh =  posting_ijklmn =  posting_opqrs = posting_tuvwxyz =  posting_others =  posting_others = {}
+
 __dictionary_of_postings = {'abc': posting_abc,'defgh': posting_defgh, 'ijklmn':posting_ijklmn, 'opqrs': posting_opqrs, 'tuvwxyz': posting_tuvwxyz, 'others': posting_others }
 
 
 
 def create_posting_files():
     global __posting_files_path
-    with open(__posting_files_path + '\\abc', 'wb') as file: # 20 percent
-        pickle.dump(posting_abc, file)
-        file.close()
-    with open(__posting_files_path + '\\defgh', 'wb') as file: # 18 percent
-        pickle.dump(posting_defgh, file)
-        file.close()
-    with open(__posting_files_path + '\\ijklmn', 'wb') as file: # 18 percent
-        pickle.dump(posting_ijklmn, file)
-        file.close()
-    with open(__posting_files_path + '\\opqrs', 'wb') as file: # 21 percent
-        pickle.dump(posting_opqrs, file)
-        file.close()
-    with open(__posting_files_path + '\\tuvwxyz', 'wb') as file: # 24 percent
-        pickle.dump(posting_tuvwxyz, file)
-        file.close()
-    with open(__posting_files_path + '\\others', 'wb') as file:
-        pickle.dump(posting_others, file)
-        file.close()
+    global __dictionary_of_postings
 
+    for key, value in __dictionary_of_postings:
+        with open(__posting_files_path + '\\'' +key' , 'wb') as file:
+            pickle.dump(value, file)
+            file.close()
 
 def insert_to_posting(term, docID_tf_dic, termIsAlreadyOnPostingFile):
     global __current_posting

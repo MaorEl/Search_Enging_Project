@@ -49,5 +49,6 @@ def takeDocsInfoFromOneFile(path):
         __extractCITY()
         __extractDATE()
         __extractTEXT()
-        docs_dictionary[current_DOCNO] = DocumentInfo(current_DATE, current_CITY, str(path),"","","","")
+        x=str(path)
+        docs_dictionary[current_DOCNO] = DocumentInfo(current_DATE, current_CITY, str(path),"","","")
 
