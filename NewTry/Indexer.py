@@ -5,8 +5,6 @@ from NewTry import TermInfo
 
 main_dictionary = {} # {term : <df , ptr to the first occurrence of this term in posting file> }
 
-
-__punctuations_for_file_name = { '\"','*','/', ':', '"','<', '>', '|'}
 __posting_files_path = ""
 __current_posting = {}
 __current_posting_file_name = 'others'
@@ -47,49 +45,12 @@ def insert_to_posting(term, docID_tf_dic, termIsAlreadyOnPostingFile):
         tmp_termContentOnPostingFile.update(docID_tf_dic)
     else:
         __current_posting[term] = docID_tf_dic
-    global_current_posting =__current_posting
-    #print('exit from insert_to_posting')
 
 
 def set_path_to_postiong_files(path):
     global __posting_files_path
     __posting_files_path = path
     pass
-
-# def update_exists_posting_file(posting_term_path, dic):
-#     with open(posting_term_path, 'rb') as file:
-#         o = pickle.load(file)
-#         file.close()
-#     with open(posting_term_path, 'wb') as file:
-#         o.update(dic)
-#         pickle.dump(o, file)
-#         file.close()
-
-# def create_new_posting_file(posting_term_path, dic):
-#     with open(posting_term_path, 'wb') as file:
-#         pickle.dump(dic, file)
-#         file.close()
-
-
-
-# def insert_to_posting(term, docID_tf_dic , isExists):
-#     global __posting_files_path
-#     clear_term = term.replace('\"','@_@').replace('*','@_@').replace(':','@_@').replace('"','@_@').replace('<','@_@').replace('>','@_@').replace('|','@_@').replace('?','@_@').replace('/','@_@')
-#     term_path = __posting_files_path + '\\' + clear_term + '.txt'
-#     if (isExists is True):
-#         update_exists_posting_file(term_path, docID_tf_dic)
-#     else:
-#         create_new_posting_file(term_path, docID_tf_dic)
-#     pass
-
-
-# def need_to_change_posting_file (letter):
-#     global __current_posting_file_name
-#     if letter == __current_posting_file_name:
-#         return True
-#     else:
-#         return False
-#     pass
 
 def switch_dictionaries(letter):
     global __posting_files_path
@@ -103,9 +64,6 @@ def switch_dictionaries(letter):
     with open(__posting_files_path + '\\' + __current_posting_file_name, 'rb') as file:
         __current_posting = pickle.load(file)
         file.close()
-    global_current_posting_file_name = __current_posting_file_name
-    global_current_posting = __current_posting
-    #print('x')
 
 
 
@@ -119,7 +77,6 @@ def calculate_tf(doc_id_tf):
 def merge_dictionaries(dictionary): # {term : {doc id : tf}}
     global main_dictionary
     global __current_posting
-    global_main_dic=main_dictionary
     global __current_posting_file_name
     global __dictionary_of_posting_pointers
     for str_term in dictionary:
@@ -164,8 +121,5 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
             main_dictionary[str_term] = term_info
             insert_to_posting(str_term, dictionary[str_term], False)
 
-        global_current_posting_file_name = __current_posting_file_name
-        global_main_dictionary = main_dictionary
-        x=5
 
 
