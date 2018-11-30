@@ -47,7 +47,7 @@ def Main(cp, ip, to_stem):
     global __index_path
     Parser.stem = getStemmerFromUser() #todo: change to_stem
     #cp = 'C:\Retrieval_folder\corpus' #todo: to delete
-    ip = 'C:\Retrieval_folder\corpus\index' #todo: to delete
+    ip = 'C:\Retrieval_folder\\index' #todo: to delete
     cp = 'C:\Retrieval_folder\\full_corpus'
     start = time.time()
 
