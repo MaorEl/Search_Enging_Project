@@ -37,7 +37,7 @@ def __extractTEXT():
 
 
 def takeDocsInfoFromOneFile(path):
-    global current_doc, current_DATE, current_CITY, current_DOCNO
+    global current_doc, current_DATE, current_CITY, current_DOCNO,docs_dictionary
     file = open(path, 'r')
     text_of_file = "".join(file.readlines())
     list_of_docs = text_of_file.split('</DOC>')
@@ -49,6 +49,5 @@ def takeDocsInfoFromOneFile(path):
         __extractCITY()
         __extractDATE()
         __extractTEXT()
-        x=str(path)
-        docs_dictionary[current_DOCNO] = DocumentInfo(current_DATE, current_CITY, str(path),"","","")
+        docs_dictionary[current_DOCNO] = DocumentInfo(current_DATE, current_CITY, str(path))
 

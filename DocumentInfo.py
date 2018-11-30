@@ -3,11 +3,11 @@ class DocumentInfo:
 
 
 
-    def __init__(self,date, city, path,maxtf,numberOfUnique,numberOfWords):
+    def __init__(self,date, city, path):
         self.city=city
         self.date=date
         self.path=path
-        self.maxTF=maxtf
-        self.number_of_unique_tokens=numberOfUnique
-        self.number_of_words = numberOfWords
+        self.maxTF=0
+        self.number_of_unique_tokens=0
+        self.number_of_words = 0
 

@@ -1,8 +1,7 @@
 from fractions import Fraction
 import PorterStemmer
-
+import ReadFile
 #todo: try and catch - advance index by one
-
 
 __punctuations_set = {'[', '(', '{', '`', ')', '<', '|', '&', '~', '+', '^', '@', '*', '?', '.',
                       '>', ';', '_', '\'', ':', ']', '\\', "}", '!', '=', '#', ',', '\"','-','/'}
@@ -17,6 +16,22 @@ stemmed_terms = {} # will contain the actual term of the dictionary
 stemmer = PorterStemmer.PorterStemmer()
 one_file_dictionary = {}
 stem=False
+
+#counters to update document information, will be initalize every time
+counter_of_unique_words=0
+counter_of_words=0
+max_tf_in_doc=1
+
+def update_docs_and_initalize_counters(doc):
+    global counter_of_unique_words, counter_of_words, max_tf_in_doc
+    current_doc = ReadFile.docs_dictionary[doc]
+    current_doc.maxTF = max_tf_in_doc
+    current_doc.number_of_unique_tokens = counter_of_unique_words
+    current_doc.number_of_words = counter_of_words
+
+    counter_of_unique_words = 0
+    counter_of_words = 0
+    max_tf_in_doc = 1
 
 
 def set_stop_words_file(path):
@@ -194,14 +209,21 @@ def stem_the_term_and_take_care_of_lowerUpperCases(term):
     pass
 
 def insert_to_dic(new_term, doc):
+    global counter_of_unique_words, counter_of_words, max_tf_in_doc
+    counter_of_words+=1
     if new_term in one_file_dictionary:
         if doc in one_file_dictionary[new_term]:
             one_file_dictionary[new_term][doc] +=1
+            #for max_tf in doc:
+            trying_to_be_max = one_file_dictionary[new_term][doc]
+            if trying_to_be_max > max_tf_in_doc:
+                max_tf_in_doc = trying_to_be_max
         else:
             one_file_dictionary[new_term][doc]=1
+            counter_of_unique_words+=1
     else:
         one_file_dictionary[new_term]={doc:1}
-
+        counter_of_unique_words += 1
 
 #todo: split by [,],{,},(,)
 def parse(dictionary):
@@ -362,6 +384,8 @@ def parse(dictionary):
                         insert_to_dic(new_term, str(doc))
                 except:
                     index=index+1
+
+        update_docs_and_initalize_counters(str(doc))
     return one_file_dictionary
 
 

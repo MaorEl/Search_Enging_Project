@@ -62,6 +62,8 @@ def Main(cp, ip, to_stem):
                 # print("indexer time for file: " +str(counter) + " " +  str(index_end-index_start))
                 # counter+=1
                 dic_to_parse.clear()
+                docs_dic = ReadFile.docs_dictionary
+                x=5
     newIndexer.create_posting_files()
     end2 = time.time()
     print((end2 - start) / 60)
