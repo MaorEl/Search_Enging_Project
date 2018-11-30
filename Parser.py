@@ -373,8 +373,9 @@ def parse(dictionary):
                         elif '-' in term:
                             new_term = term
                             index = index + 1
-                        elif city_of_doc in ReadFile.city_dictionary:
+                        elif term == city_of_doc:
                             ReadFile.city_dictionary[city_of_doc].dic_doc_index[str(doc)].append(counter_of_words)
+                            xxxxx= ReadFile.city_dictionary
                             index = index+1
                         else: # upper/lower case regular word
                             new_term = upper_lower_case_format(term)
