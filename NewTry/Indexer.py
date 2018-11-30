@@ -85,13 +85,13 @@ def create_new_posting_file(posting_term_path, dic):
 #     pass
 
 
-def need_to_change_posting_file (letter):
-    global __current_posting_file_name
-    if letter == __current_posting_file_name:
-        return True
-    else:
-        return False
-    pass
+# def need_to_change_posting_file (letter):
+#     global __current_posting_file_name
+#     if letter == __current_posting_file_name:
+#         return True
+#     else:
+#         return False
+#     pass
 
 def switch_dictionaries(letter):
     global __posting_files_path
@@ -125,7 +125,8 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
     global __current_posting_file_name
     global __dictionary_of_posting_pointers
     for str_term in dictionary:
-
+        if str_term == 'THE':
+            print("xxxxx")
         str_term_0 = str_term[0]
         if __dictionary_of_posting_pointers.get(str_term_0,'others') != __current_posting_file_name:
             switch_dictionaries(str_term_0)

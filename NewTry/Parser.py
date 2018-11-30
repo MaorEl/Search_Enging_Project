@@ -181,7 +181,7 @@ def stem_the_term_and_take_care_of_lowerUpperCases(term):
             if lower_term in stemmed_terms:
                 return stemmed_terms[lower_term]
             else:
-                stemmed_terms[term]=stemmer.stem(term)
+                stemmed_terms[term]=stemmer.stem(lower_term).upper()
                 return stemmed_terms[term]
         else: #if term is lower
             upper_term = term.upper()

@@ -10,9 +10,6 @@ corpus_path = ''
 dic_to_parse = {}
 
 
-def saveDictionaryToDisk():
-    with open('DocsDictionary', 'wb') as f:
-        pickle.dump(docs_dictionary, f, pickle.HIGHEST_PROTOCOL)
 
 current_doc =""
 current_DOCNO=""
