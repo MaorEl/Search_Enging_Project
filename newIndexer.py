@@ -26,9 +26,9 @@ def create_posting_files():
     global __posting_files_path
     global __dictionary_of_postings
 
-    for key, value in __dictionary_of_postings:
-        with open(__posting_files_path + '\\'' +key' , 'wb') as file:
-            pickle.dump(value, file)
+    for key in __dictionary_of_postings:
+        with open(__posting_files_path + '\\' + str(key), 'wb') as file:
+            pickle.dump(__dictionary_of_postings[key], file)
             file.close()
 
 def insert_to_posting(term, docID_tf_dic, termIsAlreadyOnPostingFile):

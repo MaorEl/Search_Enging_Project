@@ -1,5 +1,6 @@
 import os
 import pathlib
+import pickle
 import time
 import collections
 
@@ -65,6 +66,9 @@ def Main(cp, ip, to_stem):
                 docs_dic = ReadFile.docs_dictionary
                 x=5
     newIndexer.create_posting_files()
+    with open('C:\Retrieval_folder\\index\docs_dic', 'wb') as file:
+        pickle.dump(docs_dic, file)
+        file.close()
     end2 = time.time()
     print((end2 - start) / 60)
 
