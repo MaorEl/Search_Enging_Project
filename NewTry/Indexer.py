@@ -14,7 +14,7 @@ __dictionary_of_posting_pointers = {
     'a':'abc','b':'abc','c':'abc','A':'abc','B':'abc','C':'abc',
     'd':'defgh','e':'defgh','f':'defgh','g':'defgh','h':'defgh','D':'defgh','E':'defgh','F':'defgh','G':'defgh','H':'defgh',
     'i':'ijklmn', 'j':'ijklmn','k':'ijklmn','l':'ijklmn','m':'ijklmn','n':'ijklmn','I':'ijklmn','J':'ijklmn','K':'ijklmn','L':'ijklmn','M':'ijklmn','N':'ijklmn',
-    'o':'opqrs','p':'opqrs','q':'opqrs','r':'opqrs','s':'opqrs','O':'opqrs','P':'\opqrs','R':'opqrs','S':'opqrs',
+    'o':'opqrs','p':'opqrs','q':'opqrs','r':'opqrs','s':'opqrs','O':'opqrs','P':'\opqrs','R':'opqrs','S':'opqrs','Q':'opqrs',
     't':'tuvwxyz','u':'tuvwxyz','v':'tuvwxyz','w':'tuvwxyz','x':'tuvwxyz','y':'tuvwxyz','z':'tuvwxyz','T':'tuvwxyz','U':'tuvwxyz','V':'tuvwxyz','W':'tuvwxyz','X':'tuvwxyz','Y':'tuvwxyz','Z':'tuvwxyz'
 }
 
@@ -41,16 +41,14 @@ def create_empty_posting_files():
 
 
 def insert_to_posting(term, docID_tf_dic, termIsAlreadyOnPostingFile):
-    global __posting_files_path
-    global __current_posting_file_name
     global __current_posting
-    clear_term = term.replace('\"','@_@').replace('*','@_@').replace(':','@_@').replace('"','@_@').replace('<','@_@').replace('>','@_@').replace('|','@_@').replace('?','@_@').replace('/','@_@')
-    term_path = __posting_files_path + '\\' + __current_posting_file_name
     if termIsAlreadyOnPostingFile == True:
         tmp_termContentOnPostingFile = __current_posting[term]
         tmp_termContentOnPostingFile.update(docID_tf_dic)
     else:
         __current_posting[term] = docID_tf_dic
+    global_current_posting =__current_posting
+    #print('exit from insert_to_posting')
 
 
 
@@ -107,6 +105,9 @@ def switch_dictionaries(letter):
     with open(__posting_files_path + '\\' + __current_posting_file_name, 'rb') as file:
         __current_posting = pickle.load(file)
         file.close()
+    global_current_posting_file_name = __current_posting_file_name
+    global_current_posting = __current_posting
+    #print('x')
 
 
 
@@ -119,11 +120,12 @@ def calculate_tf(doc_id_tf):
 
 def merge_dictionaries(dictionary): # {term : {doc id : tf}}
     global main_dictionary
+    global __current_posting
+    global_main_dic=main_dictionary
     global __current_posting_file_name
     global __dictionary_of_posting_pointers
     for str_term in dictionary:
-        if(str_term=='2.6m' or str_term=='2.6M'):
-            print("maor")
+
         str_term_0 = str_term[0]
         if __dictionary_of_posting_pointers.get(str_term_0,'others') != __current_posting_file_name:
             switch_dictionaries(str_term_0)
@@ -140,11 +142,15 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
             insert_to_posting(str_term_lower, dictionary[str_term], True)
         elif str_term.islower():
             if str_term.upper() in main_dictionary:
-                term_info = main_dictionary[str_term.upper()]
+                term_in_upper = str_term.upper()
+                term_info = main_dictionary[term_in_upper]
                 term_info.add_df(len(dictionary[str_term]))
                 term_info.add_tf(calculate_tf(dictionary[str_term]))
-                del main_dictionary[str_term.upper()]
+                del main_dictionary[term_in_upper]
                 main_dictionary[str_term] = term_info
+                current_posting_upper_content = __current_posting[term_in_upper]
+                del __current_posting[term_in_upper]
+                __current_posting[str_term] = current_posting_upper_content
                 insert_to_posting(str_term, dictionary[str_term], True)
             else: # lower case not in dictionary
                 term_info = TermInfo.TermInfo()
@@ -160,6 +166,10 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
             term_info.set_ptr(__current_posting_file_name)
             main_dictionary[str_term] = term_info
             insert_to_posting(str_term, dictionary[str_term], False)
+
+        global_current_posting_file_name = __current_posting_file_name
+        global_main_dictionary = main_dictionary
+
 
 
 
