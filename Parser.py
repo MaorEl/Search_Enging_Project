@@ -241,9 +241,9 @@ def parse(dictionary):
         city_of_doc = docs[str(doc)].city
         if text is not None or text is not "":
             index = 0
-            #splited = text.split()
+            splited = text.split()
             #todo: decide if to delete
-            splited = ' '.join(' '.join(' '.join(' '.join(' '.join(' '.join(text.split('(')).split(')')).split(']')).split('[')).split('{')).split('}')).split()
+            #splited = ' '.join(' '.join(' '.join(' '.join(' '.join(' '.join(text.split('(')).split(')')).split(']')).split('[')).split('{')).split('}')).split()
 
 
             length_of_splited_text = len(splited)
