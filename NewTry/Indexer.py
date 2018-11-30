@@ -125,9 +125,7 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
     for str_term in dictionary:
         str_term_0 = str_term[0]
         if __dictionary_of_posting_pointers.get(str_term_0,'others') != __current_posting_file_name:
-            if (str_term_0 in ['o','q','p','r','s']):
-                print('check me')
-                switch_dictionaries(str_term_0)
+            switch_dictionaries(str_term_0)
         if str_term in main_dictionary: #in dictionary, posting file exists
             term_info = main_dictionary[str_term]
             term_info.add_df(len(dictionary[str_term]))
@@ -168,7 +166,6 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
 
         global_current_posting_file_name = __current_posting_file_name
         global_main_dictionary = main_dictionary
-
-
+        x=5
 
 

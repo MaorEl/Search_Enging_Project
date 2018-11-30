@@ -6,10 +6,10 @@ import time
 import collections
 from fractions import Fraction
 
-from NewTry import RegularExpressionsCode
+from NewTry import ReadFile
 from NewTry import Parser
 from NewTry import Indexer
-from NewTry.RegularExpressionsCode import dic_to_parse
+from NewTry.ReadFile import dic_to_parse
 
 __corpus_path = ""
 __index_path = ""
@@ -42,9 +42,9 @@ def Main(cp, ip, to_stem):
     global __corpus_path
     global __index_path
     Parser.stem = getStemmerFromUser() #todo: change to_stem and remove the function
-    #cp = 'C:\Retrieval_folder\corpus' #todo: to delete
+    cp = 'C:\Retrieval_folder\corpus' #todo: to delete
     ip = 'C:\Retrieval_folder\\index' #todo: to delete
-    cp = 'C:\Retrieval_folder\\full_corpus'
+  #  cp = 'C:\Retrieval_folder\\full_corpus'
     start = time.time()
 
     data_set_Path(cp, ip)
@@ -56,7 +56,7 @@ def Main(cp, ip, to_stem):
             if ((end2-start)/60)>10 and ((end2-start)/60) <10.10:
                 print(str(file))
             if str(file) != 'stop_words.txt':
-                RegularExpressionsCode.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
+                ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
                 dic_of_one_file = SendToParser(file)
                 sorted_dictionary = collections.OrderedDict(sorted(dic_of_one_file.items())) #todo: check this on lab
                 Indexer.merge_dictionaries(sorted_dictionary)
