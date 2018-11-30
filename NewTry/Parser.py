@@ -356,10 +356,11 @@ def parse(dictionary):
                                 shouleBeStemmed = True
                     ###################################DONE WITH PARSING########################################
                     ###################################STEMMING SECTION#########################################
-                    if stem is True and shouleBeStemmed is True and new_term.lower() not in stop_words_dict.keys():
-                        new_term = stem_the_term_and_take_care_of_lowerUpperCases(new_term)
+                    if new_term.lower() not in stop_words_dict.keys():
+                        if stem is True and shouleBeStemmed is True:
+                            new_term = stem_the_term_and_take_care_of_lowerUpperCases(new_term)
                     ###################################END OF STEM SECTION######################################
-                    insert_to_dic(new_term, str(doc))
+                        insert_to_dic(new_term, str(doc))
                 except:
                     index=index+1
     return one_file_dictionary
