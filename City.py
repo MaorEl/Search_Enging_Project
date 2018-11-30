@@ -1,6 +1,7 @@
 import sys
 import urllib.request
 import json
+import time
 from urllib.error import HTTPError
 from Parser import number_format
 
@@ -27,33 +28,40 @@ class City:
                 return splited_num[0] + '.' + splited_num[1][0] + new_digit + sign
 
     def __init__(self, city, docID):
+        start = time.time()
+        '''
         try:
             url = 'https://restcountries.eu/rest/v2/capital/' + city + '?fields=name;capital;currencies;population'
             with urllib.request.urlopen(url) as url1:
-                s = url1.read()
-                json_result = json.loads(s)[0]
-                self.capital = json_result['capital']
-                self.currency = json_result['currencies'][0]['code']
-                self.population = self.round_a_sum(number_format(str(json_result['population'])))
-                self.country = json_result['name']
-        except HTTPError:
-            try:
-                url = 'http://getcitydetails.geobytes.com/GetCityDetails?fqcn=' + city
-                with urllib.request.urlopen(url) as url1:
+                if (url1.status == 200):
                     s = url1.read()
-                    json_result = json.loads(s)
-                    self.capital = json_result['geobytescapital']
-                    self.currency = json_result['geobytescurrencycode']
-                    population = str(json_result['geobytespopulation'])
-                    if population != '':
-                        self.population = self.round_a_sum(number_format(population))
-                    self.country = json_result['geobytescountry']
-            except:
-                print("Unexpected error occured here!!!:", sys.exc_info()[0])
+                    json_result = json.loads(s)[0]
+                    self.capital = json_result['capital']
+                    self.currency = json_result['currencies'][0]['code']
+                    self.population = self.round_a_sum(number_format(str(json_result['population'])))
+                    self.country = json_result['name']
+        #except HTTPError:
+            # try:
+            #     url = 'http://getcitydetails.geobytes.com/GetCityDetails?fqcn=' + city
+            #     with urllib.request.urlopen(url) as url1:
+            #         s = url1.read()
+            #         #print(time.time()-start)
+            #         json_result = json.loads(s)
+            #         self.capital = json_result['geobytescapital']
+            #         self.currency = json_result['geobytescurrencycode']
+            #         population = str(json_result['geobytespopulation'])
+            #         if population != '':
+            #             self.population = self.round_a_sum(number_format(population))
+            #         self.country = json_result['geobytescountry']
+            # except:
+            #print("Unexpected error occured here!!!:", sys.exc_info()[0])
         except:
-            print("Unexpected error occured here!!!:", sys.exc_info()[0])
+            pass
+            
+            #print("Unexpected error occured here!!!:", sys.exc_info()[0])
         finally:
-            self.dic_doc_index = {docID: ['TAG']}
+        '''
+        self.dic_doc_index = {docID: ['TAG']}
 
         # self.country = json_result[]
         # self.currency = currency
