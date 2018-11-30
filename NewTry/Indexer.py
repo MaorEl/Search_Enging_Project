@@ -12,7 +12,10 @@ __current_posting = {}
 __current_posting_file_name = ''
 __dictionary_of_posting_pointers = {
     'a':'\\abc','b':'\\abc','c':'\\abc','A':'\\abc','B':'\\abc','C':'\\abc',
-    'd':
+    'd':'\\defgh','e':'\\defgh','f':'\\defgh','g':'\\defgh','h':'\\defgh','D':'\\defgh','E':'\\defgh','F':'\\defgh','G':'\\defgh','H':'\\defgh',
+    'i':'\\ijklmn', 'j':'\\ijklmn','k':'\\ijklmn','l':'\\ijklmn','m':'\\ijklmn','n':'\\ijklmn','I':'\\ijklmn','J':'\\ijklmn','K':'\\ijklmn','L':'\\ijklmn','M':'\\ijklmn','N':'\\ijklmn',
+    'o':'\\opqrs','p':'\\opqrs','q':'\\opqrs','r':'\\opqrs','s':'\\opqrs','O':'\\opqrs','P':'\\opqrs','R':'\\opqrs','S':'\\opqrs',
+    't':'\\tuvwxyz','u':'\\tuvwxyz','v':'\\tuvwxyz','w':'\\tuvwxyz','x':'\\tuvwxyz','y':'\\tuvwxyz','z':'\\tuvwxyz','T':'\\tuvwxyz','U':'\\tuvwxyz','V':'\\tuvwxyz','W':'\\tuvwxyz','X':'\\tuvwxyz','Y':'\\tuvwxyz','Z':'\\tuvwxyz'
 }
 
 def create_empty_posting_files():
@@ -35,8 +38,6 @@ def create_empty_posting_files():
     with open(__posting_files_path + '\\others', 'wb') as file:
         pickle.dump({}, file)
         file.close()
-
-def set_dictionary_of_posting_pointers():
 
 
 def set_path_to_postiong_files(path):
