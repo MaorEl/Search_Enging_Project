@@ -37,16 +37,19 @@ class City:
                 self.population = self.round_a_sum(number_format(str(json_result['population'])))
                 self.country = json_result['name']
         except HTTPError:
-            url = 'http://getcitydetails.geobytes.com/GetCityDetails?fqcn=' + city
-            with urllib.request.urlopen(url) as url1:
-                s = url1.read()
-                json_result = json.loads(s)
-                self.capital = json_result['geobytescapital']
-                self.currency = json_result['geobytescurrencycode']
-                population = str(json_result['geobytespopulation'])
-                if population != '':
-                    self.population = self.round_a_sum(number_format(population))
-                self.country = json_result['geobytescountry']
+            try:
+                url = 'http://getcitydetails.geobytes.com/GetCityDetails?fqcn=' + city
+                with urllib.request.urlopen(url) as url1:
+                    s = url1.read()
+                    json_result = json.loads(s)
+                    self.capital = json_result['geobytescapital']
+                    self.currency = json_result['geobytescurrencycode']
+                    population = str(json_result['geobytespopulation'])
+                    if population != '':
+                        self.population = self.round_a_sum(number_format(population))
+                    self.country = json_result['geobytescountry']
+            except:
+                print("Unexpected error occured here!!!:", sys.exc_info()[0])
         except:
             print("Unexpected error occured here!!!:", sys.exc_info()[0])
         finally:
