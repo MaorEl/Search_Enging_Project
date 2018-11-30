@@ -22,3 +22,7 @@
 #     file.close()
 #
 
+# string = 'African National 1)african dddd[ANC] Dogs do(g st}ayaway'
+# x = ' '.join(' '.join(' '.join(' '.join(' '.join(' '.join(string.split('(')).split(')')).split(']')).split('[')).split('{')).split('}')).split()
+# #x.split()
+# print(x)
