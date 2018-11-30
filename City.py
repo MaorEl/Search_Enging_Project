@@ -1,3 +1,4 @@
+import sys
 import urllib.request
 import json
 from urllib.error import HTTPError
@@ -10,9 +11,9 @@ class City:
         if '.' not in number:
             return number
         else:
-            sign=''
-            if number[len(number)-1] in ['K','M','B']:
-                sign = number[len(number)-1]
+            sign = ''
+            if number[len(number) - 1] in ['K', 'M', 'B']:
+                sign = number[len(number) - 1]
                 number = number[:-1]
             splited_num = number.split('.')
             if len(splited_num[1]) <= 2:
@@ -20,14 +21,14 @@ class City:
             else:
                 digit_to_round = splited_num[1][2]
                 if digit_to_round >= '5':
-                    new_digit =str(int(splited_num[1][1]) +1)
+                    new_digit = str(int(splited_num[1][1]) + 1)
                 else:
                     new_digit = splited_num[1][1]
-                return splited_num[0]+ '.' + splited_num[1][0] + new_digit + sign
+                return splited_num[0] + '.' + splited_num[1][0] + new_digit + sign
 
-    def __init__(self, city , docID):
+    def __init__(self, city, docID):
         try:
-            url = 'https://restcountries.eu/rest/v2/capital/'+ city +'?fields=name;capital;currencies;population'
+            url = 'https://restcountries.eu/rest/v2/capital/' + city + '?fields=name;capital;currencies;population'
             with urllib.request.urlopen(url) as url1:
                 s = url1.read()
                 json_result = json.loads(s)[0]
@@ -46,9 +47,10 @@ class City:
                 if population != '':
                     self.population = self.round_a_sum(number_format(population))
                 self.country = json_result['geobytescountry']
+        except:
+            print("Unexpected error occured here!!!:", sys.exc_info()[0])
         finally:
             self.dic_doc_index = {docID: ['TAG']}
-
 
         # self.country = json_result[]
         # self.currency = currency
@@ -56,12 +58,10 @@ class City:
         # self.list_of_tuples_doc_index = {docID:[-1]} # tag index = -1
         # self.capital = capital
 
-        #https://restcountries.eu/rest/v2/capital/tallinn?fields=name;capital;currency;population
-        #http://getcitydetails.geobytes.com/GetCityDetails?fqcn=turku
-     #
-     # def add_doc_index(self, dictionary):
-     #     self.dictionary_of_docs_and_locations.update()
+        # https://restcountries.eu/rest/v2/capital/tallinn?fields=name;capital;currency;population
+        # http://getcitydetails.geobytes.com/GetCityDetails?fqcn=turku
+    #
+    # def add_doc_index(self, dictionary):
+    #     self.dictionary_of_docs_and_locations.update()
 
-#city = City('Berlin', '1')
-
-
+# city = City('Berlin', '1')

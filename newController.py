@@ -39,6 +39,7 @@ def contains_digit(term):
 def Main(cp, ip, to_stem):
     global __corpus_path
     global __index_path
+    global doc
     Parser.stem = getStemmerFromUser() #todo: change to_stem and remove the function
     #cp = 'C:\Retrieval_folder\corpus' #todo: to delete
     ip = 'C:\Retrieval_folder\\index' #todo: to delete
