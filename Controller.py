@@ -1,15 +1,12 @@
-import json
 import os
 import pathlib
-import pickle
 import time
 import collections
-from fractions import Fraction
 
-from NewTry import ReadFile
-from NewTry import Parser
-from NewTry import Indexer
-from NewTry.ReadFile import dic_to_parse
+import ReadFile
+import Parser
+import Indexer
+from ReadFile import dic_to_parse
 
 __corpus_path = ""
 __index_path = ""

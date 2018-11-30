@@ -1,6 +1,5 @@
-import time
 from fractions import Fraction
-from NewTry import PorterStemmer
+import PorterStemmer
 
 #todo: try and catch - advance index by one
 

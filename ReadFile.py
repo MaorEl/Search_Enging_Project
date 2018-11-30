@@ -1,9 +1,4 @@
-import os
-import pathlib
-import pickle
-import time
-
-from NewTry.DocumentInfo import DocumentInfo
+from DocumentInfo import DocumentInfo
 
 docs_dictionary = {} #Doc Number will be the key. value is a Document
 corpus_path = ''

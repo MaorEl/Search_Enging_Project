@@ -1,7 +1,7 @@
 
 import pickle
 
-from NewTry import TermInfo
+import TermInfo
 
 main_dictionary = {} # {term : <df , ptr to the first occurrence of this term in posting file> }
 
