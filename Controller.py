@@ -11,7 +11,7 @@ from ReadFile import dic_to_parse
 __corpus_path = ""
 __index_path = ""
 
-def SendToParser(file):
+def SendToParser():
     return Parser.parse(dic_to_parse)
 
 
@@ -54,7 +54,7 @@ def Main(cp, ip, to_stem):
                 print(str(file))
             if str(file) != 'stop_words.txt':
                 ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
-                dic_of_one_file = SendToParser(file)
+                dic_of_one_file = SendToParser()
                 sorted_dictionary = collections.OrderedDict(sorted(dic_of_one_file.items())) #todo: check this on lab
                 Indexer.merge_dictionaries(sorted_dictionary)
                 dic_to_parse.clear()
