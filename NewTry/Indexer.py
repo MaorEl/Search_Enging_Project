@@ -9,7 +9,7 @@ main_dictionary = {} # {term : <df , ptr to the first occurrence of this term in
 __punctuations_for_file_name = { '\"','*','/', ':', '"','<', '>', '|'}
 __posting_files_path = ""
 __current_posting = {}
-__current_posting_file_name = ''
+__current_posting_file_name = 'others'
 __dictionary_of_posting_pointers = {
     'a':'abc','b':'abc','c':'abc','A':'abc','B':'abc','C':'abc',
     'd':'defgh','e':'defgh','f':'defgh','g':'defgh','h':'defgh','D':'defgh','E':'defgh','F':'defgh','G':'defgh','H':'defgh',
@@ -122,8 +122,10 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
     global __current_posting_file_name
     global __dictionary_of_posting_pointers
     for str_term in dictionary:
+        if(str_term=='2.6m' or str_term=='2.6M'):
+            print("maor")
         str_term_0 = str_term[0]
-        if __dictionary_of_posting_pointers[str_term_0] != __current_posting_file_name:
+        if __dictionary_of_posting_pointers.get(str_term_0,'others') != __current_posting_file_name:
             switch_dictionaries(str_term_0)
         if str_term in main_dictionary: #in dictionary, posting file exists
             term_info = main_dictionary[str_term]
