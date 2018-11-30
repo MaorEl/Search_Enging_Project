@@ -1,9 +1,10 @@
+from City import City
 from DocumentInfo import DocumentInfo
 
 docs_dictionary = {} #Doc Number will be the key. value is a Document
 corpus_path = ''
 dic_to_parse = {}
-
+city_dictionary = {}
 
 
 current_doc =""
@@ -16,9 +17,15 @@ def __extractDOCNO():
     current_DOCNO = (current_doc.split("</DOCNO>", 1)[0]).split("<DOCNO>")[1].strip()
 
 def __extractCITY():
-    global  current_CITY
+    global  current_CITY, current_DOCNO
+    global city_dictionary
     if "<F P=104>" in current_doc:
         current_CITY = current_doc.split("<F P=104>")[1].split()[0]
+        if current_CITY not in city_dictionary:
+            city_dictionary[current_CITY] = City(current_CITY,current_DOCNO)
+        else:
+            city_object = {current_DOCNO : ['TAG']}
+            city_dictionary[current_CITY].dic_doc_index.update(city_object)
 
 def __extractDATE():
     global current_DATE
