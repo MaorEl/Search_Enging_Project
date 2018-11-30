@@ -63,6 +63,7 @@ def Main(cp, ip, to_stem):
                 counter+=1
                 dic_to_parse.clear()
 
+
     end2 = time.time()
     print((end2 - start) / 60)
 
