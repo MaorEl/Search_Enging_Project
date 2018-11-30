@@ -232,10 +232,13 @@ def parse(dictionary):
     global stemmer
     global one_file_dictionary
     global stem
+    global counter_of_words
+    docs = ReadFile.docs_dictionary
     x=stem
     one_file_dictionary = {} # contains : key = term , value = {docID : frequency in doc}
     for doc in dictionary:
         text = dictionary[doc]
+        city_of_doc = docs[str(doc)].city
         if text is not None or text is not "":
             index = 0
             #splited = text.split()
@@ -370,6 +373,9 @@ def parse(dictionary):
                         elif '-' in term:
                             new_term = term
                             index = index + 1
+                        elif city_of_doc in ReadFile.city_dictionary:
+                            ReadFile.city_dictionary[city_of_doc].dic_doc_index[str(doc)].append(counter_of_words)
+                            index = index+1
                         else: # upper/lower case regular word
                             new_term = upper_lower_case_format(term)
                             index = index + 1
