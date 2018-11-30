@@ -51,26 +51,24 @@ def insert_to_posting(term, docID_tf_dic, termIsAlreadyOnPostingFile):
     #print('exit from insert_to_posting')
 
 
-
-
 def set_path_to_postiong_files(path):
     global __posting_files_path
     __posting_files_path = path
     pass
 
-def update_exists_posting_file(posting_term_path, dic):
-    with open(posting_term_path, 'rb') as file:
-        o = pickle.load(file)
-        file.close()
-    with open(posting_term_path, 'wb') as file:
-        o.update(dic)
-        pickle.dump(o, file)
-        file.close()
+# def update_exists_posting_file(posting_term_path, dic):
+#     with open(posting_term_path, 'rb') as file:
+#         o = pickle.load(file)
+#         file.close()
+#     with open(posting_term_path, 'wb') as file:
+#         o.update(dic)
+#         pickle.dump(o, file)
+#         file.close()
 
-def create_new_posting_file(posting_term_path, dic):
-    with open(posting_term_path, 'wb') as file:
-        pickle.dump(dic, file)
-        file.close()
+# def create_new_posting_file(posting_term_path, dic):
+#     with open(posting_term_path, 'wb') as file:
+#         pickle.dump(dic, file)
+#         file.close()
 
 
 
@@ -125,11 +123,11 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
     global __current_posting_file_name
     global __dictionary_of_posting_pointers
     for str_term in dictionary:
-        if str_term == 'THE':
-            print("xxxxx")
         str_term_0 = str_term[0]
         if __dictionary_of_posting_pointers.get(str_term_0,'others') != __current_posting_file_name:
-            switch_dictionaries(str_term_0)
+            if (str_term_0 in ['o','q','p','r','s']):
+                print('check me')
+                switch_dictionaries(str_term_0)
         if str_term in main_dictionary: #in dictionary, posting file exists
             term_info = main_dictionary[str_term]
             term_info.add_df(len(dictionary[str_term]))
