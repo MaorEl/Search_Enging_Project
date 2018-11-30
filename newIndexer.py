@@ -26,25 +26,25 @@ __dictionary_of_postings = {'abc': posting_abc,'defgh': posting_defgh, 'ijklmn':
 
 
 
-def create_empty_posting_files():
+def create_posting_files():
     global __posting_files_path
     with open(__posting_files_path + '\\abc', 'wb') as file: # 20 percent
-        pickle.dump({}, file)
+        pickle.dump(posting_abc, file)
         file.close()
     with open(__posting_files_path + '\\defgh', 'wb') as file: # 18 percent
-        pickle.dump({}, file)
+        pickle.dump(posting_defgh, file)
         file.close()
     with open(__posting_files_path + '\\ijklmn', 'wb') as file: # 18 percent
-        pickle.dump({}, file)
+        pickle.dump(posting_ijklmn, file)
         file.close()
     with open(__posting_files_path + '\\opqrs', 'wb') as file: # 21 percent
-        pickle.dump({}, file)
+        pickle.dump(posting_opqrs, file)
         file.close()
     with open(__posting_files_path + '\\tuvwxyz', 'wb') as file: # 24 percent
-        pickle.dump({}, file)
+        pickle.dump(posting_tuvwxyz, file)
         file.close()
     with open(__posting_files_path + '\\others', 'wb') as file:
-        pickle.dump({}, file)
+        pickle.dump(posting_others, file)
         file.close()
 
 

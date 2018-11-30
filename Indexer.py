@@ -12,7 +12,7 @@ __dictionary_of_posting_pointers = {
     'a':'abc','b':'abc','c':'abc','A':'abc','B':'abc','C':'abc',
     'd':'defgh','e':'defgh','f':'defgh','g':'defgh','h':'defgh','D':'defgh','E':'defgh','F':'defgh','G':'defgh','H':'defgh',
     'i':'ijklmn', 'j':'ijklmn','k':'ijklmn','l':'ijklmn','m':'ijklmn','n':'ijklmn','I':'ijklmn','J':'ijklmn','K':'ijklmn','L':'ijklmn','M':'ijklmn','N':'ijklmn',
-    'o':'opqrs','p':'opqrs','q':'opqrs','r':'opqrs','s':'opqrs','O':'opqrs','P':'\opqrs','R':'opqrs','S':'opqrs','Q':'opqrs',
+    'o':'opqrs','p':'opqrs','q':'opqrs','r':'opqrs','s':'opqrs','O':'opqrs','P':'opqrs','R':'opqrs','S':'opqrs','Q':'opqrs',
     't':'tuvwxyz','u':'tuvwxyz','v':'tuvwxyz','w':'tuvwxyz','x':'tuvwxyz','y':'tuvwxyz','z':'tuvwxyz','T':'tuvwxyz','U':'tuvwxyz','V':'tuvwxyz','W':'tuvwxyz','X':'tuvwxyz','Y':'tuvwxyz','Z':'tuvwxyz'
 }
 

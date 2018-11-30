@@ -50,7 +50,7 @@ def Main(cp, ip, to_stem):
     for root, dirs, files in os.walk(__corpus_path):
         for file in files:
             end2 = time.time()
-            if ((end2-start)/60)>2 and ((end2-start)/60) <2.10:
+            if ((end2-start)/60)>10 and ((end2-start)/60) <10.10:
                 print(str(file))
             if str(file) != 'stop_words.txt':
                 ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
@@ -62,7 +62,7 @@ def Main(cp, ip, to_stem):
                 # print("indexer time for file: " +str(counter) + " " +  str(index_end-index_start))
                 # counter+=1
                 dic_to_parse.clear()
-
+    newIndexer.create_posting_files()
     end2 = time.time()
     print((end2 - start) / 60)
 
