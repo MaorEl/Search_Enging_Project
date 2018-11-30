@@ -40,6 +40,21 @@ def create_empty_posting_files():
         file.close()
 
 
+def insert_to_posting(term, docID_tf_dic, termIsAlreadyOnPostingFile):
+    global __posting_files_path
+    global __current_posting_file_name
+    global __current_posting
+    clear_term = term.replace('\"','@_@').replace('*','@_@').replace(':','@_@').replace('"','@_@').replace('<','@_@').replace('>','@_@').replace('|','@_@').replace('?','@_@').replace('/','@_@')
+    term_path = __posting_files_path + '\\' + __current_posting_file_name
+    if termIsAlreadyOnPostingFile == True:
+        tmp_termContentOnPostingFile = __current_posting[term]
+        tmp_termContentOnPostingFile.update(docID_tf_dic)
+    else:
+        __current_posting[term] = docID_tf_dic
+
+
+
+
 def set_path_to_postiong_files(path):
     global __posting_files_path
     __posting_files_path = path
@@ -61,15 +76,15 @@ def create_new_posting_file(posting_term_path, dic):
 
 
 
-def insert_to_posting(term, docID_tf_dic , isExists):
-    global __posting_files_path
-    clear_term = term.replace('\"','@_@').replace('*','@_@').replace(':','@_@').replace('"','@_@').replace('<','@_@').replace('>','@_@').replace('|','@_@').replace('?','@_@').replace('/','@_@')
-    term_path = __posting_files_path + '\\' + clear_term + '.txt'
-    if (isExists is True):
-        update_exists_posting_file(term_path, docID_tf_dic)
-    else:
-        create_new_posting_file(term_path, docID_tf_dic)
-    pass
+# def insert_to_posting(term, docID_tf_dic , isExists):
+#     global __posting_files_path
+#     clear_term = term.replace('\"','@_@').replace('*','@_@').replace(':','@_@').replace('"','@_@').replace('<','@_@').replace('>','@_@').replace('|','@_@').replace('?','@_@').replace('/','@_@')
+#     term_path = __posting_files_path + '\\' + clear_term + '.txt'
+#     if (isExists is True):
+#         update_exists_posting_file(term_path, docID_tf_dic)
+#     else:
+#         create_new_posting_file(term_path, docID_tf_dic)
+#     pass
 
 
 def need_to_change_posting_file (letter):
@@ -94,6 +109,14 @@ def switch_dictionaries(letter):
 
 
 
+def add_tf_for_term_in_all_corpus(doc_id_tf,str_term):
+    counter = 0
+    for key in doc_id_tf:
+        tmp = counter + doc_id_tf[key]
+    tmp_term = main_dictionary[str_term]
+    tmp_term.add_tf(counter)
+    main_dictionary[str_term]=tmp_term
+
 
 def merge_dictionaries(dictionary): # {term : {doc id : tf}}
     global main_dictionary
@@ -101,28 +124,34 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
         if str_term in main_dictionary: #in dictionary, posting file exists
             term_info = main_dictionary[str_term]
             term_info.add_df(len(dictionary[str_term]))
+            add_tf_for_term_in_all_corpus(dictionary[str_term],str_term)
             insert_to_posting(str_term, dictionary[str_term], True)
         elif str_term.lower() in main_dictionary: #upper case -> insert as lower case
             str_term_lower = str_term.lower()
             term_info = main_dictionary[str_term_lower]
             term_info.add_df(len(dictionary[str_term]))
+            add_tf_for_term_in_all_corpus(dictionary[str_term],str_term)
             insert_to_posting(str_term_lower, dictionary[str_term], True)
         elif str_term.islower():
             if str_term.upper() in main_dictionary:
                 term_info = main_dictionary[str_term.upper()]
                 term_info.add_df(len(dictionary[str_term]))
+                add_tf_for_term_in_all_corpus(dictionary[str_term], str_term)
                 del main_dictionary[str_term.upper()]
                 main_dictionary[str_term] = term_info
                 insert_to_posting(str_term, dictionary[str_term], True)
             else: # lower case not in dictionary
                 term_info = TermInfo.TermInfo()
                 term_info.add_df(len(dictionary[str_term]))
+                add_tf_for_term_in_all_corpus(dictionary[str_term], str_term)
                 main_dictionary[str_term] = term_info
                 insert_to_posting(str_term, dictionary[str_term], False)
         else: #upper case not in dictionary
             term_info = TermInfo.TermInfo()
             term_info.add_df(len(dictionary[str_term]))
+            add_tf_for_term_in_all_corpus(dictionary[str_term],str_term)
             main_dictionary[str_term] = term_info
             insert_to_posting(str_term, dictionary[str_term], False)
+
 
 
