@@ -5,7 +5,7 @@ import collections
 
 import ReadFile
 import Parser
-import Indexer
+import newIndexer
 from ReadFile import dic_to_parse
 
 __corpus_path = ""
@@ -23,7 +23,7 @@ def data_set_Path(corpus_path, index_path):
     Parser.set_stop_words_file(__stopwords_path)
     __corpus_path = corpus_path
     __index_path = index_path
-    Indexer.set_path_to_postiong_files(__index_path)
+    newIndexer.set_path_to_postiong_files(__index_path)
 
 
 def getStemmerFromUser():
@@ -45,22 +45,22 @@ def Main(cp, ip, to_stem):
     start = time.time()
 
     data_set_Path(cp, ip)
-    Indexer.create_empty_posting_files()
-    counter=0
+    #Indexer.create_empty_posting_files()
+    # counter=0
     for root, dirs, files in os.walk(__corpus_path):
         for file in files:
             end2 = time.time()
-            if ((end2-start)/60)>10 and ((end2-start)/60) <10.10:
+            if ((end2-start)/60)>2 and ((end2-start)/60) <2.10:
                 print(str(file))
             if str(file) != 'stop_words.txt':
                 ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
                 dic_of_one_file = SendToParser()
                 sorted_dictionary = collections.OrderedDict(sorted(dic_of_one_file.items())) #todo: check this on lab
                 index_start = time.time()
-                Indexer.merge_dictionaries(sorted_dictionary)
-                index_end = time.time()
-                print("indexer time for file: " +str(counter) + " " +  str(index_end-index_start))
-                counter+=1
+                newIndexer.merge_dictionaries(sorted_dictionary)
+                # index_end = time.time()
+                # print("indexer time for file: " +str(counter) + " " +  str(index_end-index_start))
+                # counter+=1
                 dic_to_parse.clear()
 
     end2 = time.time()
