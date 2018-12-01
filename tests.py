@@ -21,8 +21,8 @@ import json
 #         x=2
 #
 #
-#
-#
+# #
+# #
 # with open( 'D:\documents\\users\\anaelgor\Downloads\corpus\index\cities', 'rb') as file:
 #     cities = pickle.load(file)
 #     print('x')
@@ -32,5 +32,5 @@ import json
 #     posting = pickle.load(file)
 #     print('x')
 #     file.close()
-
-
+#
+#
