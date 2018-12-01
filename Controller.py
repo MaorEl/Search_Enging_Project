@@ -33,6 +33,11 @@ def getStemmerFromUser():
     #TODO: implements this from user GUI
     return True
 
+def saveCityDictionaryToDisk(ip):
+    with open(ip + '\cities', 'wb') as file:
+        pickle.dump(ReadFile.city_dictionary, file)
+        file.close()
+        x=2
 
 def Main(cp, ip, to_stem):
     global __corpus_path
@@ -67,6 +72,7 @@ def Main(cp, ip, to_stem):
                 Indexer.SaveAndMergePostings()
                 counter = 0
     Indexer.SaveAndMergePostings()
+    saveCityDictionaryToDisk(ip)
     end2 = time.time()
     print((end2 - start) / 60)
 

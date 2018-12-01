@@ -42,32 +42,31 @@ class City:
                 return splited_num[0] + '.' + splited_num[1][0] + new_digit + sign
 
     def __init__(self, city, docID):
-        def __init__(self, city, docID):
-            global city_db
-            pointer_to_city_db = city_db
-            if city in pointer_to_city_db:
-                self.capital = city_db[city]['capital']
-                self.currency = city_db[city]['currency']
-                populuation_to_fix = str(city_db[city]['population'])
-                self.population = self.round_a_sum(Parser.number_format(populuation_to_fix))
-                self.country = city_db[city]['country']
+        global city_db
+        pointer_to_city_db = city_db
+        if city in pointer_to_city_db:
+            self.capital = city_db[city]['capital']
+            self.currency = city_db[city]['currency']
+            populuation_to_fix = str(city_db[city]['population'])
+            self.population = self.round_a_sum(Parser.number_format(populuation_to_fix))
+            self.country = city_db[city]['country']
+            self.dic_doc_index = {docID: ['TAG']}
+        else:
+            try:
+                url = 'http://getcitydetails.geobytes.com/GetCityDetails?fqcn=' + city
+                with urllib.request.urlopen(url) as url1:
+                    s = url1.read()
+                    # print(time.time()-start)
+                    json_result = json.loads(s)
+                    self.capital = json_result['geobytescapital']
+                    self.currency = json_result['geobytescurrencycode']
+                    population = str(json_result['geobytespopulation'])
+                    if population != '':
+                        self.population = self.round_a_sum(Parser.number_format(population))
+                    self.country = json_result['geobytescountry']
+            except:
+                print("Unexpected error occured here!!!:", sys.exc_info()[0])
+                pass
+            finally:
                 self.dic_doc_index = {docID: ['TAG']}
-            else:
-                try:
-                    url = 'http://getcitydetails.geobytes.com/GetCityDetails?fqcn=' + city
-                    with urllib.request.urlopen(url) as url1:
-                        s = url1.read()
-                        # print(time.time()-start)
-                        json_result = json.loads(s)
-                        self.capital = json_result['geobytescapital']
-                        self.currency = json_result['geobytescurrencycode']
-                        population = str(json_result['geobytespopulation'])
-                        if population != '':
-                            self.population = self.round_a_sum(Parser.number_format(population))
-                        self.country = json_result['geobytescountry']
-                except:
-                    print("Unexpected error occured here!!!:", sys.exc_info()[0])
-                    pass
-                finally:
-                    self.dic_doc_index = {docID: ['TAG']}
 

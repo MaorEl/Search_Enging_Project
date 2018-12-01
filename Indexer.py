@@ -1,5 +1,6 @@
 
 import pickle
+from datetime import time
 
 import TermInfo
 
@@ -160,8 +161,11 @@ def readPosting(key):
         file.close()
 
 def SaveAndMergePostings():
+    start = time()
     global __dictionary_of_postings
     for key in __dictionary_of_postings:
         readPosting(key)
         mergePostingsAndSaveToDisk(key)
         __dictionary_of_postings[key].clear()
+    print (time() - start)
+
