@@ -65,7 +65,7 @@ def Main(cp, ip, to_stem):
                 dic_to_parse.clear()
                 docs_dic = ReadFile.docs_dictionary
                 counter += 1
-            if counter == 10:
+            if counter == 100:
                 Indexer.SaveAndMergePostings()
                 counter = 0
     Indexer.SaveAndMergePostings()

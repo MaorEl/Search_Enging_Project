@@ -145,10 +145,10 @@ def mergePostingsAndSaveToDisk(key): # {term : { doc : term}}
 
 def write_posting_file_to_disk(key):
     global __posting_files_path
-    global __dictionary_of_postings
+    global __posting_from_disk
 
     with open(__posting_files_path + '\\' + str(key), 'wb') as file:
-        pickle.dump(__dictionary_of_postings[key], file)
+        pickle.dump(__posting_from_disk, file)
         file.close()
 
 def readPosting(key):
