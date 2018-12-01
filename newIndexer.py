@@ -114,4 +114,46 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
             insert_to_posting(str_term, dictionary[str_term], False)
 
 
+# merge 2 dictionaries of posting files
+# the dictionary we get as argument is the most update by term upper/lower case.
+# so we need to deal with it well
+def mergePostingsAndSaveToDisk(key): # {term : { doc : term}}
+    #global main_dictionary
+    global __dictionary_of_postings
+    global  posting_from_disk
+    dic = __dictionary_of_postings[key]
+    for str_term in dic: # the most update term
+        if str_term in posting_from_disk: # as it is
+            posting_from_disk[str_term].update(dic[str_term])
+        elif str_term.upper() in posting_from_disk: # in upper case in the old posting
+            str_term_upper = str_term.upper()
+            term_dic = posting_from_disk[str_term_upper]
+            term_dic.update(dic[str_term])
+            del posting_from_disk[str_term_upper]
+            posting_from_disk[str_term] = term_dic # add with the lower case term
+        else: # not exists
+            posting_from_disk[str_term] = dic[str_term]
+    write_posting_file_to_disk(key)
 
+def write_posting_file_to_disk(key):
+    global __posting_files_path
+    global __dictionary_of_postings
+
+    with open(__posting_files_path + '\\' + str(key), 'wb') as file:
+        pickle.dump(__dictionary_of_postings[key], file)
+        file.close()
+
+def readPosting(key):
+    global __posting_files_path
+    global posting_from_disk
+
+    with open(__posting_files_path + '\\' + str(key), 'rb') as file:
+        posting_from_disk = pickle.load(file)
+        file.close()
+
+def SaveAndMergePostings():
+    global __dictionary_of_postings
+    for key in __dictionary_of_postings:
+        readPosting(key)
+        mergePostingsAndSaveToDisk(key)
+        __dictionary_of_postings[key].clear()
