@@ -64,6 +64,7 @@ def start_button_command():
         messagebox.showwarning("Error", "Please choose path of your corpus")
     reset_button.config(state=ACTIVE)
     start_button.config(state=DISABLED)
+    Controller.Main(corpus_path.get(),index_path.get(),bool_stem)
 
 
 #browsing files section:

@@ -89,8 +89,6 @@ def Main(cp, ip, to_stem):
     print((end2 - start) / 60)
 
 
-Main("","",True)
-
 
 
 
