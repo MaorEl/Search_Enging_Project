@@ -53,6 +53,7 @@ def Main(cp, ip, to_stem):
     counter=0
     for root, dirs, files in os.walk(__corpus_path):
         for file in files:
+            print (counter)
             end2 = time.time()
             if ((end2-start)/60)>10 and ((end2-start)/60) <10.10:
                 print(str(file))
@@ -65,7 +66,7 @@ def Main(cp, ip, to_stem):
                 dic_to_parse.clear()
                 docs_dic = ReadFile.docs_dictionary
                 counter += 1
-            if counter == 100:
+            if counter == 10:
                 newIndexer.SaveAndMergePostings()
                 counter = 0
     newIndexer.SaveAndMergePostings()

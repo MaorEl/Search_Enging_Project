@@ -1,5 +1,6 @@
 import os
 import pathlib
+import pickle
 import time
 import collections
 
@@ -38,14 +39,17 @@ def contains_digit(term):
 def Main(cp, ip, to_stem):
     global __corpus_path
     global __index_path
+    global doc
     Parser.stem = getStemmerFromUser() #todo: change to_stem and remove the function
     #cp = 'C:\Retrieval_folder\corpus' #todo: to delete
     ip = 'C:\Retrieval_folder\\index' #todo: to delete
     cp = 'C:\Retrieval_folder\\full_corpus'
+    ip = 'D:\documents\\users\\anaelgor\Downloads\corpus\index'  # todo: to delete
+    cp = 'd:\documents\\users\\anaelgor\Downloads\corpus\corpus'
     start = time.time()
-
     data_set_Path(cp, ip)
-    Indexer.create_empty_posting_files()
+
+    Indexer.create_posting_files()
     counter=0
     for root, dirs, files in os.walk(__corpus_path):
         for file in files:
@@ -58,12 +62,13 @@ def Main(cp, ip, to_stem):
                 sorted_dictionary = collections.OrderedDict(sorted(dic_of_one_file.items())) #todo: check this on lab
                 index_start = time.time()
                 Indexer.merge_dictionaries(sorted_dictionary)
-                index_end = time.time()
-                print("indexer time for file: " +str(counter) + " " +  str(index_end-index_start))
-                counter+=1
                 dic_to_parse.clear()
-
-
+                docs_dic = ReadFile.docs_dictionary
+                counter += 1
+            if counter == 10:
+                Indexer.SaveAndMergePostings()
+                counter = 0
+    Indexer.SaveAndMergePostings()
     end2 = time.time()
     print((end2 - start) / 60)
 
