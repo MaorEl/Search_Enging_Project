@@ -18,7 +18,7 @@ def create_city_db():
                 info_about_city = {'country': dic['name'], 'population': dic['population'], 'currency': dic['currencies'][0]['code'], 'capital': dic['capital']}
             except KeyError:
                 info_about_city = {'country': dic['name'], 'population': dic['population'], 'currency': dic['currencies'][1]['code'],'capital': dic['capital']}
-            city_db[dic['capital']]= info_about_city
+            city_db[dic['capital'].upper()]= info_about_city
 
 class City:
 
@@ -69,4 +69,7 @@ class City:
                 pass
             finally:
                 self.dic_doc_index = {docID: ['TAG']}
-
+#
+# create_city_db()
+# c = City("BUDAPEST", "1")
+# print(c.capital + ',' + c.currency + ',' + c.country)

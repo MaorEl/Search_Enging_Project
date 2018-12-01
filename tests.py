@@ -1,10 +1,10 @@
 import pickle
 import urllib
 import json
-
-__dictionary_of_postings = {1:{1:1,1:2}, 2:{2:1,2:2}}
-
-url = 'http://getcitydetails.geobytes.com/GetCityDetails?fqcn=Paris'
+#
+# __dictionary_of_postings = {1:{1:1,1:2}, 2:{2:1,2:2}}
+#
+# url = 'http://getcitydetails.geobytes.com/GetCityDetails?fqcn=Paris'
 # response = urllib.urlopen(url)
 # json = json.loads(response.url)
 #
@@ -21,8 +21,15 @@ url = 'http://getcitydetails.geobytes.com/GetCityDetails?fqcn=Paris'
 #         x=2
 #
 #
-# with open( 'C:\Retrieval_folder\index\\abc', 'rb') as file:
-#     __current_posting = pickle.load(file)
+#
+#
+# with open( 'D:\documents\\users\\anaelgor\Downloads\corpus\index\cities', 'rb') as file:
+#     cities = pickle.load(file)
+#     print('x')
+#     file.close()
+#
+# with open( 'D:\documents\\users\\anaelgor\Downloads\corpus\index\\tuvwxyz', 'rb') as file:
+#     posting = pickle.load(file)
 #     print('x')
 #     file.close()
 

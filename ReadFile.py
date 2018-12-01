@@ -21,13 +21,15 @@ def __extractCITY():
     global city_dictionary
     if "<F P=104>" in current_doc:
         current_CITY = current_doc.split("<F P=104>")[1].split()[0]
-        if current_CITY != '</F>':
+        if current_CITY != '</F>' and current_CITY.isalpha():
             current_CITY = current_CITY.upper()
             if current_CITY not in city_dictionary:
                 city_dictionary[current_CITY] = City(current_CITY,current_DOCNO)
             else:
                 city_object = {current_DOCNO : ['TAG']}
                 city_dictionary[current_CITY].dic_doc_index.update(city_object)
+        else:
+            current_CITY = ""
 
 def __extractDATE():
     global current_DATE
