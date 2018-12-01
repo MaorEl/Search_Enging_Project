@@ -23,7 +23,7 @@ window.title("Search Engine")
 
 #photo for logo
 my_path = os.path.abspath(os.path.dirname(__file__))
-path = os.path.join(my_path, "../images/logo.png")
+path = os.path.join(my_path, "images/logo.png")
 photo = PhotoImage(file=path)
 w = Label(topFrame,image=photo)
 w.pack()
@@ -43,6 +43,8 @@ def browse_folder_for_index_path():
     global index_path
     filename = filedialog.askdirectory()
     index_path.set(filename)
+
+
 
 #browsing files section:
 corpus_path = StringVar() #to keep result of browse button
@@ -96,5 +98,12 @@ scrollbar.config(command=list_lang.yview)
 #
 # checkBox = Checkbutton(bottomFrame,text="I agree")
 # checkBox.grid(column=0,columnspan=2)
+def start_button_command():
+    global checkBox, textfield_corpus_path, textfield_index_path
+    if checkBox.variable==1:
+        bool_stem = True
+    else:
+        bool_stem= False
+
 window.mainloop()
 
