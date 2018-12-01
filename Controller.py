@@ -12,6 +12,7 @@ from City import create_city_db,city_db
 
 __corpus_path = ""
 __index_path = ""
+__stem_suffix = ''
 
 def data_set_Path(corpus_path, index_path):
     global __stopwords_path
@@ -24,17 +25,35 @@ def data_set_Path(corpus_path, index_path):
     Indexer.set_path_to_postiong_files(__index_path)
 
 def saveCityDictionaryToDisk(ip):
-    with open(ip + '\cities', 'wb') as file:
+    global __stem_suffix
+    with open(ip + '\cities' + __stem_suffix, 'wb') as file:
         pickle.dump(ReadFile.city_dictionary, file)
         file.close()
-        x=2
+
+
+def saveMainDictionaryToDisk(ip):
+    global __stem_suffix
+    with open(ip + '\main_dictionary' + __stem_suffix, 'wb') as file:
+        pickle.dump(Indexer.main_dictionary, file)
+        file.close()
+
+
+def saveDocumentDictionaryToDisk(ip):
+    global __stem_suffix
+    with open(ip + '\docs_dictionary' + __stem_suffix, 'wb') as file:
+        pickle.dump(ReadFile.docs_dictionary, file)
+        file.close()
+
 
 def Main(cp, ip, to_stem):
     global __corpus_path
     global __index_path
     global doc
+    global __stem_suffix
     create_city_db()
     Parser.stem = to_stem
+    if to_stem is True:
+        __stem_suffix = '_stem'
     #''' DEBUG ONLY ! ! !
     #cp = 'C:\Retrieval_folder\corpus' #todo: to delete
     ip = 'C:\Retrieval_folder\\index' #todo: to delete
@@ -64,6 +83,8 @@ def Main(cp, ip, to_stem):
                 counter = 0
     Indexer.SaveAndMergePostings()
     saveCityDictionaryToDisk(ip)
+    saveMainDictionaryToDisk(ip)
+    saveDocumentDictionaryToDisk(ip)
     end2 = time.time()
     print((end2 - start) / 60)
 
