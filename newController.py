@@ -45,12 +45,12 @@ def Main(cp, ip, to_stem):
     ip = 'C:\Retrieval_folder\\index' #todo: to delete
     cp = 'C:\Retrieval_folder\\full_corpus'
     ip = 'D:\documents\\users\\anaelgor\Downloads\corpus\index'  # todo: to delete
-    cp = 'd:\documents\\users\\anaelgor\Documents\corpus\corpus'
+    cp = 'd:\documents\\users\\anaelgor\Downloads\corpus\corpus'
     start = time.time()
-
     data_set_Path(cp, ip)
-    #Indexer.create_empty_posting_files()
-    # counter=0
+
+    newIndexer.create_posting_files()
+    counter=0
     for root, dirs, files in os.walk(__corpus_path):
         for file in files:
             end2 = time.time()
@@ -62,16 +62,13 @@ def Main(cp, ip, to_stem):
                 sorted_dictionary = collections.OrderedDict(sorted(dic_of_one_file.items())) #todo: check this on lab
                 index_start = time.time()
                 newIndexer.merge_dictionaries(sorted_dictionary)
-                # index_end = time.time()
-                # print("indexer time for file: " +str(counter) + " " +  str(index_end-index_start))
-                # counter+=1
                 dic_to_parse.clear()
                 docs_dic = ReadFile.docs_dictionary
-                x=5
-    newIndexer.create_posting_files()
-    with open('C:\Retrieval_folder\\index\docs_dic', 'wb') as file:
-        pickle.dump(docs_dic, file)
-        file.close()
+                counter += 1
+            if counter == 100:
+                newIndexer.SaveAndMergePostings()
+                counter = 0
+    newIndexer.SaveAndMergePostings()
     end2 = time.time()
     print((end2 - start) / 60)
 

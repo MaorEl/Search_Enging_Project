@@ -16,7 +16,14 @@ __dictionary_of_posting_pointers = {
     't':'tuvwxyz','u':'tuvwxyz','v':'tuvwxyz','w':'tuvwxyz','x':'tuvwxyz','y':'tuvwxyz','z':'tuvwxyz','T':'tuvwxyz','U':'tuvwxyz','V':'tuvwxyz','W':'tuvwxyz','X':'tuvwxyz','Y':'tuvwxyz','Z':'tuvwxyz'
 }
 
-posting_abc =  posting_defgh =  posting_ijklmn =  posting_opqrs = posting_tuvwxyz =  posting_others =  posting_others = {}
+posting_abc = {}
+posting_defgh = {}
+posting_ijklmn = {}
+posting_opqrs = {}
+posting_tuvwxyz =  {}
+posting_others = {}
+
+__posting_from_disk = {}
 
 __dictionary_of_postings = {'abc': posting_abc,'defgh': posting_defgh, 'ijklmn':posting_ijklmn, 'opqrs': posting_opqrs, 'tuvwxyz': posting_tuvwxyz, 'others': posting_others }
 
@@ -118,9 +125,9 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
 # the dictionary we get as argument is the most update by term upper/lower case.
 # so we need to deal with it well
 def mergePostingsAndSaveToDisk(key): # {term : { doc : term}}
-    #global main_dictionary
     global __dictionary_of_postings
-    global  posting_from_disk
+    global  __posting_from_disk
+    posting_from_disk = __posting_from_disk
     dic = __dictionary_of_postings[key]
     for str_term in dic: # the most update term
         if str_term in posting_from_disk: # as it is
@@ -145,10 +152,10 @@ def write_posting_file_to_disk(key):
 
 def readPosting(key):
     global __posting_files_path
-    global posting_from_disk
+    global __posting_from_disk
 
     with open(__posting_files_path + '\\' + str(key), 'rb') as file:
-        posting_from_disk = pickle.load(file)
+        __posting_from_disk = pickle.load(file)
         file.close()
 
 def SaveAndMergePostings():
