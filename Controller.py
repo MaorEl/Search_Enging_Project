@@ -8,6 +8,7 @@ import ReadFile
 import Parser
 import Indexer
 from ReadFile import dic_to_parse
+from City import create_city_db,city_db
 
 __corpus_path = ""
 __index_path = ""
@@ -32,14 +33,12 @@ def getStemmerFromUser():
     #TODO: implements this from user GUI
     return True
 
-def contains_digit(term):
-    return any(char.isdigit() for char in term)
-
 
 def Main(cp, ip, to_stem):
     global __corpus_path
     global __index_path
     global doc
+    create_city_db()
     Parser.stem = getStemmerFromUser() #todo: change to_stem and remove the function
     #cp = 'C:\Retrieval_folder\corpus' #todo: to delete
     ip = 'C:\Retrieval_folder\\index' #todo: to delete
@@ -48,7 +47,6 @@ def Main(cp, ip, to_stem):
     cp = 'd:\documents\\users\\anaelgor\Downloads\corpus\corpus'
     start = time.time()
     data_set_Path(cp, ip)
-
     Indexer.create_posting_files()
     counter=0
     for root, dirs, files in os.walk(__corpus_path):

@@ -5,6 +5,21 @@ import time
 from urllib.error import HTTPError
 import Parser
 
+city_db = {}  # dictionary of city_name as key, value: dictionary of country,capital,currency
+
+def create_city_db():
+    global city_db
+    url = "http://restcountries.eu/rest/v2/all?fields=name;capital;population;currencies"
+    with urllib.request.urlopen(url) as res:
+        data= res.read()
+        json_data = json.loads(data)
+        for dic in json_data:
+            try:
+                info_about_city = {'country': dic['name'], 'population': dic['population'], 'currency': dic['currencies'][0]['code'], 'capital': dic['capital']}
+            except KeyError:
+                info_about_city = {'country': dic['name'], 'population': dic['population'], 'currency': dic['currencies'][1]['code'],'capital': dic['capital']}
+            city_db[dic['capital']]= info_about_city
+
 class City:
 
     def round_a_sum(self, number):
@@ -27,54 +42,32 @@ class City:
                 return splited_num[0] + '.' + splited_num[1][0] + new_digit + sign
 
     def __init__(self, city, docID):
-        start = time.time()
-        try:
-            url = 'https://restcountries.eu/rest/v2/capital/' + city + '?fields=name;capital;currencies;population'
-            with urllib.request.urlopen(url) as url1:
-                if (url1.status == 200):
-                    s = url1.read()
-                    json_result = json.loads(s)[0]
-                    self.capital = json_result['capital']
-                    self.currency = json_result['currencies'][0]['code']
-                    self.population = self.round_a_sum(number_format(str(json_result['population'])))
-                    self.country = json_result['name']
-        except HTTPError:
-            try:
-                url = 'http://getcitydetails.geobytes.com/GetCityDetails?fqcn=' + city
-                with urllib.request.urlopen(url) as url1:
-                    s = url1.read()
-                    #print(time.time()-start)
-                    json_result = json.loads(s)
-                    self.capital = json_result['geobytescapital']
-                    self.currency = json_result['geobytescurrencycode']
-                    population = str(json_result['geobytespopulation'])
-                    if population != '':
-                        self.population = self.round_a_sum(number_format(population))
-                    self.country = json_result['geobytescountry']
-            except:
-                print("Unexpected error occured here!!!:", sys.exc_info()[0])
-        except:
-            pass
+        def __init__(self, city, docID):
+            global city_db
+            pointer_to_city_db = city_db
+            if city in pointer_to_city_db:
+                self.capital = city_db[city]['capital']
+                self.currency = city_db[city]['currency']
+                populuation_to_fix = str(city_db[city]['population'])
+                self.population = self.round_a_sum(Parser.number_format(populuation_to_fix))
+                self.country = city_db[city]['country']
+                self.dic_doc_index = {docID: ['TAG']}
+            else:
+                try:
+                    url = 'http://getcitydetails.geobytes.com/GetCityDetails?fqcn=' + city
+                    with urllib.request.urlopen(url) as url1:
+                        s = url1.read()
+                        # print(time.time()-start)
+                        json_result = json.loads(s)
+                        self.capital = json_result['geobytescapital']
+                        self.currency = json_result['geobytescurrencycode']
+                        population = str(json_result['geobytespopulation'])
+                        if population != '':
+                            self.population = self.round_a_sum(Parser.number_format(population))
+                        self.country = json_result['geobytescountry']
+                except:
+                    print("Unexpected error occured here!!!:", sys.exc_info()[0])
+                    pass
+                finally:
+                    self.dic_doc_index = {docID: ['TAG']}
 
-        finally:
-            self.dic_doc_index = {docID: ['TAG']}
-
-def create_city_db():
-    start = time.time()
-    city_db = {} #dictionary of city_name as key, value: dictionary of
-    url = "http://restcountries.eu/rest/v2/all?fields=name;capital;population;currencies"
-    with urllib.request.urlopen(url) as res:
-        data= res.read()
-        json_data = json.loads(data)
-        for dic in json_data:
-            try:
-                info_about_city = {'name': dic['name'], 'population': dic['population'], 'currency': dic['currencies'][0]['code']}
-            except KeyError:
-                info_about_city = {'name': dic['name'], 'population': dic['population'], 'currency': dic['currencies'][1]['code']}
-            city_db[dic['capital']]= info_about_city
-    end = time.time()
-    x=city_db
-
-    print (end-start)
-
-create_city_db()
