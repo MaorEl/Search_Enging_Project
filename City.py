@@ -3,8 +3,7 @@ import urllib.request
 import json
 import time
 from urllib.error import HTTPError
-from Parser import number_format
-
+import Parser
 
 class City:
 
@@ -60,4 +59,22 @@ class City:
         finally:
             self.dic_doc_index = {docID: ['TAG']}
 
+def create_city_db():
+    start = time.time()
+    city_db = {} #dictionary of city_name as key, value: dictionary of
+    url = "http://restcountries.eu/rest/v2/all?fields=name;capital;population;currencies"
+    with urllib.request.urlopen(url) as res:
+        data= res.read()
+        json_data = json.loads(data)
+        for dic in json_data:
+            try:
+                info_about_city = {'name': dic['name'], 'population': dic['population'], 'currency': dic['currencies'][0]['code']}
+            except KeyError:
+                info_about_city = {'name': dic['name'], 'population': dic['population'], 'currency': dic['currencies'][1]['code']}
+            city_db[dic['capital']]= info_about_city
+    end = time.time()
+    x=city_db
 
+    print (end-start)
+
+create_city_db()
