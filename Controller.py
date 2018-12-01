@@ -67,6 +67,7 @@ def Main(cp, ip, to_stem):
     counter = 0
     for root, dirs, files in os.walk(__corpus_path):
         for file in files:
+            print("file!!!")
             end2 = time.time()
             if ((end2-start)/60)>10 and ((end2-start)/60) <10.10:
                 print(str(file))

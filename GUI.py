@@ -1,7 +1,9 @@
+import _thread
 import tkinter
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
+import threading
 
 import os.path
 
@@ -64,9 +66,7 @@ def start_button_command():
         messagebox.showwarning("Error", "Please choose path of your corpus")
     reset_button.config(state=ACTIVE)
     start_button.config(state=DISABLED)
-    Controller.Main(corpus_path.get(),index_path.get(),bool_stem)
-
-
+    indexingThread = _thread.start_new_thread(Controller.Main,(corpus_path.get(),index_path.get(),bool_stem)) # Run the indexing in a thread
 #browsing files section:
 corpus_path = StringVar() #to keep result of browse button
 index_path = StringVar() #to keep result of browse button
