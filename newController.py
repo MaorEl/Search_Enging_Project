@@ -44,6 +44,8 @@ def Main(cp, ip, to_stem):
     #cp = 'C:\Retrieval_folder\corpus' #todo: to delete
     ip = 'C:\Retrieval_folder\\index' #todo: to delete
     cp = 'C:\Retrieval_folder\\full_corpus'
+    ip = 'D:\documents\\users\\anaelgor\Downloads\corpus\index'  # todo: to delete
+    cp = 'd:\documents\\users\\anaelgor\Documents\corpus\corpus'
     start = time.time()
 
     data_set_Path(cp, ip)
