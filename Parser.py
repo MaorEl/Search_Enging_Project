@@ -10,7 +10,6 @@ __months_set = {'january':'01', 'jan':'01', 'february':'02', 'feb':'02', 'march'
                 'may':'05', 'june':'06', 'jun':'06', 'july':'07', 'jul':'07', 'august':'08', 'aug':'08', 'september':'09',
                 'sep':'09', 'october':'10', 'oct':'10', 'november':'11', 'nov':'11', 'december':'12', 'dec':'12'}
 
-__stop_words = []
 stop_words_dict = {}
 stemmed_terms = {} # will contain the actual term of the dictionary
 stemmer = PorterStemmer.PorterStemmer()
@@ -225,7 +224,7 @@ def insert_to_dic(new_term, doc):
         one_file_dictionary[new_term]={doc:1}
         counter_of_unique_words += 1
 
-#todo: split by [,],{,},(,)
+
 def parse(dictionary):
     #print(file)
     global stemmed_terms
@@ -241,9 +240,8 @@ def parse(dictionary):
         city_of_doc = docs[str(doc)].city
         if text is not None or text is not "":
             index = 0
-            splited = text.split()
-            #todo: decide if to delete
-            #splited = ' '.join(' '.join(' '.join(' '.join(' '.join(' '.join(text.split('(')).split(')')).split(']')).split('[')).split('{')).split('}')).split()
+            #splited = text.split()
+            splited = ' '.join(' '.join(' '.join(' '.join(' '.join(' '.join(text.split('(')).split(')')).split(']')).split('[')).split('{')).split('}')).split()
 
 
             length_of_splited_text = len(splited)
@@ -375,7 +373,6 @@ def parse(dictionary):
                             index = index + 1
                         elif term.upper() == city_of_doc:
                             ReadFile.city_dictionary[city_of_doc].dic_doc_index[str(doc)].append(counter_of_words)
-                            xxxxx= ReadFile.city_dictionary
                             new_term = upper_lower_case_format(term)
                             index = index+1
                         else: # upper/lower case regular word
@@ -395,15 +392,3 @@ def parse(dictionary):
 
         update_docs_and_initalize_counters(str(doc))
     return one_file_dictionary
-
-
-                #todo: check in indexer if term exist upper/lower ->> merging the keys
-
-##dobug##
-# path = 'C:\Retrieval_folder\\full_corpus'
-# __stopwords_path = path + "/stop_words.txt"
-# set_stop_words_file(__stopwords_path)
-# text = "internity intern Dog dogs"
-# dic = {}
-# dic ["doc1"] = text
-# parse(dic,"m")

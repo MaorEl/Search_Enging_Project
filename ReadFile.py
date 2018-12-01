@@ -2,7 +2,6 @@ from City import City
 from DocumentInfo import DocumentInfo
 
 docs_dictionary = {} #Doc Number will be the key. value is a Document
-corpus_path = ''
 dic_to_parse = {}
 city_dictionary = {}
 
