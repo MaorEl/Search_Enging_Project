@@ -42,6 +42,7 @@ def create_posting_files(stem_suffix):
 
 def insert_to_posting(term, docID_tf_dic):
     global __current_posting
+    post = __current_posting
     if term in __current_posting:
         tmp_termContentOnPostingFile = __current_posting[term]
         tmp_termContentOnPostingFile.update(docID_tf_dic)
@@ -67,6 +68,8 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
     global __current_posting_file_name
     global __dictionary_of_posting_pointers
     for str_term in dictionary:
+        if str_term == '50cm':
+            x=1
         str_term_0 = str_term[0]
         __current_posting = __dictionary_of_postings[__dictionary_of_posting_pointers.get(str_term_0,'others')]
         if str_term in main_dictionary: #in dictionary, posting file exists
@@ -147,13 +150,11 @@ def readPosting(key):
         file.close()
 
 def SaveAndMergePostings():
-    start = time.time()
     global __dictionary_of_postings
     for key in __dictionary_of_postings:
         readPosting(key)
         mergePostingsAndSaveToDisk(key)
         __dictionary_of_postings[key].clear()
-    print (time.time() - start)
 
 
 def reset():

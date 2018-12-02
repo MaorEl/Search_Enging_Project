@@ -28,9 +28,20 @@ import json
 #     print('x')
 #     file.close()
 #
-# with open( 'D:\documents\\users\\anaelgor\Downloads\corpus\index\\tuvwxyz', 'rb') as file:
-#     posting = pickle.load(file)
+
+
+
+
+# with open( 'C:\Retrieval_folder\index\others_stem', 'rb') as file:
+#     main = pickle.load(file)
 #     print('x')
 #     file.close()
 #
+# with open( 'C:\Retrieval_folder\index\main_dictionary_stem', 'rb') as file:
+#     main1 = pickle.load(file)
+#     print('x')
+#     file.close()
 #
+# cm_50 = main['50cm']
+# cm_501 = main1['50cm']
+# print("x")
