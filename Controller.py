@@ -56,8 +56,8 @@ def Main(cp, ip, to_stem):
         __stem_suffix = '_stem'
     #''' DEBUG ONLY ! ! !
     #cp = 'C:\Retrieval_folder\corpus' #todo: to delete
-    ip = 'C:\Retrieval_folder\\index' #todo: to delete
-    cp = 'C:\Retrieval_folder\\full_corpus'
+    #ip = 'C:\Retrieval_folder\\index' #todo: to delete
+    #cp = 'C:\Retrieval_folder\\full_corpus'
     #ip = 'D:\documents\\users\\anaelgor\Downloads\corpus\index'  # todo: to delete
     #cp = 'd:\documents\\users\\anaelgor\Downloads\corpus\corpus'
     #'''
@@ -67,7 +67,7 @@ def Main(cp, ip, to_stem):
     counter = 0
     for root, dirs, files in os.walk(__corpus_path):
         for file in files:
-            print("file!!!")
+            #print("file!!!")
             end2 = time.time()
             if ((end2-start)/60)>10 and ((end2-start)/60) <10.10:
                 print(str(file))

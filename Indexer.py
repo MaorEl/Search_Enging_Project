@@ -53,21 +53,6 @@ def set_path_to_postiong_files(path):
     __posting_files_path = path
     pass
 
-def switch_dictionaries(letter):
-    global __posting_files_path
-    global __current_posting_file_name
-    global __current_posting
-    global __dictionary_of_posting_pointers
-    with open(__posting_files_path + '\\' + __current_posting_file_name, 'wb') as file:
-        pickle.dump(__current_posting, file)
-        file.close()
-    __current_posting_file_name = __dictionary_of_posting_pointers.get(letter, 'others')
-    with open(__posting_files_path + '\\' + __current_posting_file_name, 'rb') as file:
-        __current_posting = pickle.load(file)
-        file.close()
-
-
-
 def calculate_tf(doc_id_tf):
     counter = 0
     for key in doc_id_tf:
