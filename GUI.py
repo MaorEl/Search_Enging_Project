@@ -8,17 +8,20 @@ import os.path
 
 import Controller
 
-index_thread = None
-window = Tk()
-window.geometry("700x500")
-window.resizable(False,False)
-topFrame = Frame(window, width=700,height=100)
-topFrame.config()
-topFrame.pack()
-centerFrame = Frame(window,width=700, height=300)
-centerFrame.pack(side=TOP)
-bottomFrame = Frame(window,width=700,height=100)
-bottomFrame.pack(side=BOTTOM)
+class GUI:
+
+    def __init__(self):
+        self.index_thread = None
+        self.window = Tk()
+        self.window.geometry("700x500")
+        self.window.resizable(False,False)
+        self.topFrame = Frame(self.window, width=700,height=100)
+        self.topFrame.config()
+        self.topFrame.pack()
+        centerFrame = Frame(window,width=700, height=300)
+        centerFrame.pack(side=TOP)
+        bottomFrame = Frame(window,width=700,height=100)
+        bottomFrame.pack(side=BOTTOM)
 
 button_height=4
 button_width=13
@@ -64,6 +67,11 @@ def start_button_command():
         messagebox.showwarning("Error", "Please choose path to your index")
     elif len(corpus_path.get()) == 0:
         messagebox.showwarning("Error", "Please choose path of your corpus")
+    elif not os.path.exists(corpus_path.get()):
+        messagebox.showwarning("Error", "Your corpus path is not exists. \n Please check it out")
+    elif not os.path.exists(index_path.get()):
+        messagebox.showwarning("Error", "Your index path is not exists. \n Please check it out")
+
     else:
         reset_button.config(state=ACTIVE)
         start_button.config(state=DISABLED)
