@@ -16,6 +16,7 @@ class GUI:
     def __init__(self):
         self.index_thread = None
         self.window = Tk()
+        self.dictionary_in_main_memory = False
 
         #3 parts of main page:
         self.topFrame = Frame(self.window, width=700,height=100)
@@ -64,7 +65,7 @@ class GUI:
 
         # start Button and more buttons
         self.start_button = Button(self.centerFrame, text="Start", command=self.start_button_command, width=self.button_width * 2,height=self.button_height, bg="blue")
-        self.show_dic_button = Button(self.centerFrame, text="Show Dictionary", command=self.show_dic_command, width=self.button_width,height=self.button_height, bg="yellow", state=DISABLED)
+        self.show_dic_button = Button(self.centerFrame, text="Show Dictionary", command=self.show_dic_command, width=self.button_width,height=self.button_height, bg="yellow")
         self.load_dic_button = Button(self.centerFrame, text="Load Dictionary", command=self.load_dic_command, width=self.button_width,height=self.button_height, bg="green")
         self.reset_button = Button(self.centerFrame, text="Reset", command=self.reset_command, width=self.button_width, height=self.button_height, bg='red', state=DISABLED)
         self.design_GUI()
@@ -129,6 +130,9 @@ class GUI:
             messagebox.showwarning("Error", "Your corpus path is not exists. \n Please check it out")
         elif not os.path.exists(self.index_path.get()):
             messagebox.showwarning("Error", "Your index path is not exists. \n Please check it out")
+        elif not os.path.exists(self.corpus_path.get() + '\stop_words.txt'):
+            messagebox.showwarning("Error", "Your corpus is not having stop words file. \n Please check it out")
+
 
         else:
             self.reset_button.config(state=ACTIVE)
@@ -146,7 +150,15 @@ class GUI:
 
     #show dic button
     def show_dic_command(self):
-        pass
+        if self.dictionary_in_main_memory==False:
+            messagebox.showwarning("Error", "first, load dictionary to your main memory.\ndon't look at me like this! just do it with the green button")
+        else:
+            self.dictionaryWindow = Toplevel(self.window)
+            self.dictionaryWindow.geometry("400x600")
+            self.dictionaryWindow.title("Main Dictionary")
+            main_dictionary_pointer = Controller.getMainDictionaryFromIndexerToGUI()
+
+
 
     #load dictionary button
     def load_dic_command(self):
@@ -162,7 +174,7 @@ class GUI:
             messagebox.showwarning("Error", "Please check there is dictionary in your index path. \n if there is, please check the Stemming check box mark")
         else:
             Controller.loadDictionaryFromDisk(bool_stem,  self.index_path.get())
-
+            self.dictionary_in_main_memory=True
 
     #reset button
     def reset_command(self):
@@ -176,6 +188,7 @@ class GUI:
         self.stemCheckBox.config(state=ACTIVE)
         self.textfield_corpus_path.config(state='normal')
         self.textfield_index_path.config(state='normal')
+
 
         pass
 

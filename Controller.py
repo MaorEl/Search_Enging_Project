@@ -126,3 +126,7 @@ def loadDictionaryFromDisk(to_stem, ip):
     with open(main_dic_path, 'rb') as file:
         Indexer.main_dictionary = pickle.load(file)
         file.close()
+
+
+def getMainDictionaryFromIndexerToGUI():
+    return Indexer.main_dictionary
