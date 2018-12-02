@@ -1,10 +1,12 @@
+import collections
 import threading
 import tkinter
 from tkinter import *
-from tkinter import filedialog
+from tkinter import filedialog, ttk
 from tkinter import messagebox
 
 import os.path
+from tkinter.ttk import Treeview
 
 import Controller
 
@@ -153,12 +155,47 @@ class GUI:
         if self.dictionary_in_main_memory==False:
             messagebox.showwarning("Error", "first, load dictionary to your main memory.\ndon't look at me like this! just do it with the green button")
         else:
+            text_of_waiting = Label(self.bottomFrame,text="Wait.. the dictionary will be shown in 10-20 seconds")
+            messagebox.showinfo("Wait",'Wait.. the dictionary will be shown in 10-20 seconds')
+
             self.dictionaryWindow = Toplevel(self.window)
             self.dictionaryWindow.geometry("400x600")
             self.dictionaryWindow.title("Main Dictionary")
+            self.dictionaryWindow.resizable(False, False)
+            tree = Treeview(self.dictionaryWindow, selectmode="extended", columns=("term", "tf"))
+
+            style = ttk.Style()
+            style.configure("Treeview.Heading", background='lavender')
+            tree.pack(expand=YES, fill=BOTH)
+            tree['show'] = 'headings'
+            tree.column("#0",minwidth=10, width=20,stretch=NO)
+            tree.heading("term", text="Term")
+            tree.column("term", minwidth=250, width=200 ,stretch=NO)
+            tree.heading("tf", text="Frequency in corpus")
+            tree.column("tf", minwidth=180, width=180, stretch=NO)
+
+            scrollbar = ttk.Scrollbar(self.dictionaryWindow, orient="vertical", command=tree.yview)
+            scrollbar.place(x=380,y=0 ,height=600)
+
+            tree.configure(yscrollcommand=scrollbar.set)
             main_dictionary_pointer = Controller.getMainDictionaryFromIndexerToGUI()
-
-
+            sorted_main_dictionary = dict(sorted(main_dictionary_pointer.items()))
+            odd = 'odd'
+            even = 'even'
+            i=0
+            for key in sorted_main_dictionary:
+                term = key
+                tf = str(sorted_main_dictionary[key].tf_in_corpus)
+                if i%2 == 0:
+                    tag=odd
+                else:
+                    tag=even
+                tree.insert('','end', values=(term, tf), tags=(tag,))
+                i=i+1
+            tree.tag_configure(odd, background='gold')
+            tree.tag_configure(even, background='deep sky blue')
+            tree.pack()
+            text_of_waiting.grid_remove()
 
     #load dictionary button
     def load_dic_command(self):
@@ -188,6 +225,7 @@ class GUI:
         self.stemCheckBox.config(state=ACTIVE)
         self.textfield_corpus_path.config(state='normal')
         self.textfield_index_path.config(state='normal')
+
 
 
         pass
