@@ -130,12 +130,19 @@ show_dic_button.grid(row=distance_between_lines+6, column=2)
 
 #load dictionary button
 def load_dic_command():
-    global state_of_stem
+    global state_of_stem, index_path
     if state_of_stem.get() == 1:
         bool_stem = True
     else:
         bool_stem = False
-    Controller.loadDictionaryFromDisk(bool_stem)
+    stem_suffix = ''
+    if bool_stem == True:
+        stem_suffix = '_stem'
+    main_dic_path = index_path.get() + '/' + 'main_dictionary' + stem_suffix
+    if not os.path.exists(main_dic_path):
+        messagebox.showwarning("Error", "Please check there is dictionary in your index path. \n if there is, please check the Stemming check box mark")
+    else:
+        Controller.loadDictionaryFromDisk(bool_stem, index_path.get())
 
 
 load_dic_button = Button(centerFrame,text="Load Dictionary", command=load_dic_command,width = button_width, height=button_height,bg="green")

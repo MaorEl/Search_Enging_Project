@@ -117,11 +117,12 @@ def reset_from_GUI():
     stop = True
     #todo: to update the GUI that's the reset have been succedfuly blabla and show their maesage
 
-def loadDictionaryFromDisk(to_stem):
+def loadDictionaryFromDisk(to_stem, ip):
     global __index_path, __stem_suffix
+    __index_path = ip
     if to_stem == True:
         __stem_suffix = '_stem'
-    main_dic_path = __index_path + 'main_dictionary' + __stem_suffix
+    main_dic_path = __index_path +  '/' + 'main_dictionary' + __stem_suffix
     with open(main_dic_path, 'rb') as file:
         Indexer.main_dictionary = pickle.load(file)
         file.close()
