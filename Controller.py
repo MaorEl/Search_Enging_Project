@@ -92,7 +92,7 @@ def Main(cp, ip, to_stem):
     saveMainDictionaryToDisk(ip)
     saveDocumentDictionaryToDisk(ip)
     end2 = time.time()
-    print((end2 - start) / 60)
+    print("time of program: " + str((end2 - start) / 60))
 
 
 def remove_index_files():

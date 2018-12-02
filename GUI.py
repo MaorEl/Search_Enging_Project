@@ -134,10 +134,10 @@ class GUI:
             self.reset_button.config(state=ACTIVE)
             self.start_button.config(state=DISABLED)
             self.load_dic_button.config(state=DISABLED)
-            self.browse_button_index(state=DISABLED)
-            self.browse_button_corpus(state=DISABLED)
-            self.textfield_corpus_path(state=DISABLED)
-            self.textfield_index_path(state=DISABLED)
+            self.browse_button_index.config(state=DISABLED)
+            self.browse_button_corpus.config(state=DISABLED)
+            self.textfield_corpus_path.config(state=DISABLED)
+            self.textfield_index_path.config(state=DISABLED)
           # indexingThread = _thread.start_new_thread(Controller.Main,(corpus_path.get(),index_path.get(),bool_stem)) # Run the indexing in a thread
             self.index_thread = threading.Thread(target=Controller.Main, args=(self.corpus_path.get(),self.index_path.get(),bool_stem))
             self.index_thread.start()
@@ -168,12 +168,12 @@ class GUI:
         Controller.reset_from_GUI()
         self.start_button.config(state=ACTIVE)
         self.load_dic_button.config(state=ACTIVE)
-        self.browse_button_index(state=ACTIVE)
-        self.browse_button_corpus(state=ACTIVE)
-        self.browse_button_index(state=ACTIVE)
-        self.browse_button_corpus(state=ACTIVE)
-        self.textfield_corpus_path(state=ACTIVE)
-        self.textfield_index_path(state=ACTIVE)
+        self.browse_button_index.config(state=ACTIVE)
+        self.browse_button_corpus.config(state=ACTIVE)
+        self.browse_button_index.config(state=ACTIVE)
+        self.browse_button_corpus.config(state=ACTIVE)
+        self.textfield_corpus_path.config(state=ACTIVE)
+        self.textfield_index_path.config(state=ACTIVE)
 
         pass
 
