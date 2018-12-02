@@ -1,14 +1,14 @@
-import _thread
+import threading
 import tkinter
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
-import threading
 
 import os.path
 
 import Controller
 
+index_thread = None
 window = Tk()
 window.geometry("700x500")
 window.resizable(False,False)
@@ -55,7 +55,7 @@ def browse_folder_for_index_path():
     index_path.set(filename)
 
 def start_button_command():
-    global state_of_stem, corpus_path, index_path,reset_button,start_button
+    global state_of_stem, corpus_path, index_path,reset_button,start_button,index_thread
     if state_of_stem.get() == 1:
         bool_stem = True
     else:
@@ -66,8 +66,10 @@ def start_button_command():
         messagebox.showwarning("Error", "Please choose path of your corpus")
     reset_button.config(state=ACTIVE)
     start_button.config(state=DISABLED)
-    indexingThread = _thread.start_new_thread(Controller.Main,(corpus_path.get(),index_path.get(),bool_stem)) # Run the indexing in a thread
-#browsing files section:
+  # indexingThread = _thread.start_new_thread(Controller.Main,(corpus_path.get(),index_path.get(),bool_stem)) # Run the indexing in a thread
+    index_thread = threading.Thread(target=Controller.Main, args=(corpus_path.get(),index_path.get(),bool_stem))
+    index_thread.start()
+    print("maor")#browsing files section:
 corpus_path = StringVar() #to keep result of browse button
 index_path = StringVar() #to keep result of browse button
 first_row = 0
@@ -135,8 +137,9 @@ load_dic_button.grid(row=distance_between_lines+6, column=0)
 def reset_command():
     global start_button
     print("Stop Indexing :(")
+
     start_button.config(state=ACTIVE)
-    Controller.reset()
+    Controller.reset_from_GUI()
 
     pass
 

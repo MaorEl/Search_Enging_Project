@@ -61,3 +61,13 @@ def takeDocsInfoFromOneFile(path):
         __extractTEXT()
         docs_dictionary[current_DOCNO] = DocumentInfo(current_DATE, current_CITY, str(path))
 
+
+def reset():
+    global docs_dictionary, dic_to_parse, city_dictionary, current_CITY, current_doc, current_DATE, current_DOCNO
+    docs_dictionary = {}
+    dic_to_parse = {}
+    city_dictionary = {}
+    current_doc = ""
+    current_DOCNO = ""
+    current_CITY = ""
+    current_DATE = ""

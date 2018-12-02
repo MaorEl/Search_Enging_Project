@@ -1,6 +1,7 @@
 import os
 import pathlib
 import pickle
+import shutil
 import time
 import collections
 
@@ -10,6 +11,7 @@ import Indexer
 from ReadFile import dic_to_parse
 from City import create_city_db,city_db
 
+stop = False
 __corpus_path = ""
 __index_path = ""
 __stem_suffix = ''
@@ -63,10 +65,13 @@ def Main(cp, ip, to_stem):
     #'''
     start = time.time()
     data_set_Path(cp, ip)
-    Indexer.create_posting_files()
+    Indexer.create_posting_files(__stem_suffix)
     counter = 0
     for root, dirs, files in os.walk(__corpus_path):
         for file in files:
+            if (stop==True):
+                reset() #will clear the memory of the program %% will remove the posting files and dictionary
+                return
             #print("file!!!")
             end2 = time.time()
             if ((end2-start)/60)>10 and ((end2-start)/60) <10.10:
@@ -90,26 +95,26 @@ def Main(cp, ip, to_stem):
     print((end2 - start) / 60)
 
 
+def remove_index_files():
+    global __index_path
+    if os.path.exists(__index_path):
+        shutil.rmtree(__index_path)
+        os.makedirs(__index_path)
 
+def reset():
+    global __corpus_path,__index_path, __stem_suffix
+    ReadFile.reset()
+    Parser.reset()
+    Indexer.reset()
+    remove_index_files()
+    __stem_suffix = ''
+    __corpus_path = ""
+    __index_path = ""
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#this function will update the boolean of stopping, so the program will stop safely
+def reset_from_GUI():
+    global stop
+    stop = True
+    #todo: to update the GUI that's the reset have been succedfuly blabla and show their maesage
 
 

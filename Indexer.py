@@ -4,11 +4,6 @@ import time
 
 import TermInfo
 
-main_dictionary = {} # {term : <df , ptr to the first occurrence of this term in posting file> }
-
-__posting_files_path = ""
-__current_posting = {}
-__current_posting_file_name = 'others'
 __dictionary_of_posting_pointers = {
     'a':'abc','b':'abc','c':'abc','A':'abc','B':'abc','C':'abc',
     'd':'defgh','e':'defgh','f':'defgh','g':'defgh','h':'defgh','D':'defgh','E':'defgh','F':'defgh','G':'defgh','H':'defgh',
@@ -17,25 +12,31 @@ __dictionary_of_posting_pointers = {
     't':'tuvwxyz','u':'tuvwxyz','v':'tuvwxyz','w':'tuvwxyz','x':'tuvwxyz','y':'tuvwxyz','z':'tuvwxyz','T':'tuvwxyz','U':'tuvwxyz','V':'tuvwxyz','W':'tuvwxyz','X':'tuvwxyz','Y':'tuvwxyz','Z':'tuvwxyz'
 }
 
+main_dictionary = {} # {term : <df , ptr to the first occurrence of this term in posting file> }
+__posting_files_path = ""
+__current_posting = {}
+__current_posting_file_name = ''
 posting_abc = {}
 posting_defgh = {}
 posting_ijklmn = {}
 posting_opqrs = {}
 posting_tuvwxyz =  {}
 posting_others = {}
-
 __posting_from_disk = {}
+__stem_suffix = ''
 
 __dictionary_of_postings = {'abc': posting_abc,'defgh': posting_defgh, 'ijklmn':posting_ijklmn, 'opqrs': posting_opqrs, 'tuvwxyz': posting_tuvwxyz, 'others': posting_others }
 
 
 
-def create_posting_files():
+def create_posting_files(stem_suffix):
     global __posting_files_path
     global __dictionary_of_postings
+    global __stem_suffix
+    __stem_suffix = stem_suffix
 
     for key in __dictionary_of_postings:
-        with open(__posting_files_path + '\\' + str(key), 'wb') as file:
+        with open(__posting_files_path + '\\' + str(key) + __stem_suffix, 'wb') as file:
             pickle.dump(__dictionary_of_postings[key], file)
             file.close()
 
@@ -96,14 +97,12 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
                 term_info = TermInfo.TermInfo()
                 term_info.add_df(len(dictionary[str_term]))
                 term_info.add_tf(calculate_tf(dictionary[str_term]))
-                term_info.set_ptr(__current_posting_file_name)
                 main_dictionary[str_term] = term_info
                 insert_to_posting(str_term, dictionary[str_term])
         else: #upper case not in dictionary
             term_info = TermInfo.TermInfo()
             term_info.add_df(len(dictionary[str_term]))
             term_info.add_tf(calculate_tf(dictionary[str_term]))
-            term_info.set_ptr(__current_posting_file_name)
             main_dictionary[str_term] = term_info
             insert_to_posting(str_term, dictionary[str_term])
 
@@ -132,16 +131,18 @@ def mergePostingsAndSaveToDisk(key): # {term : { doc : term}}
 def write_posting_file_to_disk(key):
     global __posting_files_path
     global __posting_from_disk
+    global __stem_suffix
 
-    with open(__posting_files_path + '\\' + str(key), 'wb') as file:
+    with open(__posting_files_path + '\\' + str(key) + __stem_suffix, 'wb' ) as file:
         pickle.dump(__posting_from_disk, file)
         file.close()
 
 def readPosting(key):
     global __posting_files_path
     global __posting_from_disk
+    global __stem_suffix
 
-    with open(__posting_files_path + '\\' + str(key), 'rb') as file:
+    with open(__posting_files_path + '\\' + str(key)+ __stem_suffix, 'rb' ) as file:
         __posting_from_disk = pickle.load(file)
         file.close()
 
@@ -154,3 +155,18 @@ def SaveAndMergePostings():
         __dictionary_of_postings[key].clear()
     print (time.time() - start)
 
+
+def reset():
+    global main_dictionary, __posting_files_path, __current_posting, __current_posting_file_name, posting_abc, posting_defgh, posting_ijklmn
+    global posting_opqrs, posting_tuvwxyz, posting_others, __posting_from_disk
+    main_dictionary = {}  # {term : <df , ptr to the first occurrence of this term in posting file> }
+    __posting_files_path = ""
+    __current_posting = {}
+    __current_posting_file_name = ''
+    posting_abc = {}
+    posting_defgh = {}
+    posting_ijklmn = {}
+    posting_opqrs = {}
+    posting_tuvwxyz = {}
+    posting_others = {}
+    __posting_from_disk = {}

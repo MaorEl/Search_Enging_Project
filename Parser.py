@@ -392,3 +392,16 @@ def parse(dictionary):
 
         update_docs_and_initalize_counters(str(doc))
     return one_file_dictionary
+
+
+def reset():
+    global stop_words_dict, stemmed_terms, one_file_dictionary, stem, counter_of_words, counter_of_unique_words, max_tf_in_doc
+    stop_words_dict = {}
+    stemmed_terms = {}  # will contain the actual term of the dictionary
+    one_file_dictionary = {}
+    stem = False
+
+    # counters to update document information, will be initalize every time
+    counter_of_unique_words = 0
+    counter_of_words = 0
+    max_tf_in_doc = 1
