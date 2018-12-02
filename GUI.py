@@ -52,7 +52,7 @@ class GUI:
 
         # stemming option:
         self.state_of_stem = tkinter.IntVar()
-        self.checkBox = Checkbutton(self.centerFrame, text="Stemming", variable=self.state_of_stem)
+        self.stemCheckBox = Checkbutton(self.centerFrame, text="Stemming", variable=self.state_of_stem)
 
         # languages option:
         self.label_lang_list = Label(self.centerFrame, text="Choose Language:")
@@ -86,7 +86,7 @@ class GUI:
         self.textfield_index_path.grid(row=self.distance_between_lines, column=1)
         self.label_index_path.grid(row=self.distance_between_lines, column=0, sticky=W)
         self.browse_button_index.grid(row=self.distance_between_lines, column=2)
-        self.checkBox.grid(row=self.distance_between_lines + 1, column=1, sticky=W)
+        self.stemCheckBox.grid(row=self.distance_between_lines + 1, column=1, sticky=W)
 
         #languages thing
         self.label_lang_list.grid(row=self.distance_between_lines + 3, column=0)
@@ -136,8 +136,9 @@ class GUI:
             self.load_dic_button.config(state=DISABLED)
             self.browse_button_index.config(state=DISABLED)
             self.browse_button_corpus.config(state=DISABLED)
-            self.textfield_corpus_path.config(state=DISABLED)
-            self.textfield_index_path.config(state=DISABLED)
+            self.stemCheckBox.config(state=DISABLED)
+            self.textfield_corpus_path.config(state='disabled')
+            self.textfield_index_path.config(state='disabled')
           # indexingThread = _thread.start_new_thread(Controller.Main,(corpus_path.get(),index_path.get(),bool_stem)) # Run the indexing in a thread
             self.index_thread = threading.Thread(target=Controller.Main, args=(self.corpus_path.get(),self.index_path.get(),bool_stem))
             self.index_thread.start()
@@ -172,8 +173,9 @@ class GUI:
         self.browse_button_corpus.config(state=ACTIVE)
         self.browse_button_index.config(state=ACTIVE)
         self.browse_button_corpus.config(state=ACTIVE)
-        self.textfield_corpus_path.config(state=ACTIVE)
-        self.textfield_index_path.config(state=ACTIVE)
+        self.stemCheckBox.config(state=ACTIVE)
+        self.textfield_corpus_path.config(state='normal')
+        self.textfield_index_path.config(state='normal')
 
         pass
 
