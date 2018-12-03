@@ -92,7 +92,7 @@ def Main(cp, ip, to_stem):
                 Indexer.merge_dictionaries(sorted_dictionary)
                 dic_to_parse.clear()
                 counter += 1
-            if counter == 100:
+            if counter == 2:
                 Indexer.SaveAndMergePostings()
                 counter = 0
     Indexer.SaveAndMergePostings()
@@ -111,8 +111,9 @@ def Main(cp, ip, to_stem):
 def remove_index_files():
     global __index_path
     if os.path.exists(__index_path):
-        shutil.rmtree(__index_path)
-        os.makedirs(__index_path)
+        for root, dirs, files in os.walk(__index_path):
+            for file in files:
+                os.remove(os.path.join(root, file))
 
 def reset():
     global __corpus_path,__index_path, __stem_suffix
