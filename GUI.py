@@ -156,6 +156,8 @@ class GUI:
 
 
         else:
+            self.finished_program=False
+            Controller.stop=False
             self.show_dic_button.config(state=DISABLED)
             self.reset_button.config(state=ACTIVE)
             self.start_button.config(state=DISABLED)
@@ -273,14 +275,18 @@ class GUI:
 
     #reset button
     def reset_command(self):
-        Controller.reset_from_GUI()
-        self.start_button.config(state=ACTIVE)
-        self.load_dic_button.config(state=ACTIVE)
-        self.browse_button_index.config(state=ACTIVE)
-        self.browse_button_corpus.config(state=ACTIVE)
-        self.stemCheckBox.config(state=ACTIVE)
-        self.textfield_corpus_path.config(state='normal')
-        self.textfield_index_path.config(state='normal')
+        if self.finished_program == False: #if program is still running
+            Controller.reset_from_GUI()
+            self.start_button.config(state=ACTIVE)
+            self.load_dic_button.config(state=ACTIVE)
+            self.browse_button_index.config(state=ACTIVE)
+            self.browse_button_corpus.config(state=ACTIVE)
+            self.stemCheckBox.config(state=ACTIVE)
+            self.textfield_corpus_path.config(state='normal')
+            self.textfield_index_path.config(state='normal')
+        else: #if the program has been finished
+            Controller.remove_index_files()
+        messagebox.showinfo("Reset Info","your proccess has been reseted! all index files has been removed\nyour memory of program is now clear!")
 
 
 def show_information_about_indexing(num_docs,num_terms,time):
