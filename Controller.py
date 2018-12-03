@@ -64,13 +64,7 @@ def Main(cp, ip, to_stem):
     Parser.stem = to_stem
     if to_stem is True:
         __stem_suffix = '_stem'
-    #''' DEBUG ONLY ! ! !
-    #cp = 'C:\Retrieval_folder\corpus' #todo: to delete
-    #ip = 'C:\Retrieval_folder\\index' #todo: to delete
-    #cp = 'C:\Retrieval_folder\\full_corpus'
-    #ip = 'D:\documents\\users\\anaelgor\Downloads\corpus\index'  # todo: to delete
-    #cp = 'd:\documents\\users\\anaelgor\Downloads\corpus\corpus'
-    #'''
+
     start = time.time()
     data_set_Path(cp, ip)
     Indexer.create_posting_files(__stem_suffix)
@@ -82,17 +76,17 @@ def Main(cp, ip, to_stem):
                 return
             #print("file!!!")
             end2 = time.time()
-            if ((end2-start)/60)>10 and ((end2-start)/60) <10.10:
-                print(str(file))
+            # if ((end2-start)/60)>10 and ((end2-start)/60) <10.10:
+            #     print(str(file))
             if str(file) != 'stop_words.txt':
                 ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
                 dic_of_one_file = Parser.parse(dic_to_parse)
-                sorted_dictionary = collections.OrderedDict(sorted(dic_of_one_file.items())) #todo: check this on lab
+                sorted_dictionary = collections.OrderedDict(sorted(dic_of_one_file.items()))
                 index_start = time.time()
                 Indexer.merge_dictionaries(sorted_dictionary)
                 dic_to_parse.clear()
                 counter += 1
-            if counter == 2:
+            if counter == 100:
                 Indexer.SaveAndMergePostings()
                 counter = 0
     Indexer.SaveAndMergePostings()
@@ -129,7 +123,6 @@ def reset():
 def reset_from_GUI():
     global stop
     stop = True
-    #todo: to update the GUI that's the reset have been succedfuly blabla and show their maesage
 
 def loadDictionaryFromDisk(to_stem, ip):
     global __index_path, __stem_suffix

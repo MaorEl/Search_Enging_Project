@@ -67,7 +67,6 @@ class GUI:
         # self.scrollbar = Scrollbar(self.centerFrame)
         # self.list_lang = Listbox(self.centerFrame, yscrollcommand=self.scrollbar.set)
         # self.scrollbar.config(command=self.list_lang.yview)
-        # todo: languages list box
 
 
         # start Button and more buttons

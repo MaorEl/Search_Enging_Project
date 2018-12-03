@@ -1,8 +1,6 @@
 from fractions import Fraction
 import PorterStemmer
 import ReadFile
-#todo: try and catch - advance index by one
-
 __punctuations_set = {'[', '(', '{', '`', ')', '<', '|', '&', '~', '+', '^', '@', '*', '?', '.',
                       '>', ';', '_', '\'', ':', ']', '\\', "}", '!', '=', '#', ',', '\"','-','/'}
 
@@ -396,9 +394,9 @@ def parse(dictionary):
 
 def reset():
     global stop_words_dict, stemmed_terms, one_file_dictionary, stem, counter_of_words, counter_of_unique_words, max_tf_in_doc
-    stop_words_dict = {}
-    stemmed_terms = {}  # will contain the actual term of the dictionary
-    one_file_dictionary = {}
+    stop_words_dict.clear()
+    stemmed_terms.clear()  # will contain the actual term of the dictionary
+    one_file_dictionary.clear()
     stem = False
 
     # counters to update document information, will be initalize every time

@@ -69,8 +69,6 @@ class City:
                 self.currency = ''
                 self.population = ''
                 self.country = ''
-                print("Unexpected error occured here!!!:", sys.exc_info()[0])
-                pass
             finally:
                 self.dic_doc_index = {docID: ['TAG']}
 #

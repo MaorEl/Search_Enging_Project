@@ -13,6 +13,9 @@ current_CITY =""
 current_DATE=""
 current_LANG=""
 
+__punctuations_set = {'[', '(', '{', '`', ')', '<', '|', '&', '~', '+', '^', '@', '*', '?', '.',
+                      '>', ';', '_', '\'', ':', ']', '\\', "}", '!', '=', '#', ',', '\"','-','/'}
+
 def __extractDOCNO():
     global current_DOCNO
     current_DOCNO = (current_doc.split("</DOCNO>", 1)[0]).split("<DOCNO>")[1].strip()
@@ -47,12 +50,32 @@ def __extractTEXT():
         text = ""
     dic_to_parse[current_DOCNO] = text
 
+def clean_term_from_punctuations(term):
+    length = term.__len__()
+    while length > 0 and term[len(term)-1] in __punctuations_set:
+        term = term[:-1]
+        length -= 1
+    while length > 0 and term[0] in __punctuations_set:
+        term = term[1:]
+        length -= 1
+    return term
+
 def __extractLANG():
-    global current_doc
-    if '<F P=105>' in current_doc:
-        current_LANG = current_doc.split("<F P=105>")[1].split()[0]
-        if current_LANG not in lang_list:
-            lang_list.append(current_LANG)
+    global current_doc, __punctuations_set
+    try:
+        if '<F P=105>' in current_doc:
+            current_LANG = current_doc.split("<F P=105>")[1].split()[0]
+            current_LANG = clean_term_from_punctuations(current_LANG)
+            current_LANG = current_LANG.lower()
+            if current_LANG.isdigit():
+                current_LAN=''
+            else:
+                current_LANG = current_LANG[0].upper() + current_LANG[1:]
+                if current_LANG not in lang_list:
+                    #todo: remove punctuations from term first and last chars. just for the next one
+                    lang_list.append(current_LANG)
+    except:
+        current_LANG=''
 
 
 
@@ -77,10 +100,10 @@ def takeDocsInfoFromOneFile(path):
 
 def reset():
     global docs_dictionary, dic_to_parse, city_dictionary, current_CITY, current_doc, current_DATE, current_DOCNO, current_LANG, lang_list
-    docs_dictionary = {}
-    dic_to_parse = {}
-    city_dictionary = {}
-    lang_list =[]
+    docs_dictionary.clear()
+    dic_to_parse.clear()
+    city_dictionary.clear()
+    lang_list.clear()
     current_doc = ""
     current_DOCNO = ""
     current_CITY = ""
