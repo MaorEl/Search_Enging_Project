@@ -120,6 +120,9 @@ class GUI:
         self.textfield_index_path.config(state='normal')
         self.browse_button_index.config(state=ACTIVE)
         self.browse_button_corpus.config(state=ACTIVE)
+        self.show_dic_button.config(state=ACTIVE)
+        self.load_dic_button.config(state=ACTIVE)
+        self.dictionary_in_main_memory = True
 
 
     def browse_folder_for_corpus_path(self):
@@ -153,6 +156,7 @@ class GUI:
 
 
         else:
+            self.show_dic_button.config(state=DISABLED)
             self.reset_button.config(state=ACTIVE)
             self.start_button.config(state=DISABLED)
             self.load_dic_button.config(state=DISABLED)
@@ -202,7 +206,7 @@ class GUI:
     #show dic button
     def show_dic_command(self):
         if self.dictionary_in_main_memory==False:
-            messagebox.showwarning("Error", "first, load dictionary to your main memory.\ndon't look at me like this! just do it with the green button")
+            messagebox.showwarning("Error", "first, load dictionary to your main memory.\ndon't look at me like this! just do it with the Load Dictionary button\nif you have some time, you can also start the program and after it will be finished, you will be able to show dictionary")
         else:
             text_of_waiting = Label(self.bottomFrame,text="Please Wait.. the dictionary will be shown in 10-20 seconds")
             text_of_waiting.grid(row=0,column=1)
