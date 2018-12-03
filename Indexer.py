@@ -160,14 +160,14 @@ def SaveAndMergePostings():
 def reset():
     global main_dictionary, __posting_files_path, __current_posting, __current_posting_file_name, posting_abc, posting_defgh, posting_ijklmn
     global posting_opqrs, posting_tuvwxyz, posting_others, __posting_from_disk
-    main_dictionary = {}  # {term : <df , ptr to the first occurrence of this term in posting file> }
+    main_dictionary.clear()  # {term : <df , ptr to the first occurrence of this term in posting file> }
     __posting_files_path = ""
-    __current_posting = {}
+    __current_posting.clear()
     __current_posting_file_name = ''
-    posting_abc = {}
-    posting_defgh = {}
-    posting_ijklmn = {}
-    posting_opqrs = {}
-    posting_tuvwxyz = {}
-    posting_others = {}
-    __posting_from_disk = {}
+    posting_abc.clear()
+    posting_defgh.clear()
+    posting_ijklmn.clear()
+    posting_opqrs.clear()
+    posting_tuvwxyz.clear()
+    posting_others.clear()
+    __posting_from_disk.clear()

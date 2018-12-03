@@ -77,10 +77,10 @@ def takeDocsInfoFromOneFile(path):
 
 def reset():
     global docs_dictionary, dic_to_parse, city_dictionary, current_CITY, current_doc, current_DATE, current_DOCNO, current_LANG, lang_list
-    docs_dictionary = {}
-    dic_to_parse = {}
-    city_dictionary = {}
-    lang_list =[]
+    docs_dictionary.clear()
+    dic_to_parse.clear()
+    city_dictionary.clear()
+    lang_list.clear()
     current_doc = ""
     current_DOCNO = ""
     current_CITY = ""
