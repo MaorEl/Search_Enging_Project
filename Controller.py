@@ -33,6 +33,13 @@ def saveCityDictionaryToDisk(ip):
         pickle.dump(ReadFile.city_dictionary, file)
         file.close()
 
+def saveLangListToDisk(ip):
+    global __stem_suffix
+    with open(ip + '\languages' + __stem_suffix, 'wb') as file:
+        pickle.dump(ReadFile.lang_list, file)
+        file.close()
+
+
 
 def saveMainDictionaryToDisk(ip):
     global __stem_suffix
@@ -92,6 +99,8 @@ def Main(cp, ip, to_stem):
     saveCityDictionaryToDisk(ip)
     saveMainDictionaryToDisk(ip)
     saveDocumentDictionaryToDisk(ip)
+    saveLangListToDisk(ip)
+    x=ReadFile.lang_list
     end2 = time.time()
     time_final = str((end2 - start) / 60)
     print("time of program: " + time_final)
