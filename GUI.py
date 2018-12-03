@@ -10,12 +10,16 @@ from tkinter.ttk import Treeview
 
 import Controller
 
+
+
+
 class GUI:
 
     def start_program(self):
         self.window.mainloop()
 
     def __init__(self):
+        self.finished_program = True #todo: change this to False, update the value to True only while indexing will be finished (from controller)
         self.index_thread = None
         self.window = Tk()
         self.dictionary_in_main_memory = False
@@ -48,28 +52,29 @@ class GUI:
 
         self.label_corpus_path = Label(self.centerFrame, text="Please enter your corpus path:")
         self.textfield_corpus_path = Entry(self.centerFrame, textvariable=self.corpus_path, width=40)
-        self.browse_button_corpus = Button(self.centerFrame, text="Browse", command=self.browse_folder_for_corpus_path, bg="pink")
+        self.browse_button_corpus = Button(self.centerFrame, text="Browse", command=self.browse_folder_for_corpus_path, bg="SkyBlue1")
         self.textfield_index_path = Entry(self.centerFrame, textvariable=self.index_path, width=40)
         self.label_index_path = Label(self.centerFrame, text="Please enter a path to keep index files:")
-        self.browse_button_index = Button(self.centerFrame, text="Browse", command=self.browse_folder_for_index_path, bg="SpringGreen2")
+        self.browse_button_index = Button(self.centerFrame, text="Browse", command=self.browse_folder_for_index_path, bg="SkyBlue1")
 
         # stemming option:
         self.state_of_stem = tkinter.IntVar()
         self.stemCheckBox = Checkbutton(self.centerFrame, text="Stemming", variable=self.state_of_stem)
 
         # languages option:
-        self.label_lang_list = Label(self.centerFrame, text="Choose Language:")
-        self.scrollbar = Scrollbar(self.centerFrame)
-        self.list_lang = Listbox(self.centerFrame, yscrollcommand=self.scrollbar.set)
-        self.scrollbar.config(command=self.list_lang.yview)
+        self.lang_button = Button(self.centerFrame,text="Languages List", bg="deep sky blue", command=self.lang_command, )
+        # self.label_lang_list = Label(self.centerFrame, text="Languages List")
+        # self.scrollbar = Scrollbar(self.centerFrame)
+        # self.list_lang = Listbox(self.centerFrame, yscrollcommand=self.scrollbar.set)
+        # self.scrollbar.config(command=self.list_lang.yview)
         # todo: languages list box
 
 
         # start Button and more buttons
-        self.start_button = Button(self.centerFrame, text="Start", command=self.start_button_command, width=self.button_width * 2,height=self.button_height, bg="blue")
-        self.show_dic_button = Button(self.centerFrame, text="Show Dictionary", command=self.show_dic_command, width=self.button_width,height=self.button_height, bg="yellow")
-        self.load_dic_button = Button(self.centerFrame, text="Load Dictionary", command=self.load_dic_command, width=self.button_width,height=self.button_height, bg="green")
-        self.reset_button = Button(self.centerFrame, text="Reset", command=self.reset_command, width=self.button_width, height=self.button_height, bg='red', state=DISABLED)
+        self.start_button = Button(self.centerFrame, text="Start", command=self.start_button_command, width=self.button_width * 2,height=self.button_height, bg="DeepSkyBlue3")
+        self.show_dic_button = Button(self.centerFrame, text="Show Dictionary", command=self.show_dic_command, width=self.button_width,height=self.button_height, bg="turquoise")
+        self.load_dic_button = Button(self.centerFrame, text="Load Dictionary", command=self.load_dic_command, width=self.button_width,height=self.button_height, bg="turquoise")
+        self.reset_button = Button(self.centerFrame, text="Reset", command=self.reset_command, width=self.button_width, height=self.button_height, bg='firebrick2', state=DISABLED)
         self.design_GUI()
 
     def design_GUI(self):
@@ -92,8 +97,10 @@ class GUI:
         self.stemCheckBox.grid(row=self.distance_between_lines + 1, column=1, sticky=W)
 
         #languages thing
-        self.label_lang_list.grid(row=self.distance_between_lines + 3, column=0)
-        self.scrollbar.grid(row=self.distance_between_lines + 3, column=1)
+        self.centerFrame.rowconfigure(self.distance_between_lines + 2, minsize=30)
+        self.lang_button.grid(row=self.distance_between_lines + 3, column=1)
+        # self.label_lang_list.grid(row=self.distance_between_lines + 3, column=0)
+        # self.scrollbar.grid(row=self.distance_between_lines + 3, column=1)
 
         self.centerFrame.rowconfigure(self.distance_between_lines + 4, minsize=30)
         self.centerFrame.rowconfigure(self.distance_between_lines + 5, minsize=30)
@@ -104,6 +111,15 @@ class GUI:
         self.load_dic_button.grid(row=self.distance_between_lines + 6, column=0)
         self.centerFrame.rowconfigure(self.distance_between_lines + 7, minsize=30)
         self.reset_button.grid(row=self.distance_between_lines + 8, column=1)
+
+    #this function will run as another thread for indexing, so we will be able to show message at end, and make start button active again
+    def start_command_wrap_in_thread(self, x, y, z):
+        Controller.Main(x,y,z)
+        self.start_button.configure(state=ACTIVE)
+        self.textfield_corpus_path.config(state='normal')
+        self.textfield_index_path.config(state='normal')
+        self.browse_button_index.config(state=ACTIVE)
+        self.browse_button_corpus.config(state=ACTIVE)
 
 
     def browse_folder_for_corpus_path(self):
@@ -146,8 +162,41 @@ class GUI:
             self.textfield_corpus_path.config(state='disabled')
             self.textfield_index_path.config(state='disabled')
           # indexingThread = _thread.start_new_thread(Controller.Main,(corpus_path.get(),index_path.get(),bool_stem)) # Run the indexing in a thread
-            self.index_thread = threading.Thread(target=Controller.Main, args=(self.corpus_path.get(),self.index_path.get(),bool_stem))
+            self.index_thread = threading.Thread(target=self.start_command_wrap_in_thread, args=(self.corpus_path.get(), self.index_path.get(), bool_stem))
             self.index_thread.start()
+
+    def lang_command(self):
+        if self.finished_program == False:
+            messagebox.showwarning("Error", "first, start indexing your corpus. then you'll be able to see the languages")
+        else:
+            self.lang_window = Toplevel(self.window)
+            self.lang_window.geometry("200x400")
+            self.lang_window.title("Languages List")
+            self.lang_window.resizable(False, False)
+            tree = Treeview(self.lang_window, selectmode="extended", columns=("lang"))
+
+            tree.pack(expand=YES, fill=BOTH)
+            tree['show'] = 'headings'
+            tree.heading("lang", text="Language")
+            tree.column("lang", minwidth=180, width=180, stretch=NO)
+            scrollbar = ttk.Scrollbar(self.lang_window, orient="vertical", command=tree.yview)
+            scrollbar.place(x=180, y=0, height=400)
+            tree.configure(yscrollcommand=scrollbar.set)
+            odd = 'odd'
+            even = 'even'
+            list_of_langs = ['Dutch','English','German','Russian','Italian','French','Chinese','Japanese','Turkish','Serbian','Spanish','Greek','Hebrew','Romanian','Latvian','Finnish','Swedish','Thai','Hindu','Arabic','Persian','Ukrainian','Danish','Cambodian','Slovak','Portuguese']
+            sorted_list_of_langs = sorted(list_of_langs)
+            i=0
+            for x in sorted_list_of_langs:
+                if i%2 == 0:
+                    tag=odd
+                else:
+                    tag=even
+                tree.insert('', 'end', values=(x), tags=(tag,))
+                i = i + 1
+            tree.tag_configure(odd, background='hot pink')
+            tree.tag_configure(even, background='deep pink')
+            
 
 
     #show dic button
@@ -155,9 +204,9 @@ class GUI:
         if self.dictionary_in_main_memory==False:
             messagebox.showwarning("Error", "first, load dictionary to your main memory.\ndon't look at me like this! just do it with the green button")
         else:
-            text_of_waiting = Label(self.bottomFrame,text="Wait.. the dictionary will be shown in 10-20 seconds")
-            messagebox.showinfo("Wait",'Wait.. the dictionary will be shown in 10-20 seconds')
-
+            text_of_waiting = Label(self.bottomFrame,text="Please Wait.. the dictionary will be shown in 10-20 seconds")
+            text_of_waiting.grid(row=0,column=1)
+            self.window.update()
             self.dictionaryWindow = Toplevel(self.window)
             self.dictionaryWindow.geometry("400x600")
             self.dictionaryWindow.title("Main Dictionary")
@@ -206,12 +255,16 @@ class GUI:
         stem_suffix = ''
         if bool_stem == True:
             stem_suffix = '_stem'
+        text_of_waiting = Label(self.bottomFrame, text="Wait.. the dictionary will be loaded to main memory in 3-5 seconds")
+        text_of_waiting.grid(row=0,column=1)
+        self.window.update()
         main_dic_path =  self.index_path.get() + '/' + 'main_dictionary' + stem_suffix
         if not os.path.exists(main_dic_path):
             messagebox.showwarning("Error", "Please check there is dictionary in your index path. \n if there is, please check the Stemming check box mark")
         else:
             Controller.loadDictionaryFromDisk(bool_stem,  self.index_path.get())
             self.dictionary_in_main_memory=True
+        text_of_waiting.grid_remove()
 
     #reset button
     def reset_command(self):
@@ -220,20 +273,13 @@ class GUI:
         self.load_dic_button.config(state=ACTIVE)
         self.browse_button_index.config(state=ACTIVE)
         self.browse_button_corpus.config(state=ACTIVE)
-        self.browse_button_index.config(state=ACTIVE)
-        self.browse_button_corpus.config(state=ACTIVE)
         self.stemCheckBox.config(state=ACTIVE)
         self.textfield_corpus_path.config(state='normal')
         self.textfield_index_path.config(state='normal')
 
 
-
-        pass
-
-
-
-
-
+def show_information_about_indexing(num_docs,num_terms,time):
+    messagebox.showinfo("Indexing has been finished!",'Number of docs indexed: ' + str(num_docs) + '\nNumber of unique terms: ' + str(num_terms) + '\nTime for whole program: ' + str(time) + ' minutes')
 
 #list_lang.grid(row=distance_between_lines+3, column=1)
 

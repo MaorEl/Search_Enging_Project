@@ -10,6 +10,7 @@ import Parser
 import Indexer
 from ReadFile import dic_to_parse
 from City import create_city_db,city_db
+import GUI
 
 stop = False
 __corpus_path = ""
@@ -92,7 +93,10 @@ def Main(cp, ip, to_stem):
     saveMainDictionaryToDisk(ip)
     saveDocumentDictionaryToDisk(ip)
     end2 = time.time()
-    print("time of program: " + str((end2 - start) / 60))
+    time_final = str((end2 - start) / 60)
+    print("time of program: " + time_final)
+    sendInfoToGUI(time_final)
+
 
 
 def remove_index_files():
@@ -130,3 +134,8 @@ def loadDictionaryFromDisk(to_stem, ip):
 
 def getMainDictionaryFromIndexerToGUI():
     return Indexer.main_dictionary
+
+def sendInfoToGUI(time):
+    num_docs = len(ReadFile.docs_dictionary)
+    num_terms = len(Indexer.main_dictionary)
+    GUI.show_information_about_indexing(num_docs,num_terms,time)
