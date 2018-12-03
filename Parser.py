@@ -1,8 +1,6 @@
 from fractions import Fraction
 import PorterStemmer
 import ReadFile
-#todo: try and catch - advance index by one
-
 __punctuations_set = {'[', '(', '{', '`', ')', '<', '|', '&', '~', '+', '^', '@', '*', '?', '.',
                       '>', ';', '_', '\'', ':', ']', '\\', "}", '!', '=', '#', ',', '\"','-','/'}
 
