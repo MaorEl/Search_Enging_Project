@@ -148,3 +148,8 @@ def sendInfoToGUI(time):
     num_docs = len(ReadFile.docs_dictionary)
     num_terms = len(Indexer.main_dictionary)
     GUI.show_information_about_indexing(num_docs,num_terms,time)
+
+
+#for GUI
+def getLangList():
+    return ReadFile.lang_list
