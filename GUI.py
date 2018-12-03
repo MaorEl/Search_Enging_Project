@@ -19,7 +19,7 @@ class GUI:
         self.window.mainloop()
 
     def __init__(self):
-        self.finished_program = True #todo: change this to False, update the value to True only while indexing will be finished (from controller)
+        self.finished_program = False
         self.index_thread = None
         self.window = Tk()
         self.dictionary_in_main_memory = False
@@ -123,8 +123,8 @@ class GUI:
         self.show_dic_button.config(state=ACTIVE)
         self.load_dic_button.config(state=ACTIVE)
         self.dictionary_in_main_memory = True
-
-
+        self.finished_program = True
+        self.lang_button.config(state=ACTIVE)
     def browse_folder_for_corpus_path(self):
         # Allow user to select a directory and store it in global var
         # called folder_path
@@ -163,6 +163,7 @@ class GUI:
             self.browse_button_index.config(state=DISABLED)
             self.browse_button_corpus.config(state=DISABLED)
             self.stemCheckBox.config(state=DISABLED)
+            self.lang_button.config(state=DISABLED)
             self.textfield_corpus_path.config(state='disabled')
             self.textfield_index_path.config(state='disabled')
           # indexingThread = _thread.start_new_thread(Controller.Main,(corpus_path.get(),index_path.get(),bool_stem)) # Run the indexing in a thread
@@ -188,7 +189,7 @@ class GUI:
             tree.configure(yscrollcommand=scrollbar.set)
             odd = 'odd'
             even = 'even'
-            list_of_langs = ['Dutch','English','German','Russian','Italian','French','Chinese','Japanese','Turkish','Serbian','Spanish','Greek','Hebrew','Romanian','Latvian','Finnish','Swedish','Thai','Hindu','Arabic','Persian','Ukrainian','Danish','Cambodian','Slovak','Portuguese']
+            list_of_langs = Controller.getLangList()
             sorted_list_of_langs = sorted(list_of_langs)
             i=0
             for x in sorted_list_of_langs:

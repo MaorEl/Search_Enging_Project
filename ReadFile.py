@@ -4,12 +4,14 @@ from DocumentInfo import DocumentInfo
 docs_dictionary = {} #Doc Number will be the key. value is a Document
 dic_to_parse = {}
 city_dictionary = {}
+lang_list = []
 
 
 current_doc =""
 current_DOCNO=""
 current_CITY =""
 current_DATE=""
+current_LANG=""
 
 def __extractDOCNO():
     global current_DOCNO
@@ -45,6 +47,16 @@ def __extractTEXT():
         text = ""
     dic_to_parse[current_DOCNO] = text
 
+def __extractLANG():
+    global current_doc
+    if '<F P=105>' in current_doc:
+        current_LANG = current_doc.split("<F P=105>")[1].split()[0]
+        if current_LANG not in lang_list:
+            lang_list.append(current_LANG)
+
+
+
+
 
 def takeDocsInfoFromOneFile(path):
     global current_doc, current_DATE, current_CITY, current_DOCNO,docs_dictionary
@@ -58,16 +70,19 @@ def takeDocsInfoFromOneFile(path):
         __extractDOCNO()
         __extractCITY()
         __extractDATE()
+        __extractLANG()
         __extractTEXT()
-        docs_dictionary[current_DOCNO] = DocumentInfo(current_DATE, current_CITY, str(path))
+        docs_dictionary[current_DOCNO] = DocumentInfo(current_DATE, current_CITY, str(path), current_LANG)
 
 
 def reset():
-    global docs_dictionary, dic_to_parse, city_dictionary, current_CITY, current_doc, current_DATE, current_DOCNO
+    global docs_dictionary, dic_to_parse, city_dictionary, current_CITY, current_doc, current_DATE, current_DOCNO, current_LANG, lang_list
     docs_dictionary = {}
     dic_to_parse = {}
     city_dictionary = {}
+    lang_list =[]
     current_doc = ""
     current_DOCNO = ""
     current_CITY = ""
     current_DATE = ""
+    current_LANG = ""
