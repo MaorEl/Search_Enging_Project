@@ -125,6 +125,7 @@ class GUI:
         self.dictionary_in_main_memory = True
         self.finished_program = True
         self.lang_button.config(state=ACTIVE)
+        self.stemCheckBox.config(state=ACTIVE)
     def browse_folder_for_corpus_path(self):
         # Allow user to select a directory and store it in global var
         # called folder_path
@@ -286,7 +287,7 @@ class GUI:
             self.textfield_index_path.config(state='normal')
         else: #if the program has been finished
             Controller.remove_index_files()
-        messagebox.showinfo("Reset Info","your proccess has been reseted! all index files has been removed\nyour memory of program is now clear!")
+        messagebox.showinfo("Reset Info","your proccess will be reseted in 5-10 seconds! all index files will be removed now\nyour memory of program will now be cleared!")
 
 
 def show_information_about_indexing(num_docs,num_terms,time):
