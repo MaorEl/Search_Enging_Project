@@ -76,8 +76,8 @@ def Main(cp, ip, to_stem):
                 return
             #print("file!!!")
             end2 = time.time()
-            if ((end2-start)/60)>10 and ((end2-start)/60) <10.10:
-                print(str(file))
+            # if ((end2-start)/60)>10 and ((end2-start)/60) <10.10:
+            #     print(str(file))
             if str(file) != 'stop_words.txt':
                 ReadFile.takeDocsInfoFromOneFile(str(pathlib.PurePath(root, file)))
                 dic_of_one_file = Parser.parse(dic_to_parse)
@@ -86,7 +86,7 @@ def Main(cp, ip, to_stem):
                 Indexer.merge_dictionaries(sorted_dictionary)
                 dic_to_parse.clear()
                 counter += 1
-            if counter == 2:
+            if counter == 100:
                 Indexer.SaveAndMergePostings()
                 counter = 0
     Indexer.SaveAndMergePostings()
