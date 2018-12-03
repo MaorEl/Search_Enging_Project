@@ -50,7 +50,7 @@ def __extractTEXT():
 def __extractLANG():
     global current_doc
     if '<F P=105>' in current_doc:
-        current_LANG = (current_doc.split("<F P=105>", 1)[0]).split("</F>")[1].strip()
+        current_LANG = current_doc.split("<F P=105>")[1].split()[0]
         if current_LANG not in lang_list:
             lang_list.append(current_LANG)
 
