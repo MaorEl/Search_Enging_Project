@@ -65,6 +65,10 @@ class City:
                         self.population = self.round_a_sum(Parser.number_format(population))
                     self.country = json_result['geobytescountry']
             except:
+                self.capital = ''
+                self.currency = ''
+                self.population = ''
+                self.country = ''
                 print("Unexpected error occured here!!!:", sys.exc_info()[0])
                 pass
             finally:
