@@ -292,6 +292,9 @@ class GUI:
 def show_information_about_indexing(num_docs,num_terms,time):
     messagebox.showinfo("Indexing has been finished!",'Number of docs indexed: ' + str(num_docs) + '\nNumber of unique terms: ' + str(num_terms) + '\nTime for whole program: ' + str(time) + ' minutes')
 
+#todo: after loading of dictionary lock the stem check box & text fields. button of "unlock or cleear" will unlock this
+#todo: while user sending query enforce him to put corpus path (of stopword file)
+
 #list_lang.grid(row=distance_between_lines+3, column=1)
 
 

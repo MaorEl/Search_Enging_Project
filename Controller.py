@@ -8,6 +8,7 @@ import collections
 import ReadFile
 import Parser
 import Indexer
+import ReadQuery
 from ReadFile import dic_to_parse
 from City import create_city_db,city_db
 import GUI
@@ -147,3 +148,41 @@ def sendInfoToGUI(time):
 #for GUI
 def getLangList():
     return ReadFile.lang_list
+
+
+#helper function for parse result of queries file
+def invertDictionaryForQueries(dict):
+    result = {}
+    for term in dict:
+        for query in dict[term]:
+            if query not in result:
+                query_dict={}
+                query_dict[term]= dict[term][query]
+                result[query]=query_dict
+            else: #for case query is not exists yet on dictionary
+                result[query][term]=dict[term][query]
+    return result
+
+def controlQueriesOfFreeText(text):
+    dictionary_of_queries = ReadQuery.create_dictionary_from_free_text_query(text)
+    dic_after_parse = invertDictionaryForQueries(Parser.parse(dictionary_of_queries))
+
+
+def controlQueriesOfFile(path):
+    dictionary_of_queries_by_title, dictionary_of_queries_by_addons = ReadQuery.create_dictionary_of_file(path)
+    dic_after_parse_by_title = invertDictionaryForQueries(Parser.parse(dictionary_of_queries_by_title))
+    dic_after_parse_by_addons = invertDictionaryForQueries(Parser.parse(dictionary_of_queries_by_addons))
+    print(8)
+
+#todo: call this from GUI before the functions above
+def setStemForPartB(to_stem):
+    global __stem_suffix
+    Parser.stem = to_stem
+    if to_stem is True:
+        __stem_suffix = '_stem'
+
+controlQueriesOfFile("C:\Retrieval_folder\queries.txt")
+#todo: we are not must to desc and narrative - so let se if it does not make too much problem we'll edit this
+#todo: check if term is exists or not on main dictionary (lower upper case - need to decide when and how)
+#todo: check which data we need to take for Ranker & Searcher and then we will keep it on {term: {DocNo: x } }
+
