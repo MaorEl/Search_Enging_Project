@@ -21,6 +21,7 @@ max_tf_in_doc=1
 
 def update_docs_and_initalize_counters(doc):
     global counter_of_unique_words, counter_of_words, max_tf_in_doc
+
     current_doc = ReadFile.docs_dictionary[doc]
     current_doc.maxTF = max_tf_in_doc
     current_doc.number_of_unique_tokens = counter_of_unique_words
@@ -235,7 +236,11 @@ def parse(dictionary):
     one_file_dictionary = {} # contains : key = term , value = {docID : frequency in doc}
     for doc in dictionary:
         text = dictionary[doc]
-        city_of_doc = docs[str(doc)].city
+        try:
+            city_of_doc = docs[str(doc)].city
+        except KeyError:
+            city_of_doc = ''
+            print("if you are in query case this error is ok, other you have problem!!!! :)")
         if text is not None or text is not "":
             index = 0
             #splited = text.split()
@@ -387,8 +392,10 @@ def parse(dictionary):
                         insert_to_dic(new_term, str(doc))
                 except:
                     index=index+1
-
-        update_docs_and_initalize_counters(str(doc))
+        try:
+            update_docs_and_initalize_counters(str(doc))
+        except KeyError:
+            print("if you are in query case this error is ok, other you have problem!!!! :)")
     return one_file_dictionary
 
 
