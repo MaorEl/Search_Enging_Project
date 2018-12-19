@@ -84,7 +84,8 @@ class Ranker:
                     else: # query inside but not sure about doc
                         if doc not in self.result[query_id]:
                             self.result[query_id][doc] = self.__term_grades_in_doc[term][doc] * term_tf_dict[term]
-                        else: #doc inside
+                        else:
+                            print ("if you see this, there is a problem :(")
 
                 if query_id not in self.result:
                     self.result[query_id] = self.__term_grades_in_doc[term] * term_tf_dict[term]
