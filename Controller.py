@@ -12,11 +12,13 @@ import ReadQuery
 from ReadFile import dic_to_parse
 from City import create_city_db,city_db
 import GUI
+from Searcher import Searcher
 
 stop = False
 __corpus_path = ""
 __index_path = ""
 __stem_suffix = ''
+__avdl = 0
 
 def data_set_Path(corpus_path, index_path):
     global __stopwords_path
@@ -55,6 +57,26 @@ def saveDocumentDictionaryToDisk(ip):
         pickle.dump(ReadFile.docs_dictionary, file)
         file.close()
 
+
+def calc_avdl():
+    '''
+    calculate the average document length
+    :return: avdl as float
+    '''
+    sum = 0
+    for doc in ReadFile.docs_dictionary:
+        docInfo = ReadFile.docs_dictionary[doc]
+        sum = sum + docInfo.number_of_words
+    return sum / len(ReadFile.docs_dictionary)
+
+
+def createAndSaveAvdlToDisk(ip):
+    global __stem_suffix
+    global __avdl
+    __avdl = calc_avdl()
+    with open(ip + '\\avdl' + __stem_suffix, 'wb') as file:
+        pickle.dump(__avdl, file)
+        file.close()
 
 def Main(cp, ip, to_stem):
     global __corpus_path
@@ -95,6 +117,10 @@ def Main(cp, ip, to_stem):
     saveMainDictionaryToDisk(ip)
     saveDocumentDictionaryToDisk(ip)
     saveLangListToDisk(ip)
+
+    #ranker things
+    createAndSaveAvdlToDisk(ip)
+
     x=ReadFile.lang_list
     end2 = time.time()
     time_final = str((end2 - start) / 60)
@@ -131,8 +157,8 @@ def reset_from_GUI():
     global stop
     stop = True
 
-def loadDictionaryFromDisk(to_stem, ip):
-    global __index_path, __stem_suffix
+def loadDictionariesFromDisk(to_stem, ip):
+    global __index_path, __stem_suffix, __avdl
     __index_path = ip
     if to_stem == True:
         __stem_suffix = '_stem'
@@ -140,7 +166,14 @@ def loadDictionaryFromDisk(to_stem, ip):
     with open(main_dic_path, 'rb') as file:
         Indexer.main_dictionary = pickle.load(file)
         file.close()
-
+    avdl_path = __index_path + '/' + 'avdl' + __stem_suffix
+    with open(avdl_path, 'rb') as file:
+        __avdl = pickle.load(file)
+        file.close()
+    docsDic_path = __index_path + '/' + 'docs_dictionary' + __stem_suffix
+    with open(docsDic_path, 'rb') as file:
+        ReadFile.docs_dictionary = pickle.load(file)
+        file.close()
 
 def getMainDictionaryFromIndexerToGUI():
     return Indexer.main_dictionary
@@ -156,28 +189,18 @@ def getLangList():
     return ReadFile.lang_list
 
 
-#helper function for parse result of queries file
-def invertDictionaryForQueries(dict):
-    result = {}
-    for term in dict:
-        for query in dict[term]:
-            if query not in result:
-                query_dict={}
-                query_dict[term]= dict[term][query]
-                result[query]=query_dict
-            else: #for case query is not exists yet on dictionary
-                result[query][term]=dict[term][query]
-    return result
-
 def controlQueriesOfFreeText(text):
     dictionary_of_queries = ReadQuery.create_dictionary_from_free_text_query(text)
-    dic_after_parse = invertDictionaryForQueries(Parser.parse(dictionary_of_queries))
+    dic_after_parse = Parser.parse(dictionary_of_queries)# { term : { query : tf_in_query } }
+    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl)
+    #send to searcher
+
 
 
 def controlQueriesOfFile(path):
     dictionary_of_queries_by_title, dictionary_of_queries_by_addons = ReadQuery.create_dictionary_of_file(path)
-    dic_after_parse_by_title = invertDictionaryForQueries(Parser.parse(dictionary_of_queries_by_title))
-    dic_after_parse_by_addons = invertDictionaryForQueries(Parser.parse(dictionary_of_queries_by_addons))
+    dic_after_parse_by_title = Parser.parse(dictionary_of_queries_by_title) # { term : { query : tf_in_query } }
+    dic_after_parse_by_addons = Parser.parse(dictionary_of_queries_by_addons) # { term : { query : tf_in_query } }
     reset("Queries") #for cleaning Parser structres
     print(8)
 
@@ -188,7 +211,7 @@ def setStemForPartB(to_stem):
     if to_stem is True:
         __stem_suffix = '_stem'
 
-controlQueriesOfFile("C:\Retrieval_folder\queries.txt")
+#controlQueriesOfFile("C:\Retrieval_folder\queries.txt")
 #todo: we are not must to desc and narrative - so let se if it does not make too much problem we'll edit this
 #todo: check if term is exists or not on main dictionary (lower upper case - need to decide when and how)
 #todo: check which data we need to take for Ranker & Searcher and then we will keep it on {term: {DocNo: x } }

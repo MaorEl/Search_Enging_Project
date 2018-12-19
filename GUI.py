@@ -269,7 +269,7 @@ class GUI:
         if not os.path.exists(main_dic_path):
             messagebox.showwarning("Error", "Please check there is dictionary in your index path. \n if there is, please check the Stemming check box mark")
         else:
-            Controller.loadDictionaryFromDisk(bool_stem,  self.index_path.get())
+            Controller.loadDictionariesFromDisk(bool_stem, self.index_path.get())
             self.dictionary_in_main_memory=True
         text_of_waiting.grid_remove()
 
