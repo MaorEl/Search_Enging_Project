@@ -110,15 +110,21 @@ def remove_index_files():
             for file in files:
                 os.remove(os.path.join(root, file))
 
-def reset():
+def reset(param=None):
     global __corpus_path,__index_path, __stem_suffix
-    ReadFile.reset()
-    Parser.reset()
-    Indexer.reset()
-    remove_index_files()
-    __stem_suffix = ''
-    __corpus_path = ""
-    __index_path = ""
+    if param == "Queries":
+        Parser.reset()
+        __stem_suffix = ''
+        __corpus_path = ""
+        __index_path = ""
+    else:
+        ReadFile.reset()
+        Parser.reset()
+        Indexer.reset()
+        remove_index_files()
+        __stem_suffix = ''
+        __corpus_path = ""
+        __index_path = ""
 
 #this function will update the boolean of stopping, so the program will stop safely
 def reset_from_GUI():
@@ -172,6 +178,7 @@ def controlQueriesOfFile(path):
     dictionary_of_queries_by_title, dictionary_of_queries_by_addons = ReadQuery.create_dictionary_of_file(path)
     dic_after_parse_by_title = invertDictionaryForQueries(Parser.parse(dictionary_of_queries_by_title))
     dic_after_parse_by_addons = invertDictionaryForQueries(Parser.parse(dictionary_of_queries_by_addons))
+    reset("Queries") #for cleaning Parser structres
     print(8)
 
 #todo: call this from GUI before the functions above
