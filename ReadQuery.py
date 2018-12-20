@@ -37,10 +37,11 @@ def create_dictionary_of_file(path_of_query_file):
         text = text[1]
         text = text.split("<narr> Narrative: ")
         query_desc = __cleanFromSpaces(text[0])
-        query_narr = __cleanFromSpaces(text[1])
+        #query_narr = __cleanFromSpaces(text[1])
 
         query_dic_by_title[query_num] = query_title
-        query_dic_by_addons[query_num] = query_desc + ' ' + query_narr
+        query_dic_by_addons[query_num] = query_desc
+        #not includes naratives
 
     return query_dic_by_title, query_dic_by_addons
 

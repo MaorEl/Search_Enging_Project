@@ -41,7 +41,8 @@ class Ranker:
     __current_posting_file_name = ''
     __currentPostingFile = None
     __term_grades_in_doc = {} # { term : {doc:grade}}
-    __mini_posting = {}
+    mini_posting = {}
+    city_docs = {}
     #todo: add to documentation- memoization of terms grades
 
     def __init__(self, docs_dictionary, main_dictionary, avdl, N, stem_suffix, indexPath):
@@ -50,12 +51,35 @@ class Ranker:
         self.k=2
         self.avdl = avdl
         self.N = N
+        self.max_top_docs_to_retrieve = 50
         self.main_dictionary = main_dictionary
         self.docs_dictionary = docs_dictionary
         self.result_bm_25={} # { query : { docNo: final_grade } }
         self.stem_suffix = stem_suffix # "_stem"
         self.indexPath = indexPath
-        self.final_result = None
+        self.final_result = {}
+        self.weight_title=0.7
+
+    def calculate_final_rank(self, ranked_title, ranked_addons):
+        '''
+        this functions calcs the final garde by weights
+        :param ranked_title: { query : { doc : grade} }
+        :param ranked_addons: { query : { doc : grade} }
+        :return: the final grade by 2 weights
+        '''
+        for query in ranked_addons:
+            self.final_result[query] = {}
+            for doc in ranked_addons[query]:
+                self.final_result[query][doc] = (1 - self.weight_title) * ranked_addons[query][doc]
+        for query in ranked_title:
+            for doc in ranked_title[query]:
+                if doc not in self.final_result[query]:
+                    self.final_result[query][doc] = (self.weight_title) * ranked_title[query][doc]
+                else:
+                    self.final_result[query][doc] += (self.weight_title) * ranked_title[query][doc]
+            self.final_result[query] = collections.OrderedDict(sorted(self.final_result[query].items(), key=lambda x: x[1], reverse=True))
+            self.final_result[query] = self.get_top_50(query)
+        return self.final_result
 
     def calc_bm_25(self, term_tf_dict, query_id):
         '''
@@ -75,9 +99,11 @@ class Ranker:
                     mechane = 0.5 + self.main_dictionary[term].get_df()
                     idf = log2(mone / mechane)
 
-                    self.__currentPostingFile = self.__mini_posting[term]
+                    self.__currentPostingFile = self.mini_posting[term]
 
                     for doc in self.__currentPostingFile:  # for each doc that includes this term
+                        if len(self.city_docs) != 0 and doc not in self.city_docs:
+                            continue
                         tf_in_doc = self.__currentPostingFile[doc]
                         doc_len = self.docs_dictionary[doc].number_of_words
 
@@ -92,7 +118,7 @@ class Ranker:
                 for doc in self.__term_grades_in_doc[term]:
                     if doc not in self.result_bm_25[query_id]:
                         self.result_bm_25[query_id][doc] = 0
-                    self.result_bm_25[query_id][doc] += self.__term_grades_in_doc[term][doc] * term_tf_dict[term]  # final grade for doc by query\
+                    self.result_bm_25[query_id][doc] += self.__term_grades_in_doc[term][doc] * term_tf_dict[term]  # final grade for doc by query
         sorted_dic = collections.OrderedDict(sorted(self.result_bm_25[query_id].items(), key=lambda x: x[1], reverse=True))
         return sorted_dic
 
@@ -120,10 +146,19 @@ class Ranker:
                 continue  # no coalculation is needed because the term not exists in corpus
                 #todo: we may need to add the missing term into the mini posting
             else:
-                if term not in self.__mini_posting:
+                if term not in self.mini_posting:
                     self.open_posting_file(term)
-                    self.__mini_posting[term] = self.__currentPostingFile[term]
+                    self.mini_posting[term] = self.__currentPostingFile[term]
 
+    def get_top_50(self, query):
+        counter = 0
+        tmp_dic = {}
+        for doc in self.final_result[query]:
+            if counter == 50:
+                break
+            counter += 1
+            tmp_dic[doc] = self.final_result[query][doc]
+        return tmp_dic
 
 
 

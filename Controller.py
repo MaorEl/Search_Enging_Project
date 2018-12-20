@@ -14,6 +14,7 @@ from City import create_city_db,city_db
 import GUI
 from Searcher import Searcher
 
+
 stop = False
 __corpus_path = ""
 __index_path = ""
@@ -193,21 +194,23 @@ def getLangList():
     return ReadFile.lang_list
 
 
-def controlQueriesOfFreeText(text):
+def controlQueriesOfFreeText(text, list_of_cities = None):
     global __stem_suffix
     dictionary_of_queries = ReadQuery.create_dictionary_from_free_text_query(text)
     dic_after_parse = Parser.parse(dictionary_of_queries, "Query")# { term : { query : tf_in_query } }
-    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix,"C:\Retrieval_folder\index - Copy")
+    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix,"C:\Retrieval_folder\index - Copy", ReadFile.city_dictionary)
+    searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse)
     reset("Queries")
     #send to searcher
 
-def controlQueriesOfFile(path):
+def controlQueriesOfFile(path, list_of_cities = None):
     global __stem_suffix
     dictionary_of_queries_by_title, dictionary_of_queries_by_addons = ReadQuery.create_dictionary_of_file(path)
     dic_after_parse_by_title = Parser.parse(dictionary_of_queries_by_title, "Query") # { term : { query : tf_in_query } }
     dic_after_parse_by_addons = Parser.parse(dictionary_of_queries_by_addons, "Query") # { term : { query : tf_in_query } }
-    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix ,"C:\Retrieval_folder\index - Copy")
+    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix ,"C:\Retrieval_folder\index - Copy", ReadFile.city_dictionary)
+    searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse_by_title, dic_after_parse_by_addons)
     reset("Queries") #for cleaning Parser structres
 
@@ -230,6 +233,6 @@ Parser.set_stop_words_file(__stopwords_path)
 loadDictionariesFromDisk(True,"C:\Retrieval_folder\index - Copy")
 setStemForPartB(True)
 start = time.time()
-#controlQueriesOfFreeText("Identify documents that discuss the building of paris pillow")
-controlQueriesOfFile("C:\Retrieval_folder\queries.txt")
+#controlQueriesOfFreeText("Identify documents that discuss the building of paris pillow", ["PARIS", "BERLIN"])
+controlQueriesOfFile("C:\Retrieval_folder\queries.txt" , ["PARIS", "BERLIN", "HOHHOT", "TEL", "LONDON"])
 print ("total: " + str(time.time() - start))
