@@ -20,6 +20,8 @@ __corpus_path = ""
 __index_path = ""
 __stem_suffix = ''
 __avdl = 0
+__current_posting_file_name = None
+__currentPostingFile = None
 
 def data_set_Path(corpus_path, index_path):
     global __stopwords_path
@@ -233,13 +235,40 @@ def setStemForPartB(to_stem):
     if to_stem is True:
         __stem_suffix = '_stem'
 
+def open_posting_file(self, term):
+    global __current_posting_file_name,__currentPostingFile
+    if __current_posting_file_name != Indexer.__dictionary_of_posting_pointers.get(term[0] , 'others'):
+        __current_posting_file_name = Indexer.__dictionary_of_posting_pointers.get(term[0] , 'others')
+        with open(self.indexPath + '\\' + str(self.__current_posting_file_name) + self.stem_suffix, 'rb') as file:
+            __currentPostingFile = pickle.load(file)
+            file.close()
+
+def getTop5Yeshuyot(DOCNO):
+    global __currentPostingFile
+    yeshuyot = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items()))
+    for yeshut in yeshuyot:
+        open_posting_file(yeshut)
+        ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot[yeshut] = __currentPostingFile[yeshut][DOCNO]
+    sorted = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items(), key=lambda x: x[1], reverse=True))
+    return  get_top_5(sorted)
+
+def get_top_5(yeshuyot):
+    counter = 0
+    tmp_dic = {}
+    for yeshut in yeshuyot:
+        if counter == 5:
+            break
+        counter += 1
+        tmp_dic[yeshut] = yeshuyot[yeshut]
+    return tmp_dic
+
 #controlQueriesOfFile("C:\Retrieval_folder\queries.txt")
 #todo: we are not must to desc and narrative - so let se if it does not make too much problem we'll edit this
 #todo: check if term is exists or not on main dictionary (lower upper case - need to decide when and how)
 #todo: check which data we need to take for Ranker & Searcher and then we will keep it on {term: {DocNo: x } }
 
 
-'''
+
 __stopwords_path = "C:\Retrieval_folder\\full_corpus" + "\\stop_words.txt"
 Parser.set_stop_words_file(__stopwords_path)
 loadDictionariesFromDisk(True,"C:\Retrieval_folder\index - Copy")
@@ -248,4 +277,3 @@ start = time.time()
 #controlQueriesOfFreeText("Identify documents that discuss the building of paris pillow", ["PARIS", "BERLIN"])
 controlQueriesOfFile("C:\Retrieval_folder\queries.txt" , ["PARIS", "BERLIN", "HOHHOT", "TEL", "LONDON"])
 print ("total: " + str(time.time() - start))
-'''
