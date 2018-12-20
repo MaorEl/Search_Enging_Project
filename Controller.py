@@ -212,7 +212,7 @@ def controlQueriesOfFreeText(text, list_of_cities = None):
     global __stem_suffix
     dictionary_of_queries = ReadQuery.create_dictionary_from_free_text_query(text)
     dic_after_parse = Parser.parse(dictionary_of_queries, "Query")# { term : { query : tf_in_query } }
-    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix,"C:\Retrieval_folder\index - Copy", ReadFile.city_dictionary)
+    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix,"C:\Retrieval_folder\index", ReadFile.city_dictionary)
     searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse)
     reset("Queries")
@@ -223,7 +223,7 @@ def controlQueriesOfFile(path, list_of_cities = None):
     dictionary_of_queries_by_title, dictionary_of_queries_by_addons = ReadQuery.create_dictionary_of_file(path)
     dic_after_parse_by_title = Parser.parse(dictionary_of_queries_by_title, "Query") # { term : { query : tf_in_query } }
     dic_after_parse_by_addons = Parser.parse(dictionary_of_queries_by_addons, "Query") # { term : { query : tf_in_query } }
-    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix ,"C:\Retrieval_folder\index - Copy", ReadFile.city_dictionary)
+    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix ,"C:\Retrieval_folder\index", ReadFile.city_dictionary)
     searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse_by_title, dic_after_parse_by_addons)
     reset("Queries") #for cleaning Parser structres
@@ -246,11 +246,12 @@ def open_posting_file(self, term):
 def getTop5Yeshuyot(DOCNO):
     global __currentPostingFile
     yeshuyot = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items()))
+
     for yeshut in yeshuyot:
         open_posting_file(yeshut)
         ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot[yeshut] = __currentPostingFile[yeshut][DOCNO]
-    sorted = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items(), key=lambda x: x[1], reverse=True))
-    return  get_top_5(sorted)
+    sorted1 = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items(), key=lambda x: x[1], reverse=True))
+    return  get_top_5(sorted1)
 
 def get_top_5(yeshuyot):
     counter = 0
@@ -271,9 +272,10 @@ def get_top_5(yeshuyot):
 
 __stopwords_path = "C:\Retrieval_folder\\full_corpus" + "\\stop_words.txt"
 Parser.set_stop_words_file(__stopwords_path)
-loadDictionariesFromDisk(True,"C:\Retrieval_folder\index - Copy")
+loadDictionariesFromDisk(True,"C:\Retrieval_folder\index")
 setStemForPartB(True)
 start = time.time()
-#controlQueriesOfFreeText("Identify documents that discuss the building of paris pillow", ["PARIS", "BERLIN"])
-controlQueriesOfFile("C:\Retrieval_folder\queries.txt" , ["PARIS", "BERLIN", "HOHHOT", "TEL", "LONDON"])
+controlQueriesOfFreeText("Identify documents that discuss the building of paris pillow", ["PARIS", "BERLIN"])
+#controlQueriesOfFile("C:\Retrieval_folder\queries.txt" , ["PARIS", "BERLIN", "HOHHOT", "TEL", "LONDON"])
+getTop5Yeshuyot('FBIS3-30599')
 print ("total: " + str(time.time() - start))
