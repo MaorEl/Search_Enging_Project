@@ -219,7 +219,8 @@ def controlQueriesOfFreeText(text, list_of_cities = None):
     #send to searcher
 
 def controlQueriesOfFile(path, list_of_cities = None):
-    global __stem_suffix
+    global __stem_suffix, __index_path
+    __index_path = path
     dictionary_of_queries_by_title, dictionary_of_queries_by_addons = ReadQuery.create_dictionary_of_file(path)
     dic_after_parse_by_title = Parser.parse(dictionary_of_queries_by_title, "Query") # { term : { query : tf_in_query } }
     dic_after_parse_by_addons = Parser.parse(dictionary_of_queries_by_addons, "Query") # { term : { query : tf_in_query } }
@@ -235,24 +236,27 @@ def setStemForPartB(to_stem):
     if to_stem is True:
         __stem_suffix = '_stem'
 
-def open_posting_file(self, term):
-    global __current_posting_file_name,__currentPostingFile
+def open_posting_file(term):
+    global __current_posting_file_name,__currentPostingFile, __index_path,__stem_suffix
     if __current_posting_file_name != Indexer.__dictionary_of_posting_pointers.get(term[0] , 'others'):
         __current_posting_file_name = Indexer.__dictionary_of_posting_pointers.get(term[0] , 'others')
-        with open(self.indexPath + '\\' + str(self.__current_posting_file_name) + self.stem_suffix, 'rb') as file:
+        with open(__index_path + '\\' + str(__current_posting_file_name) +__stem_suffix, 'rb') as file:
             __currentPostingFile = pickle.load(file)
             file.close()
 
-def getTop5Yeshuyot(DOCNO):
-    global __currentPostingFile
+#todo: path here is plaster. check why path is not updated and also stem suffix
+def getTop5Yeshuyot(DOCNO, path):
+    global __currentPostingFile, __index_path, __stem_suffix
+    __stem_suffix = '_stem'
     yeshuyot = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items()))
-
+    __index_path = path
     for yeshut in yeshuyot:
         open_posting_file(yeshut)
         ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot[yeshut] = __currentPostingFile[yeshut][DOCNO]
     sorted1 = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items(), key=lambda x: x[1], reverse=True))
     return  get_top_5(sorted1)
 
+#todo: if yeshut == "P=105" so ignore it. let's see...
 def get_top_5(yeshuyot):
     counter = 0
     tmp_dic = {}
@@ -272,10 +276,14 @@ def get_top_5(yeshuyot):
 
 __stopwords_path = "C:\Retrieval_folder\\full_corpus" + "\\stop_words.txt"
 Parser.set_stop_words_file(__stopwords_path)
-loadDictionariesFromDisk(True,"C:\Retrieval_folder\index")
+path = "C:\Retrieval_folder\index"
+loadDictionariesFromDisk(True,path)
 setStemForPartB(True)
 start = time.time()
 controlQueriesOfFreeText("Identify documents that discuss the building of paris pillow", ["PARIS", "BERLIN"])
 #controlQueriesOfFile("C:\Retrieval_folder\queries.txt" , ["PARIS", "BERLIN", "HOHHOT", "TEL", "LONDON"])
-getTop5Yeshuyot('FBIS3-30599')
+start2 = time.time()
+getTop5Yeshuyot('FBIS3-30599',path)
+print ("get yeshuiot: " + str(time.time() - start2))
 print ("total: " + str(time.time() - start))
+
