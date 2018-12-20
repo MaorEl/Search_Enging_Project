@@ -392,6 +392,8 @@ def parse(dictionary, mode="Docs"):
                         if stem is True and shouleBeStemmed is True:
                             new_term = stem_the_term_and_take_care_of_lowerUpperCases(new_term)
                     ###################################END OF STEM SECTION######################################
+                        if new_term.isupper():
+                            ReadFile.docs_dictionary[doc].dic_of_yeshuyot[new_term] = None
                         insert_to_dic(new_term, str(doc))
                 except:
                     index=index+1

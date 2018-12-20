@@ -11,4 +11,5 @@ class DocumentInfo:
         self.maxTF=0
         self.number_of_unique_tokens=0
         self.number_of_words = 0
+        self.dic_of_yeshuyot = {}
 

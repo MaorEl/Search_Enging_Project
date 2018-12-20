@@ -79,6 +79,16 @@ def createAndSaveAvdlToDisk(ip):
         pickle.dump(__avdl, file)
         file.close()
 
+
+def cleanDocsYeshuyot():
+    for doc in ReadFile.docs_dictionary:
+        new_yeshuyot = {}
+        for yeshut in ReadFile.docs_dictionary[doc].dic_of_yeshuyot:
+            if yeshut in Indexer.main_dictionary:
+                new_yeshuyot[yeshut] = None
+        ReadFile.docs_dictionary[doc].dic_of_yeshuyot = new_yeshuyot
+
+
 def Main(cp, ip, to_stem):
     global __corpus_path
     global __index_path
@@ -116,7 +126,9 @@ def Main(cp, ip, to_stem):
     Indexer.SaveAndMergePostings()
     saveCityDictionaryToDisk(ip)
     saveMainDictionaryToDisk(ip)
+    cleanDocsYeshuyot()
     saveDocumentDictionaryToDisk(ip)
+    x= ReadFile.docs_dictionary
     saveLangListToDisk(ip)
 
     #ranker things
@@ -227,7 +239,7 @@ def setStemForPartB(to_stem):
 #todo: check which data we need to take for Ranker & Searcher and then we will keep it on {term: {DocNo: x } }
 
 
-
+'''
 __stopwords_path = "C:\Retrieval_folder\\full_corpus" + "\\stop_words.txt"
 Parser.set_stop_words_file(__stopwords_path)
 loadDictionariesFromDisk(True,"C:\Retrieval_folder\index - Copy")
@@ -236,3 +248,4 @@ start = time.time()
 #controlQueriesOfFreeText("Identify documents that discuss the building of paris pillow", ["PARIS", "BERLIN"])
 controlQueriesOfFile("C:\Retrieval_folder\queries.txt" , ["PARIS", "BERLIN", "HOHHOT", "TEL", "LONDON"])
 print ("total: " + str(time.time() - start))
+'''
