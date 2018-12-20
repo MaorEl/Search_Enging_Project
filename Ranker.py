@@ -4,6 +4,7 @@
 # helper function for parse result of queries file
 import collections
 import pickle
+import time
 from math import log2
 
 
@@ -40,74 +41,89 @@ class Ranker:
     __current_posting_file_name = ''
     __currentPostingFile = None
     __term_grades_in_doc = {} # { term : {doc:grade}}
+    __mini_posting = {}
     #todo: add to documentation- memoization of terms grades
 
     def __init__(self, docs_dictionary, main_dictionary, avdl, N, stem_suffix, indexPath):
-        self.weight_bm_25 = 1
+        self.weight_bm_25 = 1 #todo: check if we need to add weight and another calculation for similarity
         self.b=0.75
         self.k=2
         self.avdl = avdl
         self.N = N
         self.main_dictionary = main_dictionary
         self.docs_dictionary = docs_dictionary
-        self.result={} # { query : { docNo: final_grade } }
-        self.term_bm_grade_dict = {}
+        self.result_bm_25={} # { query : { docNo: final_grade } }
         self.stem_suffix = stem_suffix # "_stem"
         self.indexPath = indexPath
-
+        self.final_result = None
 
     def calc_bm_25(self, term_tf_dict, query_id):
         '''
-        calculate the grades of all docs of one query in dict
+        calculate the grades of all docs of one query in dict.
+        update result dictionary for all terms in query
         :param { term : tf_in_query } sorted by term
-        :return: { docNo : Grade }
         '''
-        for term in term_tf_dict:
-            mone = self.N + 0.5 - self.main_dictionary[term].get_df()
-            mechane = 0.5 + self.main_dictionary[term].get_df()
-            idf = mone / mechane
-
-            #need to open posting file
-            self.open_posting_file(term)
-            for doc in self.__currentPostingFile[term]:
-                if doc not in self.__term_grades_in_doc[term]:
-                    tf_in_doc = self.__currentPostingFile[term][doc]
-                    doc_len = self.docs_dictionary[doc].number_of_words
-
-                    mone = tf_in_doc * (self.k + 1)
-                    mechane = tf_in_doc + self.k * (1 - self.b + self.b * (doc_len/self.avdl))
-                    okapi = mone / mechane
-                    self.__term_grades_in_doc[term] = {doc : okapi * idf} #memoization of term in doc
+        self.result_bm_25[query_id] = {}
+        for term in term_tf_dict: # of one query
+            if term not in self.__term_grades_in_doc:
+                self.__term_grades_in_doc[term] = {}
+                if term not in self.main_dictionary:
+                    print (term + " not found in dictionary !!!")
+                    continue #no coalculation is needed because the term not exists in corpus
                 else:
-                    if query_id not in self.result:
-                        self.result[query_id] = {doc : self.__term_grades_in_doc[term][doc] * term_tf_dict[term]}
-                    else: # query inside but not sure about doc
-                        if doc not in self.result[query_id]:
-                            self.result[query_id][doc] = self.__term_grades_in_doc[term][doc] * term_tf_dict[term]
-                        else:
-                            print ("if you see this, there is a problem :(")
+                    mone = self.N + 0.5 - self.main_dictionary[term].get_df()
+                    mechane = 0.5 + self.main_dictionary[term].get_df()
+                    idf = log2(mone / mechane)
 
-                if query_id not in self.result:
-                    self.result[query_id] = self.__term_grades_in_doc[term] * term_tf_dict[term]
+                    self.__currentPostingFile = self.__mini_posting[term]
 
-                elif :
-                    self.result[query_id][doc] += self.__term_grades_in_doc[term][doc]
+                    for doc in self.__currentPostingFile:  # for each doc that includes this term
+                        tf_in_doc = self.__currentPostingFile[doc]
+                        doc_len = self.docs_dictionary[doc].number_of_words
 
-
-
-        return
+                        mone = tf_in_doc * (self.k + 1)
+                        mechane = tf_in_doc + self.k * (1 - self.b + self.b * (doc_len / self.avdl))
+                        okapi = mone / mechane
+                        self.__term_grades_in_doc[term][doc] = okapi * idf  # memoization of term in doc
+                        if doc not in self.result_bm_25[query_id]:
+                            self.result_bm_25[query_id][doc] = 0
+                        self.result_bm_25[query_id][doc] += self.__term_grades_in_doc[term][doc] * term_tf_dict[term] #final grade for doc by query
+            else: # the term already calculated for all docs
+                for doc in self.__term_grades_in_doc[term]:
+                    if doc not in self.result_bm_25[query_id]:
+                        self.result_bm_25[query_id][doc] = 0
+                    self.result_bm_25[query_id][doc] += self.__term_grades_in_doc[term][doc] * term_tf_dict[term]  # final grade for doc by query\
+        sorted_dic = collections.OrderedDict(sorted(self.result_bm_25[query_id].items(), key=lambda x: x[1], reverse=True))
+        return sorted_dic
 
     def rank(self, query_dict):
+        self.result_bm_25 = {}
         query_term_tf_dict = invertDictionaryForQueries(query_dict) # dict of {Query: { Term: tf_ in query}
+        start = time.time()
         for query in query_term_tf_dict:
-            self.result[query] = self.weight_bm_25 * self.calc_bm_25(collections.OrderedDict(sorted(query_term_tf_dict[query])), query)
+            #sorted_dict = collections.OrderedDict(sorted(query_term_tf_dict[query].items(), key = lambda v: v[0].upper()))
+            self.result_bm_25[query] = self.calc_bm_25(query_term_tf_dict[query], query)
+        print ("calculation: " + str(time.time() - start))
+        return self.result_bm_25
 
     def open_posting_file(self, term):
-        if self.__current_posting_file_name != self.__dictionary_of_posting_pointers[term[0]]:
-            self.__current_posting_file_name = self.__dictionary_of_posting_pointers[term[0]]
+        if self.__current_posting_file_name != self.__dictionary_of_posting_pointers.get(term[0] , 'others'):
+            self.__current_posting_file_name = self.__dictionary_of_posting_pointers.get(term[0] , 'others')
             with open(self.indexPath + '\\' + str(self.__current_posting_file_name) + self.stem_suffix, 'rb') as file:
                 self.__currentPostingFile = pickle.load(file)
                 file.close()
+
+    def fill_mini_posting_file(self, list_of_terms):
+        for term in list_of_terms:
+            if term not in self.main_dictionary:
+                print(term + " not found in dictionary !!!")
+                continue  # no coalculation is needed because the term not exists in corpus
+                #todo: we may need to add the missing term into the mini posting
+            else:
+                if term not in self.__mini_posting:
+                    self.open_posting_file(term)
+                    self.__mini_posting[term] = self.__currentPostingFile[term]
+
 
 
 

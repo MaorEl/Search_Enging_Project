@@ -174,6 +174,10 @@ def loadDictionariesFromDisk(to_stem, ip):
     with open(docsDic_path, 'rb') as file:
         ReadFile.docs_dictionary = pickle.load(file)
         file.close()
+    cityDic_path = __index_path + '/' + 'cities' + __stem_suffix
+    with open(cityDic_path, 'rb') as file:
+        ReadFile.city_dictionary = pickle.load(file)
+        file.close()
 
 def getMainDictionaryFromIndexerToGUI():
     return Indexer.main_dictionary
@@ -190,19 +194,22 @@ def getLangList():
 
 
 def controlQueriesOfFreeText(text):
+    global __stem_suffix
     dictionary_of_queries = ReadQuery.create_dictionary_from_free_text_query(text)
-    dic_after_parse = Parser.parse(dictionary_of_queries)# { term : { query : tf_in_query } }
-    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl)
+    dic_after_parse = Parser.parse(dictionary_of_queries, "Query")# { term : { query : tf_in_query } }
+    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix,"C:\Retrieval_folder\index - Copy")
+    searcher.search(dic_after_parse)
+    reset("Queries")
     #send to searcher
 
-
-
 def controlQueriesOfFile(path):
+    global __stem_suffix
     dictionary_of_queries_by_title, dictionary_of_queries_by_addons = ReadQuery.create_dictionary_of_file(path)
-    dic_after_parse_by_title = Parser.parse(dictionary_of_queries_by_title) # { term : { query : tf_in_query } }
-    dic_after_parse_by_addons = Parser.parse(dictionary_of_queries_by_addons) # { term : { query : tf_in_query } }
+    dic_after_parse_by_title = Parser.parse(dictionary_of_queries_by_title, "Query") # { term : { query : tf_in_query } }
+    dic_after_parse_by_addons = Parser.parse(dictionary_of_queries_by_addons, "Query") # { term : { query : tf_in_query } }
+    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix ,"C:\Retrieval_folder\index - Copy")
+    searcher.search(dic_after_parse_by_title, dic_after_parse_by_addons)
     reset("Queries") #for cleaning Parser structres
-    print(8)
 
 #todo: call this from GUI before the functions above
 def setStemForPartB(to_stem):
@@ -216,3 +223,13 @@ def setStemForPartB(to_stem):
 #todo: check if term is exists or not on main dictionary (lower upper case - need to decide when and how)
 #todo: check which data we need to take for Ranker & Searcher and then we will keep it on {term: {DocNo: x } }
 
+
+
+__stopwords_path = "C:\Retrieval_folder\\full_corpus" + "\\stop_words.txt"
+Parser.set_stop_words_file(__stopwords_path)
+loadDictionariesFromDisk(True,"C:\Retrieval_folder\index - Copy")
+setStemForPartB(True)
+start = time.time()
+#controlQueriesOfFreeText("Identify documents that discuss the building of paris pillow")
+controlQueriesOfFile("C:\Retrieval_folder\queries.txt")
+print ("total: " + str(time.time() - start))

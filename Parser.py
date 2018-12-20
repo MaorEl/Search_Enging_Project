@@ -224,7 +224,7 @@ def insert_to_dic(new_term, doc):
         counter_of_unique_words += 1
 
 
-def parse(dictionary):
+def parse(dictionary, mode="Docs"):
     #print(file)
     global stemmed_terms
     global stemmer
@@ -236,11 +236,11 @@ def parse(dictionary):
     one_file_dictionary = {} # contains : key = term , value = {docID : frequency in doc}
     for doc in dictionary:
         text = dictionary[doc]
-        try:
+        if mode == "Docs":
             city_of_doc = docs[str(doc)].city
-        except KeyError:
-            city_of_doc = ''
-            print("if you are in query case this error is ok, other you have problem!!!! :)")
+        # except KeyError:
+        #     city_of_doc = ''
+        #     print("if you are in query case this error is ok because no city of query exists, other you have problem!!!! :)")
         if text is not None or text is not "":
             index = 0
             #splited = text.split()
@@ -374,10 +374,13 @@ def parse(dictionary):
                         elif '-' in term:
                             new_term = term
                             index = index + 1
-                        elif term.upper() == city_of_doc:
+                        elif mode== "Docs" and term.upper() == city_of_doc:
                             ReadFile.city_dictionary[city_of_doc].dic_doc_index[str(doc)].append(counter_of_words)
                             new_term = upper_lower_case_format(term)
                             index = index+1
+                        elif mode == "Query" and term.upper() in ReadFile.city_dictionary:
+                            new_term = term.upper()
+                            index = index + 1
                         else: # upper/lower case regular word
                             new_term = upper_lower_case_format(term)
                             index = index + 1
@@ -392,10 +395,10 @@ def parse(dictionary):
                         insert_to_dic(new_term, str(doc))
                 except:
                     index=index+1
-        try:
+        if mode == "Docs":
             update_docs_and_initalize_counters(str(doc))
-        except KeyError:
-            print("if you are in query case this error is ok, other you have problem!!!! :)")
+        # except KeyError:
+        #     print("if you are in query case this error is ok because no docInfo needed, other you have problem!!!! :)")
     return one_file_dictionary
 
 
