@@ -9,8 +9,7 @@ import os.path
 from tkinter.ttk import Treeview
 #todo: enable import
 import Controller
-
-
+from Helper import ScrolledFrame, Result
 
 
 class GUI:
@@ -24,6 +23,7 @@ class GUI:
         self.index_thread = None
         self.window = Tk()
         self.dictionary_in_main_memory = False
+        self.queries_result = None
 
         #3 parts of main page:
         self.topFrame = Frame(self.window, width=700,height=100)
@@ -181,6 +181,9 @@ class GUI:
         self.finished_program = True
         self.lang_button.config(state=ACTIVE)
         self.stemCheckBox.config(state=ACTIVE)
+        self.change_states_of_queries(NORMAL)
+
+
     def browse_folder_for_corpus_path(self):
         # Allow user to select a directory and store it in global var
         # called folder_path
@@ -386,17 +389,45 @@ class GUI:
         if (bool_text_query and bool_files_query) or (not bool_text_query and not bool_files_query):
             messagebox.showwarning("Error", "Please enter a query OR choose file (not both) !")
         elif not bool_text_query:
-            Controller.controlQueriesOfFreeText(self.query_text.get(), self.list_of_cities)
+            self.queries_result = Controller.controlQueriesOfFreeText(self.query_text.get(), self.list_of_cities)
+            self.message_on_bottom("Please Wait.. the result will be shown in 15-30 seconds")
+            self.open_result_window()
         elif not bool_files_query:
             if not os.path.exists(self.queries_file_path.get()):
                 messagebox.showwarning("Error", "Your queries file path is not exists. \n Please check it out")
             else:
-                Controller.controlQueriesOfFile(self.queries_file_path.get(),self.list_of_cities)
+                self.queries_result = Controller.controlQueriesOfFile(self.queries_file_path.get(),self.list_of_cities)
+                self.message_on_bottom("Please Wait.. the result will be shown in 15-30 seconds")
+                self.open_result_window()
+
+        Controller.reset("Queries")
 
 
     def reset_index_command(self):
         self.change_states_of_indexing(NORMAL)
         self.change_states_of_queries(DISABLED)
+        pass
+
+    def open_result_window(self):
+        self.text_of_waiting.grid_remove()
+        self.result_window = Toplevel(self.window)
+        self.scrolled_frame = ScrolledFrame(self.result_window)
+        self.result_window.geometry("600x600")
+        self.result_window.title("Search Result")
+        self.result_window.resizable(False,False)
+        self.scrolled_frame.pack(expand=True, fill='both')
+
+        for query in self.queries_result:
+            result = Result(self.scrolled_frame.inner, query, self.queries_result[query])
+        save_button_result = Button(self.result_window, text="Save Results", command=self.save_result_command, bg="SkyBlue1")
+
+    def message_on_bottom(self, _text):
+        self.text_of_waiting = Label(self.bottomFrame, text=_text)
+        self.text_of_waiting.grid(row=0, column=1)
+        self.window.update()
+
+    def save_result_command(self):
+        #todo: complete
         pass
 
 
@@ -406,19 +437,4 @@ def show_information_about_indexing(num_docs,num_terms,time):
 #todo: after loading of dictionary lock the stem check box & text fields. button of "unlock or cleear" will unlock this
 #todo: while user sending query enforce him to put corpus path (of stopword file)
 
-#list_lang.grid(row=distance_between_lines+3, column=1)
-
-
-
-# label = Label(topFrame,text="Please enter path of corpus:")
-# label.grid(row=2,column=7)
-# text_field1 = Entry(bottomFrame)
-# button1 = Button(bottomFrame, text="button1",fg="red")
-# button1.grid(row=0,sticky=W)
-# text_field1.grid(row=1,sticky=W)
-# button2 = Button(bottomFrame, text="button2")
-# button2.grid(row=1,column=1,sticky=W)
-#
-# checkBox = Checkbutton(bottomFrame,text="I agree")
-# checkBox.grid(column=0,columnspan=2)
 

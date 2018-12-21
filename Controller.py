@@ -217,7 +217,8 @@ def controlQueriesOfFreeText(text, list_of_cities = None):
     searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix, __index_path, ReadFile.city_dictionary)
     searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse)
-    reset("Queries")
+    return searcher.get_final_result()
+    #reset("Queries")
 
 def controlQueriesOfFile(path_of_queries_file, list_of_cities = None):
     global __stem_suffix, __index_path
@@ -227,7 +228,8 @@ def controlQueriesOfFile(path_of_queries_file, list_of_cities = None):
     searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix ,__index_path, ReadFile.city_dictionary)
     searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse_by_title, dic_after_parse_by_addons)
-    reset("Queries") #for cleaning Parser structres
+    return searcher.get_final_result()
+    #reset("Queries") #for cleaning Parser structres
 
 #todo: call this from GUI before the functions above
 def setStemForPartB(to_stem):

@@ -40,6 +40,9 @@ class Searcher:
             self.__ranker.final_result = ranked_docs
             self.__ranker.final_result["1"] = self.__ranker.get_top_50("1")
 
+    def get_final_result(self):
+        return self.__ranker.final_result
+
     def set_cities_filter_list(self, list):
         self.__list_of_cities = list
 
