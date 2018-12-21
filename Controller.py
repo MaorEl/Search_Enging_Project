@@ -252,7 +252,10 @@ def getTop5Yeshuyot(DOCNO, path):
     __index_path = path
     for yeshut in yeshuyot:
         open_posting_file(yeshut)
+        y=Indexer.main_dictionary
+        x=__currentPostingFile
         ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot[yeshut] = __currentPostingFile[yeshut][DOCNO]
+        #todo: problem with 'AL-AHRAM' - exists on main dictionary but not in posting file
     sorted1 = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items(), key=lambda x: x[1], reverse=True))
     return  get_top_5(sorted1)
 
@@ -267,6 +270,10 @@ def get_top_5(yeshuyot):
         tmp_dic[yeshut] = yeshuyot[yeshut]
     return tmp_dic
 
+def check___(list, path):
+    for x in list:
+        print(getTop5Yeshuyot(x,path))
+
 #controlQueriesOfFile("C:\Retrieval_folder\queries.txt")
 #todo: we are not must to desc and narrative - so let se if it does not make too much problem we'll edit this
 #todo: check if term is exists or not on main dictionary (lower upper case - need to decide when and how)
@@ -280,9 +287,12 @@ path = "C:\Retrieval_folder\index"
 loadDictionariesFromDisk(True,path)
 setStemForPartB(True)
 start = time.time()
-controlQueriesOfFreeText("Identify documents that discuss the building of paris pillow", ["PARIS", "BERLIN"])
+#controlQueriesOfFreeText("Identify documents that discuss the building of paris pillow", ["PARIS", "BERLIN"])
 #controlQueriesOfFile("C:\Retrieval_folder\queries.txt" , ["PARIS", "BERLIN", "HOHHOT", "TEL", "LONDON"])
 start2 = time.time()
+x=ReadFile.docs_dictionary
+list = ['FBIS3-8','FBIS3-9','FBIS3-10','FBIS3-11','FBIS3-12']
+check___(list, path)
 getTop5Yeshuyot('FBIS3-30599',path)
 print ("get yeshuiot: " + str(time.time() - start2))
 print ("total: " + str(time.time() - start))
