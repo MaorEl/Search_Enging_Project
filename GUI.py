@@ -26,7 +26,8 @@ class GUI:
 
         #3 parts of main page:
         self.topFrame = Frame(self.window, width=700,height=100)
-        self.centerFrame = Frame(self.window,width=700, height=300)
+        self.centerFrame = Frame(self.window,width=700, height=100)
+        self.centerFrameButtons = Frame(self.window,width=700, height=50)
         self.bottomFrame = Frame(self.window,width=700,height=100)
 
         # top frame part:
@@ -38,7 +39,7 @@ class GUI:
         w.image = photo
         w.pack()
         #for sizes of buttons
-        self.button_height=4
+        self.button_height=2
         self.button_width=13
 
         # browsing files section:
@@ -62,7 +63,7 @@ class GUI:
         self.stemCheckBox = Checkbutton(self.centerFrame, text="Stemming", variable=self.state_of_stem)
 
         # languages option:
-        self.lang_button = Button(self.centerFrame,text="Languages List", bg="deep sky blue", command=self.lang_command, )
+        self.lang_button = Button(self.centerFrame,text="Languages List", bg="deep sky blue", command=self.lang_command)
         # self.label_lang_list = Label(self.centerFrame, text="Languages List")
         # self.scrollbar = Scrollbar(self.centerFrame)
         # self.list_lang = Listbox(self.centerFrame, yscrollcommand=self.scrollbar.set)
@@ -70,10 +71,10 @@ class GUI:
 
 
         # start Button and more buttons
-        self.start_button = Button(self.centerFrame, text="Start", command=self.start_button_command, width=self.button_width * 2,height=self.button_height, bg="DeepSkyBlue3")
-        self.show_dic_button = Button(self.centerFrame, text="Show Dictionary", command=self.show_dic_command, width=self.button_width,height=self.button_height, bg="turquoise")
-        self.load_dic_button = Button(self.centerFrame, text="Load Dictionary", command=self.load_dic_command, width=self.button_width,height=self.button_height, bg="turquoise")
-        self.reset_button = Button(self.centerFrame, text="Reset", command=self.reset_command, width=self.button_width, height=self.button_height, bg='firebrick2', state=DISABLED)
+        self.start_button = Button(self.centerFrameButtons, text="Start", command=self.start_button_command, width=self.button_width,height=self.button_height, bg="DeepSkyBlue3")
+        self.show_dic_button = Button(self.centerFrameButtons, text="Show Dictionary", command=self.show_dic_command, width=self.button_width,height=self.button_height, bg="turquoise")
+        self.load_dic_button = Button(self.centerFrameButtons, text="Load Dictionary", command=self.load_dic_command, width=self.button_width,height=self.button_height, bg="turquoise")
+        self.reset_button = Button(self.centerFrameButtons, text="Reset", command=self.reset_command, width=self.button_width, height=self.button_height, bg='firebrick2', state=DISABLED)
 
 
 
@@ -86,6 +87,7 @@ class GUI:
         self.window.resizable(False, False)
         self.topFrame.pack()
         self.centerFrame.pack(side=TOP)
+        self.centerFrameButtons.pack(side=TOP)
         self.bottomFrame.pack(side=BOTTOM)
 
 
@@ -101,19 +103,20 @@ class GUI:
 
         #languages thing
         self.centerFrame.rowconfigure(self.distance_between_lines + 2, minsize=30)
-        self.lang_button.grid(row=self.distance_between_lines + 3, column=1)
+        self.lang_button.grid(row=self.distance_between_lines + 1, column=0)
         # self.label_lang_list.grid(row=self.distance_between_lines + 3, column=0)
         # self.scrollbar.grid(row=self.distance_between_lines + 3, column=1)
 
-        self.centerFrame.rowconfigure(self.distance_between_lines + 4, minsize=30)
-        self.centerFrame.rowconfigure(self.distance_between_lines + 5, minsize=30)
+        #self.centerFrame.rowconfigure(self.distance_between_lines + 4, minsize=30)
+        #self.centerFrame.rowconfigure(self.distance_between_lines + 5, minsize=30)
 
         #buttons:
-        self.start_button.grid(row=self.distance_between_lines + 6, column=1)
-        self.show_dic_button.grid(row=self.distance_between_lines + 6, column=2)
-        self.load_dic_button.grid(row=self.distance_between_lines + 6, column=0)
-        self.centerFrame.rowconfigure(self.distance_between_lines + 7, minsize=30)
-        self.reset_button.grid(row=self.distance_between_lines + 8, column=1)
+        self.centerFrameButtons.rowconfigure(0, minsize=50)
+        self.centerFrameButtons.columnconfigure(0, minsize=4)
+        self.start_button.grid(row=0, column=2, padx=20)
+        self.show_dic_button.grid(row=0, column=1, padx=20)
+        self.load_dic_button.grid(row=0, column=0, padx=20)
+        self.reset_button.grid(row=0, column=3, padx=20)
 
     #this function will run as another thread for indexing, so we will be able to show message at end, and make start button active again
     def start_command_wrap_in_thread(self, x, y, z):
