@@ -235,6 +235,8 @@ def setStemForPartB(to_stem):
     Parser.stem = to_stem
     if to_stem is True:
         __stem_suffix = '_stem'
+    else:
+        __stem_suffix = ''
 
 def open_posting_file(term):
     global __current_posting_file_name,__currentPostingFile, __index_path,__stem_suffix
