@@ -12,6 +12,7 @@ stop_words_dict = {}
 stemmed_terms = {} # will contain the actual term of the dictionary
 stemmer = PorterStemmer.PorterStemmer()
 one_file_dictionary = {}
+terms_to_avoid = {"P=105"}
 stem=False
 
 #counters to update document information, will be initalize every time
@@ -255,7 +256,7 @@ def parse(dictionary, mode="Docs"):
                     original_term = splited[index]
                     term = clean_term_from_punctuations(original_term)
 
-                    if len(term) == 0 or term =='':
+                    if len(term) == 0 or term =='' or term in terms_to_avoid:
                         index = index + 1
                         continue
                     if isNumeric(term): #for numbers , pruces, percentage, dates
