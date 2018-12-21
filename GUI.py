@@ -8,7 +8,7 @@ from tkinter import messagebox
 import os.path
 from tkinter.ttk import Treeview
 #todo: enable import
-#import Controller
+import Controller
 
 
 

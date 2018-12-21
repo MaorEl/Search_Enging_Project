@@ -209,22 +209,20 @@ def getLangList():
 
 
 def controlQueriesOfFreeText(text, list_of_cities = None):
-    global __stem_suffix
+    global __stem_suffix, __index_path
     dictionary_of_queries = ReadQuery.create_dictionary_from_free_text_query(text)
     dic_after_parse = Parser.parse(dictionary_of_queries, "Query")# { term : { query : tf_in_query } }
-    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix,"C:\Retrieval_folder\index", ReadFile.city_dictionary)
+    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix, __index_path, ReadFile.city_dictionary)
     searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse)
     reset("Queries")
-    #send to searcher
 
-def controlQueriesOfFile(path, list_of_cities = None):
+def controlQueriesOfFile(path_of_queries_file, list_of_cities = None):
     global __stem_suffix, __index_path
-    __index_path = path
-    dictionary_of_queries_by_title, dictionary_of_queries_by_addons = ReadQuery.create_dictionary_of_file(path)
+    dictionary_of_queries_by_title, dictionary_of_queries_by_addons = ReadQuery.create_dictionary_of_file(path_of_queries_file)
     dic_after_parse_by_title = Parser.parse(dictionary_of_queries_by_title, "Query") # { term : { query : tf_in_query } }
     dic_after_parse_by_addons = Parser.parse(dictionary_of_queries_by_addons, "Query") # { term : { query : tf_in_query } }
-    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix ,"C:\Retrieval_folder\index", ReadFile.city_dictionary)
+    searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix ,__index_path, ReadFile.city_dictionary)
     searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse_by_title, dic_after_parse_by_addons)
     reset("Queries") #for cleaning Parser structres
@@ -247,19 +245,17 @@ def open_posting_file(term):
 #todo: path here is plaster. check why path is not updated and also stem suffix
 def getTop5Yeshuyot(DOCNO, path):
     global __currentPostingFile, __index_path, __stem_suffix
-    __stem_suffix = '_stem'
     yeshuyot = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items()))
     __index_path = path
     for yeshut in yeshuyot:
         open_posting_file(yeshut)
-        y=Indexer.main_dictionary
-        x=__currentPostingFile
+        #y=Indexer.main_dictionary
+        #x=__currentPostingFile
         ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot[yeshut] = __currentPostingFile[yeshut][DOCNO]
         #todo: problem with 'AL-AHRAM' - exists on main dictionary but not in posting file
     sorted1 = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items(), key=lambda x: x[1], reverse=True))
     return  get_top_5(sorted1)
 
-#todo: if yeshut == "P=105" so ignore it. let's see...
 def get_top_5(yeshuyot):
     counter = 0
     tmp_dic = {}
@@ -270,30 +266,25 @@ def get_top_5(yeshuyot):
         tmp_dic[yeshut] = yeshuyot[yeshut]
     return tmp_dic
 
-def check___(list, path):
-    for x in list:
-        print(getTop5Yeshuyot(x,path))
-
-#controlQueriesOfFile("C:\Retrieval_folder\queries.txt")
-#todo: we are not must to desc and narrative - so let se if it does not make too much problem we'll edit this
-#todo: check if term is exists or not on main dictionary (lower upper case - need to decide when and how)
-#todo: check which data we need to take for Ranker & Searcher and then we will keep it on {term: {DocNo: x } }
+# todo: check more problems
+# def check___(list, path):
+#     for x in list:
+#         print(getTop5Yeshuyot(x,path))
 
 
-
-__stopwords_path = "C:\Retrieval_folder\\full_corpus" + "\\stop_words.txt"
-Parser.set_stop_words_file(__stopwords_path)
-path = "C:\Retrieval_folder\index"
-loadDictionariesFromDisk(True,path)
-setStemForPartB(True)
-start = time.time()
-#controlQueriesOfFreeText("Identify documents that discuss the building of paris pillow", ["PARIS", "BERLIN"])
-#controlQueriesOfFile("C:\Retrieval_folder\queries.txt" , ["PARIS", "BERLIN", "HOHHOT", "TEL", "LONDON"])
-start2 = time.time()
-x=ReadFile.docs_dictionary
-list = ['FBIS3-8','FBIS3-9','FBIS3-10','FBIS3-11','FBIS3-12']
-check___(list, path)
-getTop5Yeshuyot('FBIS3-30599',path)
-print ("get yeshuiot: " + str(time.time() - start2))
-print ("total: " + str(time.time() - start))
-
+# __stopwords_path = "C:\Retrieval_folder\\full_corpus" + "\\stop_words.txt"
+# Parser.set_stop_words_file(__stopwords_path)
+# path = "C:\Retrieval_folder\index"
+# loadDictionariesFromDisk(True,path)
+# setStemForPartB(True)
+# start = time.time()
+# #controlQueriesOfFreeText("Identify documents that discuss the building of paris pillow", ["PARIS", "BERLIN"])
+# #controlQueriesOfFile("C:\Retrieval_folder\queries.txt" , ["PARIS", "BERLIN", "HOHHOT", "TEL", "LONDON"])
+# start2 = time.time()
+# x=ReadFile.docs_dictionary
+# list = ['FBIS3-8','FBIS3-9','FBIS3-10','FBIS3-11','FBIS3-12']
+# check___(list, path)
+# getTop5Yeshuyot('FBIS3-30599',path)
+# print ("get yeshuiot: " + str(time.time() - start2))
+# print ("total: " + str(time.time() - start))
+#

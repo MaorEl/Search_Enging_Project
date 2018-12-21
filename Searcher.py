@@ -15,13 +15,13 @@ class Searcher:
     def search(self, query_dict , addons_dict = None):
         '''
         searching docs that includes terms in query
+        final rank in ranker class will be the final calculation
         :param query_dict: {term : { query : tf } }
         :param addons_dict: {term : { query : tf } } - optional
-        :return:
         '''
 
         query_dict = self.adjust_terms(query_dict)
-        if addons_dict is not None:
+        if addons_dict is not None: #title + description
             addons_dict = self.adjust_terms(addons_dict)
             all_terms = list(set(list(query_dict.keys()) + list(addons_dict.keys())))
             #all_terms = self.merge_all_terms_to_one_list(query_dict, addons_dict)
@@ -29,15 +29,15 @@ class Searcher:
             if self.__list_of_cities is not None:
                 self.remove_not_relevant_docs()
             ranked_titles = self.__ranker.rank(query_dict)
-            self.__ranker.counter_for_doc = 0
             ranked_addons = self.__ranker.rank(addons_dict)
-            final = self.__ranker.calculate_final_rank(ranked_titles, ranked_addons)
+            self.__ranker.calculate_final_rank(ranked_titles, ranked_addons) #saves the result in final_result &&& takes top 50
+
         else:
             self.__ranker.fill_mini_posting_file(sorted(query_dict.keys(), key=lambda v: v.upper()))
             if self.__list_of_cities is not None:
                 self.remove_not_relevant_docs()
-            ranked_files = self.__ranker.rank(query_dict)
-            self.__ranker.final_result = ranked_files
+            ranked_docs = self.__ranker.rank(query_dict)
+            self.__ranker.final_result = ranked_docs
             self.__ranker.final_result["1"] = self.__ranker.get_top_50("1")
 
     def set_cities_filter_list(self, list):
@@ -109,13 +109,17 @@ class Searcher:
         return result
 
     def remove_not_relevant_docs(self):
-        start = time.time()
-        #posting_file = self.__ranker.mini_posting
-        city_docs = []
+        city_docs = [] # will contain list of all possible docs
         for city_name in self.__list_of_cities:
             city_docs = list(set(list(self.__city_dictionary[city_name].dic_doc_index.keys()) + city_docs))
-        city_docs = {key : None for key in city_docs}
+        city_docs = {key : None for key in city_docs} #now, city_docs is dictionary for faster result
         self.__ranker.city_docs = city_docs
+
+
+
+
+
+
         # print("merge: " + str(time.time() - start))
         # new_temp_posting = {}
         # start = time.time()

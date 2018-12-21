@@ -79,13 +79,13 @@ class Ranker:
                     self.final_result[query][doc] += (self.weight_title) * ranked_title[query][doc]
             self.final_result[query] = collections.OrderedDict(sorted(self.final_result[query].items(), key=lambda x: x[1], reverse=True))
             self.final_result[query] = self.get_top_50(query)
-        return self.final_result
 
     def calc_bm_25(self, term_tf_dict, query_id):
         '''
         calculate the grades of all docs of one query in dict.
         update result dictionary for all terms in query
         :param { term : tf_in_query } sorted by term
+        :param: query id
         '''
         self.result_bm_25[query_id] = {}
         for term in term_tf_dict: # of one query
@@ -123,13 +123,15 @@ class Ranker:
         return sorted_dic
 
     def rank(self, query_dict):
-        self.result_bm_25 = {}
+        '''
+        will rank the files by calculating bm25
+        :param query_dict: {Term: {Query : tf_ in query}
+        :return: bm25 result {query : {doc : grade}}
+        '''
+        self.result_bm_25 = {} #initialize
         query_term_tf_dict = invertDictionaryForQueries(query_dict) # dict of {Query: { Term: tf_ in query}
-        start = time.time()
         for query in query_term_tf_dict:
-            #sorted_dict = collections.OrderedDict(sorted(query_term_tf_dict[query].items(), key = lambda v: v[0].upper()))
-            self.result_bm_25[query] = self.calc_bm_25(query_term_tf_dict[query], query)
-        print ("calculation: " + str(time.time() - start))
+            self.result_bm_25[query] = self.calc_bm_25(query_term_tf_dict[query], query) #override for sorted by grades
         return self.result_bm_25
 
     def open_posting_file(self, term):

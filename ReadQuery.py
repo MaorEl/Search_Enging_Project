@@ -1,5 +1,3 @@
-# for Searcher
-import Parser
 
 
 def create_dictionary_from_free_text_query(text):
