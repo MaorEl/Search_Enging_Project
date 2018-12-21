@@ -12,7 +12,7 @@ stop_words_dict = {}
 stemmed_terms = {} # will contain the actual term of the dictionary
 stemmer = PorterStemmer.PorterStemmer()
 one_file_dictionary = {}
-terms_to_avoid = {"P=105"}
+terms_to_avoid = {'P=105', 'TYPE:BFN', 'AFP', 'P=106', 'BFN'} #todo: improve this list
 stem=False
 
 #counters to update document information, will be initalize every time
@@ -393,7 +393,7 @@ def parse(dictionary, mode="Docs"):
                         if stem is True and shouleBeStemmed is True:
                             new_term = stem_the_term_and_take_care_of_lowerUpperCases(new_term)
                     ###################################END OF STEM SECTION######################################
-                        if new_term.isupper():
+                        if new_term.isupper() and not contains_digit(new_term):
                             ReadFile.docs_dictionary[doc].dic_of_yeshuyot[new_term] = None
                         insert_to_dic(new_term, str(doc))
                 except:
