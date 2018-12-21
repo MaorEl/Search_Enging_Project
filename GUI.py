@@ -74,6 +74,10 @@ class GUI:
         self.show_dic_button = Button(self.centerFrame, text="Show Dictionary", command=self.show_dic_command, width=self.button_width,height=self.button_height, bg="turquoise")
         self.load_dic_button = Button(self.centerFrame, text="Load Dictionary", command=self.load_dic_command, width=self.button_width,height=self.button_height, bg="turquoise")
         self.reset_button = Button(self.centerFrame, text="Reset", command=self.reset_command, width=self.button_width, height=self.button_height, bg='firebrick2', state=DISABLED)
+
+
+
+
         self.design_GUI()
 
     def design_GUI(self):
@@ -262,16 +266,17 @@ class GUI:
         stem_suffix = ''
         if bool_stem == True:
             stem_suffix = '_stem'
-        text_of_waiting = Label(self.bottomFrame, text="Wait.. the dictionary will be loaded to main memory in 3-5 seconds")
-        text_of_waiting.grid(row=0,column=1)
-        self.window.update()
+
         main_dic_path =  self.index_path.get() + '/' + 'main_dictionary' + stem_suffix
         if not os.path.exists(main_dic_path):
             messagebox.showwarning("Error", "Please check there is dictionary in your index path. \n if there is, please check the Stemming check box mark")
         else:
+            text_of_waiting = Label(self.bottomFrame, text="Wait.. the dictionary will be loaded to main memory in 3-5 seconds")
+            text_of_waiting.grid(row=0, column=1)
+            self.window.update()
             Controller.loadDictionariesFromDisk(bool_stem, self.index_path.get())
             self.dictionary_in_main_memory=True
-        text_of_waiting.grid_remove()
+            text_of_waiting.grid_remove()
 
     #reset button
     def reset_command(self):

@@ -100,6 +100,8 @@ def Main(cp, ip, to_stem):
     Parser.stem = to_stem
     if to_stem is True:
         __stem_suffix = '_stem'
+    else:
+        __stem_suffix = ''
 
     start = time.time()
     data_set_Path(cp, ip)
