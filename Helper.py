@@ -1,7 +1,6 @@
 import tkinter as tk
 from random import randint
 
-
 class ScrolledFrame(tk.Frame):
 
     def __init__(self, parent, vertical=True, horizontal=False):
@@ -53,14 +52,12 @@ class Result:
 
     def create_widgets(self):
         self.labelframe = tk.LabelFrame(self.parent, text=self.query_id)
-        self.labelframe.pack(fill="both", expand=False)
-
+        self.labelframe.pack(fill="both", expand=True, side=tk.RIGHT)
         counter = 0
+
+
         for doc in self.doc_rank_dic:
-            res = tk.RIGHT
-            if counter == 5:
-                counter = 0
-                res = tk.BOTTOM
+            res = tk.BOTTOM
             label = Doc_Button(doc, self.labelframe)
             label.button.pack(side=res)
             counter += 1

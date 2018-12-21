@@ -412,7 +412,7 @@ class GUI:
         self.text_of_waiting.grid_remove()
         self.result_window = Toplevel(self.window)
         self.scrolled_frame = ScrolledFrame(self.result_window)
-        self.result_window.geometry("600x600")
+        self.result_window.geometry("1200x600")
         self.result_window.title("Search Result")
         self.result_window.resizable(False,False)
         self.scrolled_frame.pack(expand=True, fill='both')
