@@ -437,16 +437,16 @@ class GUI:
         if (bool_text_query and bool_files_query) or (not bool_text_query and not bool_files_query):
             messagebox.showwarning("Error", "Please enter a query OR choose file (not both) !")
         elif not bool_text_query:
-            self.queries_result = Controller.controlQueriesOfFreeText(self.query_text.get(), self.list_of_cities_to_filter)
             self.message_on_bottom("Please Wait.. the result will be shown in 15-30 seconds")
+            self.queries_result = Controller.controlQueriesOfFreeText(self.query_text.get(), self.list_of_cities_to_filter)
             self.reset_filters_cities()
             self.open_result_window()
         elif not bool_files_query:
             if not os.path.exists(self.queries_file_path.get()):
                 messagebox.showwarning("Error", "Your queries file path is not exists. \n Please check it out")
             else:
-                self.queries_result = Controller.controlQueriesOfFile(self.queries_file_path.get(), self.list_of_cities_to_filter)
                 self.message_on_bottom("Please Wait.. the result will be shown in 15-30 seconds")
+                self.queries_result = Controller.controlQueriesOfFile(self.queries_file_path.get(), self.list_of_cities_to_filter)
                 self.reset_filters_cities()
                 self.open_result_window()
 
@@ -474,7 +474,7 @@ class GUI:
         self.result_window.resizable(True,True)
         self.save_button_result = Button(self.result_window, text="Save Results", command=self.save_result_command, bg="SkyBlue1")
         self.save_button_result.pack(side = TOP)
-        label_of_info = Label(self.result_window, text = "In order to see the top 5 yeshuyot in the document,\njust click on it ")
+        label_of_info = Label(self.result_window, text = "In order to see the top 5 yeshuyot in the document,\njust click on it\nbut pe patient, this will take 5-10 seconds to happen ")
         label_of_info.pack(side=TOP)
 
 
