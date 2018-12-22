@@ -22,6 +22,7 @@ __stem_suffix = ''
 __avdl = 0
 __current_posting_file_name = None
 __currentPostingFile = None
+__results = None
 
 def data_set_Path(corpus_path, index_path):
     global __stopwords_path
@@ -227,25 +228,33 @@ def getLangList():
 
 
 def controlQueriesOfFreeText(text, list_of_cities = None):
-    global __stem_suffix, __index_path
+    global __stem_suffix, __index_path, __results
     dictionary_of_queries = ReadQuery.create_dictionary_from_free_text_query(text)
     dic_after_parse = Parser.parse(dictionary_of_queries, "Query")# { term : { query : tf_in_query } }
     searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix, __index_path, ReadFile.city_dictionary)
     searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse)
+    __results = searcher.get_final_result()
     return searcher.get_final_result()
     #reset("Queries")
 
 def controlQueriesOfFile(path_of_queries_file, list_of_cities = None):
-    global __stem_suffix, __index_path
+    global __stem_suffix, __index_path, __results
     dictionary_of_queries_by_title, dictionary_of_queries_by_addons = ReadQuery.create_dictionary_of_file(path_of_queries_file)
     dic_after_parse_by_title = Parser.parse(dictionary_of_queries_by_title, "Query") # { term : { query : tf_in_query } }
     dic_after_parse_by_addons = Parser.parse(dictionary_of_queries_by_addons, "Query") # { term : { query : tf_in_query } }
     searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix ,__index_path, ReadFile.city_dictionary)
     searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse_by_title, dic_after_parse_by_addons)
+    __results = searcher.get_final_result()
     return searcher.get_final_result()
     #reset("Queries") #for cleaning Parser structres
+
+def saveResults():
+    global __results
+    if __results is not None:
+        results = __results
+
 
 #todo: call this from GUI before the functions above
 def setStemForPartB(to_stem):
