@@ -188,6 +188,7 @@ class GUI:
         # Allow user to select a directory and store it in global var
         # called folder_path
         filename = filedialog.askdirectory()
+        self.window.update()
         self.corpus_path.set(filename)
 
 
@@ -195,6 +196,7 @@ class GUI:
         # Allow user to select a directory and store it in global var
         # called folder_path
         filename = filedialog.askdirectory()
+        self.window.update()
         self.index_path.set(filename)
 
     def start_button_command(self):
@@ -373,6 +375,7 @@ class GUI:
 
     def browse_file(self):
         filename = filedialog.askopenfilename()
+        self.window.update()
         self.queries_file_path.set(filename)
 
     def filter_cities_command(self):
@@ -412,14 +415,26 @@ class GUI:
         self.text_of_waiting.grid_remove()
         self.result_window = Toplevel(self.window)
         self.scrolled_frame = ScrolledFrame(self.result_window)
-        self.result_window.geometry("1200x600")
+        size_of_window = len(self.queries_result) * 100
+        if size_of_window < 300:
+            size_of_window = str(300)
+        else: size_of_window = str(size_of_window)
+
+        self.result_window.geometry(size_of_window + "x600")
         self.result_window.title("Search Result")
         self.result_window.resizable(False,False)
+        save_button_result = Button(self.result_widow, text="Save Results", command=self.save_result_command, bg="SkyBlue1")
+        save_button_result.pack(side = TOP)
+        label_of_info = Label(self.result_window, text = "In order to see the top 5 yeshuyot in the document,\njust click on it ", width = 100)
+        label_of_info.pack(side=TOP)
+
+
+
         self.scrolled_frame.pack(expand=True, fill='both')
+
 
         for query in self.queries_result:
             result = Result(self.scrolled_frame.inner, query, self.queries_result[query])
-        save_button_result = Button(self.result_window, text="Save Results", command=self.save_result_command, bg="SkyBlue1")
 
     def message_on_bottom(self, _text):
         self.text_of_waiting = Label(self.bottomFrame, text=_text)

@@ -159,7 +159,6 @@ def reset(param=None):
         Parser.reset()
         __stem_suffix = ''
         __corpus_path = ""
-        __index_path = ""
     else:
         ReadFile.reset()
         Parser.reset()

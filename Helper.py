@@ -53,18 +53,12 @@ class Result:
     def create_widgets(self):
         self.labelframe = tk.LabelFrame(self.parent, text=self.query_id)
         self.labelframe.pack(fill="both", expand=True, side=tk.RIGHT)
-        counter = 0
 
 
         for doc in self.doc_rank_dic:
             res = tk.BOTTOM
             label = Doc_Button(doc, self.labelframe)
             label.button.pack(side=res)
-            counter += 1
-
-    # def getYeshuyot(self, doc):
-    #     print(doc)
-    #     pass
 
 class Doc_Button:
     def __init__(self, doc, labelframe):
@@ -73,4 +67,5 @@ class Doc_Button:
 
     def getYeshuyot(self, doc):
         print(doc)
+        #todo: open here window of yeshyot with info from controller
         pass
