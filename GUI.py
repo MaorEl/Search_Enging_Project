@@ -10,10 +10,6 @@ from tkinter.ttk import Treeview
 import Controller
 from Helper import ScrolledFrame, Result
 
-
-# todo: for each start lock everything
-
-
 class GUI:
 
     def start_program(self):
@@ -177,18 +173,19 @@ class GUI:
 
     #this function will run as another thread for indexing, so we will be able to show message at end, and make start button active again
     def start_command_wrap_in_thread(self, x, y, z):
+        self.change_states_of_queries(DISABLED)
         Controller.Main(x,y,z)
-        self.start_button.configure(state=ACTIVE)
+        self.start_button.configure(state=NORMAL)
         self.textfield_corpus_path.config(state='normal')
         self.textfield_index_path.config(state='normal')
-        self.browse_button_index.config(state=ACTIVE)
-        self.browse_button_corpus.config(state=ACTIVE)
-        self.show_dic_button.config(state=ACTIVE)
-        self.load_dic_button.config(state=ACTIVE)
+        self.browse_button_index.config(state=NORMAL)
+        self.browse_button_corpus.config(state=NORMAL)
+        self.show_dic_button.config(state=NORMAL)
+        self.load_dic_button.config(state=NORMAL)
         self.dictionary_in_main_memory = True
         self.finished_program = True
-        self.lang_button.config(state=ACTIVE)
-        self.stemCheckBox.config(state=ACTIVE)
+        self.lang_button.config(state=NORMAL)
+        self.stemCheckBox.config(state=NORMAL)
         self.change_states_of_queries(NORMAL)
 
 
@@ -228,7 +225,7 @@ class GUI:
             self.finished_program=False
             Controller.stop=False
             self.show_dic_button.config(state=DISABLED)
-            self.reset_button.config(state=ACTIVE)
+            self.reset_button.config(state=NORMAL)
             self.start_button.config(state=DISABLED)
             self.load_dic_button.config(state=DISABLED)
             self.browse_button_index.config(state=DISABLED)
@@ -353,7 +350,7 @@ class GUI:
         self.browse_button_index.config(state=_STATE)
         self.stemCheckBox.config(state=_STATE)
         self.load_dic_button.config(state=_STATE)
-        if _STATE == ACTIVE or _STATE == NORMAL:
+        if _STATE == NORMAL or _STATE == NORMAL:
             self.reset_index_button.config(state=DISABLED)
             self.loaded_index = False
         else:
@@ -371,11 +368,11 @@ class GUI:
     def reset_command(self):
         if self.finished_program == False: #if program is still running
             Controller.reset_from_GUI()
-            self.start_button.config(state=ACTIVE)
-            self.load_dic_button.config(state=ACTIVE)
-            self.browse_button_index.config(state=ACTIVE)
-            self.browse_button_corpus.config(state=ACTIVE)
-            self.stemCheckBox.config(state=ACTIVE)
+            self.start_button.config(state=NORMAL)
+            self.load_dic_button.config(state=NORMAL)
+            self.browse_button_index.config(state=NORMAL)
+            self.browse_button_corpus.config(state=NORMAL)
+            self.stemCheckBox.config(state=NORMAL)
             self.textfield_corpus_path.config(state='normal')
             self.textfield_index_path.config(state='normal')
         else: #if the program has been finished
@@ -512,4 +509,3 @@ class GUI:
 
 def show_information_about_indexing(num_docs,num_terms,time):
     messagebox.showinfo("Indexing has been finished!",'Number of docs indexed: ' + str(num_docs) + '\nNumber of unique terms: ' + str(num_terms) + '\nTime for whole program: ' + str(time) + ' minutes')
-    

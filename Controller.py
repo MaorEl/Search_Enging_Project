@@ -295,7 +295,6 @@ def getTop5Yeshuyot(DOCNO):
     sorted1 = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items(), key=lambda x: x[1], reverse=True))
     return  get_top_5(sorted1)
 
-# todo: check more problems of yeshuyot to words to avoid
 def get_top_5(yeshuyot):
     counter = 0
     tmp_dic = {}
