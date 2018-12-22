@@ -14,13 +14,13 @@ from Helper import ScrolledFrame, Result
 
 # todo: for each start lock everything
 
+
 class GUI:
 
     def start_program(self):
         self.window.mainloop()
 
     def __init__(self):
-        self.list_of_cities = None
         self.finished_program = False
         self.index_thread = None
         self.window = Tk()
@@ -31,6 +31,8 @@ class GUI:
         self.all_cities_state_list = []
         self.all_cities_checkBox_list = []
         self.all_cities_list = []
+        self.list_of_cities_to_filter = None
+
 
         #3 parts of main page:
         self.topFrame = Frame(self.window, width=700,height=100)
@@ -390,7 +392,6 @@ class GUI:
         #todo: complete
         #self.list_of_cities = Controller.getCitiesList()
         self.all_cities_list = sorted(Controller.getCitiesList())
-
         self.cities_window = Toplevel(self.window)
         self.scrolled_frame_cities = ScrolledFrame(self.cities_window)
 
@@ -401,12 +402,19 @@ class GUI:
         label_of_info.pack(side=TOP)
         label_of_info2 = Label(self.cities_window,text="Your results will be only of docs who includes this city")
         label_of_info2.pack(side=TOP)
+        self.filter_button = Button(self.cities_window,text = "Filter", command = self.filter_button_command, bg='gold2')
+        self.filter_button.pack(side=TOP, pady = 15)
+
+        self.cancel_filter_button = Button(self.cities_window, text="Cancel Filters", command=self.cancel_filter_button_command, bg='red')
+        self.cancel_filter_button.pack(side=TOP)
+
         self.scrolled_frame_cities.pack(expand=True, fill='both')
 
-
-        # #to avoid grid - pack errors
-        # inner_frame = Frame(self.scrolled_frame_cities)
-        # inner_frame.pack(fill="both", expand=True, side=TOP)
+        #to avoid errors:
+        def on_closing():
+            self.reset_filters_cities("not search")
+            self.cities_window.destroy()
+        self.cities_window.protocol("WM_DELETE_WINDOW", on_closing)
 
         for i in range(len(self.all_cities_list)):
             self.all_cities_state_list.append(tkinter.IntVar())
@@ -414,6 +422,10 @@ class GUI:
             self.all_cities_checkBox_list[i].pack()
 
         self.cities_window.update()
+
+    def cancel_filter_button_command(self):
+        self.list_of_cities_to_filter = None
+        messagebox.showinfo("Info", "Your cities filters has been cancelled", parent = self.cities_window)
 
     def search_query(self):
         if self.state_of_semantic.get() == 1:
@@ -425,15 +437,17 @@ class GUI:
         if (bool_text_query and bool_files_query) or (not bool_text_query and not bool_files_query):
             messagebox.showwarning("Error", "Please enter a query OR choose file (not both) !")
         elif not bool_text_query:
-            self.queries_result = Controller.controlQueriesOfFreeText(self.query_text.get(), self.list_of_cities)
+            self.queries_result = Controller.controlQueriesOfFreeText(self.query_text.get(), self.list_of_cities_to_filter)
             self.message_on_bottom("Please Wait.. the result will be shown in 15-30 seconds")
+            self.reset_filters_cities()
             self.open_result_window()
         elif not bool_files_query:
             if not os.path.exists(self.queries_file_path.get()):
                 messagebox.showwarning("Error", "Your queries file path is not exists. \n Please check it out")
             else:
-                self.queries_result = Controller.controlQueriesOfFile(self.queries_file_path.get(),self.list_of_cities)
+                self.queries_result = Controller.controlQueriesOfFile(self.queries_file_path.get(), self.list_of_cities_to_filter)
                 self.message_on_bottom("Please Wait.. the result will be shown in 15-30 seconds")
+                self.reset_filters_cities()
                 self.open_result_window()
 
         Controller.reset("Queries")
@@ -477,6 +491,20 @@ class GUI:
     def save_result_command(self):
         #todo: complete
         pass
+
+    def filter_button_command(self):
+        self.list_of_cities_to_filter = []
+        for i in range(len(self.all_cities_list)):
+            if self.all_cities_state_list[i].get() == 1:
+                self.list_of_cities_to_filter.append(self.all_cities_list[i])
+        self.reset_filters_cities("not_search")
+        self.cities_window.destroy()
+
+    def reset_filters_cities(self,mode="search"):
+        if mode =="search":
+            self.list_of_cities_to_filter = None
+        self.all_cities_state_list = []
+        self.all_cities_checkBox_list = []
 
 
 def show_information_about_indexing(num_docs,num_terms,time):
