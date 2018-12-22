@@ -465,6 +465,8 @@ class GUI:
         size_of_window = len(self.queries_result) * 100
         if size_of_window < 300:
             size_of_window = str(300)
+        elif size_of_window > 900:
+            size_of_window = str(900)
         else: size_of_window = str(size_of_window)
 
         self.result_window.geometry(size_of_window + "x600")
@@ -476,7 +478,6 @@ class GUI:
         label_of_info.pack(side=TOP)
 
 
-
         self.scrolled_frame.pack(expand=True, fill='both')
 
 
@@ -484,7 +485,6 @@ class GUI:
             result = Result(self.scrolled_frame.inner, query, self.queries_result[query])
 
 
-        self.result_window.geometry("400x600")
 
     def message_on_bottom(self, _text):
         self.text_of_waiting = Label(self.bottomFrame, text=_text)
