@@ -248,14 +248,11 @@ def open_posting_file(term):
             file.close()
 
 #todo: path here is plaster. check why path is not updated and also stem suffix
-def getTop5Yeshuyot(DOCNO, path):
+def getTop5Yeshuyot(DOCNO):
     global __currentPostingFile, __index_path, __stem_suffix
     yeshuyot = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items()))
-    __index_path = path
     for yeshut in yeshuyot:
         open_posting_file(yeshut)
-        #y=Indexer.main_dictionary
-        #x=__currentPostingFile
         ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot[yeshut] = __currentPostingFile[yeshut][DOCNO]
         #todo: problem with 'AL-AHRAM' - exists on main dictionary but not in posting file
     sorted1 = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items(), key=lambda x: x[1], reverse=True))

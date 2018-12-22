@@ -1,5 +1,9 @@
 import tkinter as tk
 from random import randint
+from tkinter import messagebox
+
+import Controller
+
 
 class ScrolledFrame(tk.Frame):
 
@@ -23,7 +27,7 @@ class ScrolledFrame(tk.Frame):
         self._canvas.configure(xscrollcommand=self._horizontal_bar.set)
 
         # inner frame for widgets
-        self.inner = tk.Frame(self._canvas, bg='red')
+        self.inner = tk.Frame(self._canvas)
         self._window = self._canvas.create_window((0, 0), window=self.inner, anchor='nw')
 
         # autoresize inner frame
@@ -68,4 +72,11 @@ class Doc_Button:
     def getYeshuyot(self, doc):
         print(doc)
         #todo: open here window of yeshyot with info from controller
+        yeshuyot_dic = Controller.getTop5Yeshuyot(doc)
+        message = ''
+        counter = 1
+        for yeshut in yeshuyot_dic:
+            message = message + str(counter) + ')  ' + str(yeshut) +'\n'
+            counter += 1
+        messagebox.showinfo("Top 5 Yeshuyot of " + doc, message)
         pass
