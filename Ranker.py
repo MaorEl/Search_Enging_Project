@@ -38,11 +38,7 @@ class Ranker:
         'T': 'tuvwxyz', 'U': 'tuvwxyz', 'V': 'tuvwxyz', 'W': 'tuvwxyz', 'X': 'tuvwxyz', 'Y': 'tuvwxyz', 'Z': 'tuvwxyz'
     }
 
-    __current_posting_file_name = ''
-    __currentPostingFile = None
-    __term_grades_in_doc = {} # { term : {doc:grade}}
-    mini_posting = {}
-    city_docs = {}
+
     #todo: add to documentation- memoization of terms grades
 
     def __init__(self, docs_dictionary, main_dictionary, avdl, N, stem_suffix, indexPath):
@@ -59,6 +55,12 @@ class Ranker:
         self.indexPath = indexPath
         self.final_result = {} #{ query : { doc : grade} }
         self.weight_title=0.7
+
+        self.__current_posting_file_name = ''
+        self.__currentPostingFile = None
+        self.__term_grades_in_doc = {}  # { term : {doc:grade}}
+        self.mini_posting = {}
+        self.city_docs = {}
 
     def calculate_final_rank(self, ranked_title, ranked_addons):
         '''

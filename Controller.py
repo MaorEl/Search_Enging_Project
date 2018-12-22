@@ -235,7 +235,7 @@ def controlQueriesOfFreeText(text, list_of_cities = None):
     searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse)
     __results = searcher.get_final_result()
-    return searcher.get_final_result()
+    return __results
     #reset("Queries")
 
 def controlQueriesOfFile(path_of_queries_file, list_of_cities = None):
@@ -247,7 +247,7 @@ def controlQueriesOfFile(path_of_queries_file, list_of_cities = None):
     searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse_by_title, dic_after_parse_by_addons)
     __results = searcher.get_final_result()
-    return searcher.get_final_result()
+    return __results
     #reset("Queries") #for cleaning Parser structres
 
 def saveResults(path):
