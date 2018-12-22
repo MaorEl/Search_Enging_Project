@@ -465,8 +465,8 @@ class GUI:
         size_of_window = len(self.queries_result) * 100
         if size_of_window < 300:
             size_of_window = str(300)
-        elif size_of_window > 900:
-            size_of_window = str(900)
+        elif size_of_window > 1000:
+            size_of_window = str(1000)
         else: size_of_window = str(size_of_window)
 
         self.result_window.geometry(size_of_window + "x600")
