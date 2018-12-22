@@ -470,8 +470,8 @@ class GUI:
         self.result_window.geometry(size_of_window + "x600")
         self.result_window.title("Search Result")
         self.result_window.resizable(False,False)
-        save_button_result = Button(self.result_window, text="Save Results", command=self.save_result_command, bg="SkyBlue1")
-        save_button_result.pack(side = TOP)
+        self.save_button_result = Button(self.result_window, text="Save Results", command=self.save_result_command, bg="SkyBlue1")
+        self.save_button_result.pack(side = TOP)
         label_of_info = Label(self.result_window, text = "In order to see the top 5 yeshuyot in the document,\njust click on it ")
         label_of_info.pack(side=TOP)
 
@@ -489,8 +489,10 @@ class GUI:
         self.window.update()
 
     def save_result_command(self):
-        #todo: complete
-        pass
+        path = os.path.dirname(self.queries_file_path.get())
+        Controller.saveResults(path)
+        messagebox.showinfo("Saved !",'Results was saved in the indexing directory', parent = self.save_button_result)
+
 
     def filter_button_command(self):
         self.list_of_cities_to_filter = []
