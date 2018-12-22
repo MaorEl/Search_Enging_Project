@@ -349,7 +349,6 @@ class GUI:
             self.reset_index_button.config(state=DISABLED)
         else:
             self.reset_index_button.config(state=NORMAL)
-#todo: to
     def change_states_of_queries(self, _STATE):
         self.textfield_queries_file_path.config(state=_STATE)
         self.textfield_query_text.config(state=_STATE)
