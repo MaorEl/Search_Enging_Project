@@ -78,5 +78,5 @@ class Doc_Button:
         for yeshut in yeshuyot_dic:
             message = message + str(counter) + ')  ' + str(yeshut) +'\n'
             counter += 1
-        messagebox.showinfo("Don't Worry! I'm good message", message)
+        messagebox.showinfo("Don't Worry! I'm good message", message, parent = self.button)
         pass
