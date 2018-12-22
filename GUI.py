@@ -12,6 +12,8 @@ import Controller
 from Helper import ScrolledFrame, Result
 
 
+# todo: for each start lock everything
+
 class GUI:
 
     def start_program(self):
@@ -25,6 +27,10 @@ class GUI:
         self.dictionary_in_main_memory = False
         self.queries_result = None
         self.loaded_index = False
+
+        self.all_cities_state_list = []
+        self.all_cities_checkBox_list = []
+        self.all_cities_list = []
 
         #3 parts of main page:
         self.topFrame = Frame(self.window, width=700,height=100)
@@ -383,21 +389,26 @@ class GUI:
     def filter_cities_command(self):
         #todo: complete
         #self.list_of_cities = Controller.getCitiesList()
-        all_cities_list = Controller.getCitiesList()
+        self.all_cities_list = Controller.getCitiesList()
 
         self.cities_window = Toplevel(self.window)
-        self.scrolled_frame = ScrolledFrame(self.cities_window)
+        self.scrolled_frame_cities = ScrolledFrame(self.cities_window)
 
         self.cities_window.geometry("400x200")
         self.cities_window.title("Filter Results by cities")
         self.cities_window.resizable(False, False)
-        label_of_info = Label(self.cities_window,text="Please choose the relevant cities for your doc", width=100)
+        label_of_info = Label(self.cities_window,text="Please choose the relevant cities for your doc")
         label_of_info.pack(side=TOP)
-        label_of_info2 = Label(self.cities_window,text="Your results will be only of docs who includes this city", width=100)
+        label_of_info2 = Label(self.cities_window,text="Your results will be only of docs who includes this city")
         label_of_info2.pack(side=TOP)
+        self.scrolled_frame_cities.pack(expand=True, fill='both')
 
+        for i in range(len(self.all_cities_list)):
+            self.all_cities_state_list.append(tkinter.IntVar())
+            self.all_cities_checkBox_list.append(Checkbutton(self.scrolled_frame_cities, text = self.all_cities_list[i], variable = self.all_cities_state_list[i]))
+            self.all_cities_checkBox_list[i].pack(side=TOP)
 
-
+        self.cities_window.update()
 
     def search_query(self):
         if self.state_of_semantic.get() == 1:
