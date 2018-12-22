@@ -344,11 +344,11 @@ class GUI:
         self.browse_button_corpus.config(state=_STATE)
         self.browse_button_index.config(state=_STATE)
         self.stemCheckBox.config(state=_STATE)
+        self.load_dic_button.config(state=_STATE)
         if _STATE == ACTIVE or _STATE == NORMAL:
             self.reset_index_button.config(state=DISABLED)
         else:
             self.reset_index_button.config(state=NORMAL)
-
     def change_states_of_queries(self, _STATE):
         self.textfield_queries_file_path.config(state=_STATE)
         self.textfield_query_text.config(state=_STATE)
@@ -356,7 +356,6 @@ class GUI:
         self.semanticCheckBox.config(state=_STATE)
         self.filter_cities_button.config(state=_STATE)
         self.search.config(state=_STATE)
-
 
     #reset button
     def reset_command(self):

@@ -91,6 +91,14 @@ def cleanDocsYeshuyot():
         ReadFile.docs_dictionary[doc].dic_of_yeshuyot = new_yeshuyot
 
 
+def saveStopWordsDictToDisk(ip):
+    stop_words_path =  ip  + '\stop_words.txt'
+    with open(stop_words_path, 'wb') as file:
+        pickle.dump(Parser.stop_words_dict,file)
+        file.close()
+
+
+
 def Main(cp, ip, to_stem):
     global __corpus_path
     global __index_path
@@ -134,6 +142,7 @@ def Main(cp, ip, to_stem):
     saveDocumentDictionaryToDisk(ip)
     x= ReadFile.docs_dictionary
     saveLangListToDisk(ip)
+    saveStopWordsDictToDisk(ip)
 
     #ranker things
     createAndSaveAvdlToDisk(ip)
@@ -193,6 +202,10 @@ def loadDictionariesFromDisk(to_stem, ip):
     cityDic_path = __index_path + '/' + 'cities' + __stem_suffix
     with open(cityDic_path, 'rb') as file:
         ReadFile.city_dictionary = pickle.load(file)
+        file.close()
+    stop_words_path = __index_path + '/' + 'stop_words.txt'
+    with open(stop_words_path, 'rb') as file:
+        Parser.stop_words_dict = pickle.load(file)
         file.close()
 
 def getMainDictionaryFromIndexerToGUI():
