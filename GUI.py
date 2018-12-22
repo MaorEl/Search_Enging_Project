@@ -389,12 +389,12 @@ class GUI:
     def filter_cities_command(self):
         #todo: complete
         #self.list_of_cities = Controller.getCitiesList()
-        self.all_cities_list = Controller.getCitiesList()
+        self.all_cities_list = sorted(Controller.getCitiesList())
 
         self.cities_window = Toplevel(self.window)
         self.scrolled_frame_cities = ScrolledFrame(self.cities_window)
 
-        self.cities_window.geometry("400x200")
+        self.cities_window.geometry("300x700")
         self.cities_window.title("Filter Results by cities")
         self.cities_window.resizable(False, False)
         label_of_info = Label(self.cities_window,text="Please choose the relevant cities for your doc")
@@ -403,10 +403,15 @@ class GUI:
         label_of_info2.pack(side=TOP)
         self.scrolled_frame_cities.pack(expand=True, fill='both')
 
+
+        # #to avoid grid - pack errors
+        # inner_frame = Frame(self.scrolled_frame_cities)
+        # inner_frame.pack(fill="both", expand=True, side=TOP)
+
         for i in range(len(self.all_cities_list)):
             self.all_cities_state_list.append(tkinter.IntVar())
-            self.all_cities_checkBox_list.append(Checkbutton(self.scrolled_frame_cities, text = self.all_cities_list[i], variable = self.all_cities_state_list[i]))
-            self.all_cities_checkBox_list[i].pack(side=TOP)
+            self.all_cities_checkBox_list.append(Checkbutton(self.scrolled_frame_cities.inner, text = self.all_cities_list[i], variable = self.all_cities_state_list[i]))
+            self.all_cities_checkBox_list[i].pack()
 
         self.cities_window.update()
 
@@ -453,7 +458,7 @@ class GUI:
         self.result_window.resizable(False,False)
         save_button_result = Button(self.result_window, text="Save Results", command=self.save_result_command, bg="SkyBlue1")
         save_button_result.pack(side = TOP)
-        label_of_info = Label(self.result_window, text = "In order to see the top 5 yeshuyot in the document,\njust click on it ", width = 100)
+        label_of_info = Label(self.result_window, text = "In order to see the top 5 yeshuyot in the document,\njust click on it ")
         label_of_info.pack(side=TOP)
 
 
