@@ -344,6 +344,7 @@ class GUI:
         self.browse_button_corpus.config(state=_STATE)
         self.browse_button_index.config(state=_STATE)
         self.stemCheckBox.config(state=_STATE)
+        self.load_dic_button.config(state=_STATE)
         if _STATE == ACTIVE or _STATE == NORMAL:
             self.reset_index_button.config(state=DISABLED)
         else:
