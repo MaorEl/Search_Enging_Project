@@ -407,7 +407,7 @@ def parse(dictionary, mode="Docs"):
 
 def reset():
     global stop_words_dict, stemmed_terms, one_file_dictionary, stem, counter_of_words, counter_of_unique_words, max_tf_in_doc
-    stop_words_dict.clear()
+    #stop_words_dict.clear()
     stemmed_terms.clear()  # will contain the actual term of the dictionary
     one_file_dictionary.clear()
     stem = False
