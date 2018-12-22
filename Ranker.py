@@ -57,7 +57,7 @@ class Ranker:
         self.result_bm_25={} # { query : { docNo: final_grade } }
         self.stem_suffix = stem_suffix # "_stem"
         self.indexPath = indexPath
-        self.final_result = {}
+        self.final_result = {} #{ query : { doc : grade} }
         self.weight_title=0.7
 
     def calculate_final_rank(self, ranked_title, ranked_addons):

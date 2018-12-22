@@ -251,9 +251,23 @@ def controlQueriesOfFile(path_of_queries_file, list_of_cities = None):
     #reset("Queries") #for cleaning Parser structres
 
 def saveResults():
-    global __results
+    '''
+    this function saves to disk the results of the queries
+    in this format delimited by spaces:
+    351   0  FR940104-0-00001  1   42.38   mt
+    :return:
+    '''
+    global __results, __index_path
     if __results is not None:
-        results = __results
+        results = __results # { query : { doc : grade} }
+        str_file = ''
+        for query in results:
+            for doc in results[query]:
+                str_file = str_file + query + '  0  ' + doc + '  1  ' + str(results[query][doc]) + '  mt \n'
+        file = open(__index_path + '\\results.txt', 'w+')
+        file.write(str_file)
+        file.close()
+
 
 
 #todo: call this from GUI before the functions above

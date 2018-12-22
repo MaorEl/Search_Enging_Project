@@ -71,8 +71,6 @@ class Doc_Button:
         self.button = tk.Button(labelframe, text=doc, command= lambda : self.getYeshuyot(self.doc),height=2, width = 10, bg='yellow2')
 
     def getYeshuyot(self, doc):
-        print(doc)
-        #todo: open here window of yeshyot with info from controller
         yeshuyot_dic = Controller.getTop5Yeshuyot(doc)
         message = 'Top 5 Yeshuyot of ' + doc + ':' + '\n'
         counter = 1
