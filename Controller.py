@@ -207,6 +207,10 @@ def loadDictionariesFromDisk(to_stem, ip):
     with open(stop_words_path, 'rb') as file:
         Parser.stop_words_dict = pickle.load(file)
         file.close()
+    lang_list_path = __index_path + '/' + 'languages'
+    with open(lang_list_path, 'rb') as file:
+        ReadFile.lang_list = pickle.load(file)
+        file.close()
 
 def getMainDictionaryFromIndexerToGUI():
     return Indexer.main_dictionary
@@ -219,7 +223,7 @@ def sendInfoToGUI(time):
 
 #for GUI
 def getLangList():
-    return ReadFile.lang_list
+        return ReadFile.lang_list
 
 
 def controlQueriesOfFreeText(text, list_of_cities = None):
@@ -303,3 +307,5 @@ def get_top_5(yeshuyot):
 # print ("get yeshuiot: " + str(time.time() - start2))
 # print ("total: " + str(time.time() - start))
 #
+def getCitiesList():
+    return list(ReadFile.city_dictionary.keys())
