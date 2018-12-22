@@ -68,8 +68,6 @@ def merge_dictionaries(dictionary): # {term : {doc id : tf}}
     global __current_posting_file_name
     global __dictionary_of_posting_pointers
     for str_term in dictionary:
-        if str_term == '50cm':
-            x=1
         str_term_0 = str_term[0]
         __current_posting = __dictionary_of_postings[__dictionary_of_posting_pointers.get(str_term_0,'others')]
         if str_term in main_dictionary: #in dictionary, posting file exists
@@ -129,6 +127,7 @@ def mergePostingsAndSaveToDisk(key): # {term : { doc : term}}
             posting_from_disk[str_term] = term_dic # add with the lower case term
         else: # not exists
             posting_from_disk[str_term] = dic[str_term]
+    __posting_from_disk=posting_from_disk
     write_posting_file_to_disk(key)
 
 def write_posting_file_to_disk(key):
