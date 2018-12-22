@@ -250,7 +250,7 @@ def controlQueriesOfFile(path_of_queries_file, list_of_cities = None):
     return searcher.get_final_result()
     #reset("Queries") #for cleaning Parser structres
 
-def saveResults():
+def saveResults(path):
     '''
     this function saves to disk the results of the queries
     in this format delimited by spaces:
@@ -264,7 +264,7 @@ def saveResults():
         for query in results:
             for doc in results[query]:
                 str_file = str_file + query + '  0  ' + doc + '  1  ' + str(results[query][doc]) + '  mt \n'
-        file = open(__index_path + '\\results.txt', 'w+')
+        file = open(path + '\\results.txt', 'w+')
         file.write(str_file)
         file.close()
 
