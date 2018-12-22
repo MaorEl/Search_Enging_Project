@@ -73,10 +73,10 @@ class Doc_Button:
         print(doc)
         #todo: open here window of yeshyot with info from controller
         yeshuyot_dic = Controller.getTop5Yeshuyot(doc)
-        message = ''
+        message = 'Top 5 Yeshuyot of ' + doc + ':' + '\n'
         counter = 1
         for yeshut in yeshuyot_dic:
             message = message + str(counter) + ')  ' + str(yeshut) +'\n'
             counter += 1
-        messagebox.showinfo("Top 5 Yeshuyot of " + doc, message)
+        messagebox.showinfo("Don't Worry! I'm good message", message)
         pass
