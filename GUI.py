@@ -356,7 +356,6 @@ class GUI:
         self.semanticCheckBox.config(state=_STATE)
         self.filter_cities_button.config(state=_STATE)
         self.search.config(state=_STATE)
-#todo: d
 
     #reset button
     def reset_command(self):
