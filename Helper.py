@@ -8,7 +8,7 @@ import Controller
 class ScrolledFrame(tk.Frame):
     #todo: to add scroll from right to left option
 
-    def __init__(self, parent, vertical=True, horizontal=False):
+    def __init__(self, parent, vertical=True, horizontal=True):
         super().__init__(parent)
 
         # canvas for inner frame

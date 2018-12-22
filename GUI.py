@@ -469,7 +469,7 @@ class GUI:
 
         self.result_window.geometry(size_of_window + "x600")
         self.result_window.title("Search Result")
-        self.result_window.resizable(False,False)
+        self.result_window.resizable(True,True)
         self.save_button_result = Button(self.result_window, text="Save Results", command=self.save_result_command, bg="SkyBlue1")
         self.save_button_result.pack(side = TOP)
         label_of_info = Label(self.result_window, text = "In order to see the top 5 yeshuyot in the document,\njust click on it ")
@@ -482,6 +482,9 @@ class GUI:
 
         for query in self.queries_result:
             result = Result(self.scrolled_frame.inner, query, self.queries_result[query])
+
+
+        self.result_window.geometry("400x600")
 
     def message_on_bottom(self, _text):
         self.text_of_waiting = Label(self.bottomFrame, text=_text)
