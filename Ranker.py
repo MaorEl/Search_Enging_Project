@@ -42,7 +42,7 @@ class Ranker:
     #todo: add to documentation- memoization of terms grades
 
     def __init__(self, docs_dictionary, main_dictionary, avdl, N, stem_suffix, indexPath):
-        self.weight_bm_25 = 1 #todo: check if we need to add weight and another calculation for similarity
+        self.weight_bm_25 = 1
         self.b=0.75
         self.k=2
         self.avdl = avdl
@@ -148,7 +148,6 @@ class Ranker:
             if term not in self.main_dictionary:
                 print(term + " not found in dictionary !!!")
                 continue  # no coalculation is needed because the term not exists in corpus
-                #todo: we may need to add the missing term into the mini posting
             else:
                 if term not in self.mini_posting:
                     self.open_posting_file(term)

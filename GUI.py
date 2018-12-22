@@ -7,7 +7,6 @@ from tkinter import messagebox
 
 import os.path
 from tkinter.ttk import Treeview
-#todo: enable import
 import Controller
 from Helper import ScrolledFrame, Result
 
@@ -389,7 +388,6 @@ class GUI:
         self.queries_file_path.set(filename)
 
     def filter_cities_command(self):
-        #todo: complete
         #self.list_of_cities = Controller.getCitiesList()
         self.all_cities_list = sorted(Controller.getCitiesList())
         self.cities_window = Toplevel(self.window)
@@ -514,8 +512,4 @@ class GUI:
 
 def show_information_about_indexing(num_docs,num_terms,time):
     messagebox.showinfo("Indexing has been finished!",'Number of docs indexed: ' + str(num_docs) + '\nNumber of unique terms: ' + str(num_terms) + '\nTime for whole program: ' + str(time) + ' minutes')
-
-#todo: after loading of dictionary lock the stem check box & text fields. button of "unlock or cleear" will unlock this
-#todo: while user sending query enforce him to put corpus path (of stopword file)
-
-
+    

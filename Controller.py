@@ -270,7 +270,6 @@ def saveResults(path):
 
 
 
-#todo: call this from GUI before the functions above
 def setStemForPartB(to_stem):
     global __stem_suffix
     Parser.stem = to_stem
@@ -287,17 +286,16 @@ def open_posting_file(term):
             __currentPostingFile = pickle.load(file)
             file.close()
 
-#todo: path here is plaster. check why path is not updated and also stem suffix
 def getTop5Yeshuyot(DOCNO):
     global __currentPostingFile, __index_path, __stem_suffix
     yeshuyot = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items()))
     for yeshut in yeshuyot:
         open_posting_file(yeshut)
         ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot[yeshut] = __currentPostingFile[yeshut][DOCNO]
-        #todo: problem with 'AL-AHRAM' - exists on main dictionary but not in posting file
     sorted1 = collections.OrderedDict(sorted(ReadFile.docs_dictionary[DOCNO].dic_of_yeshuyot.items(), key=lambda x: x[1], reverse=True))
     return  get_top_5(sorted1)
 
+# todo: check more problems of yeshuyot to words to avoid
 def get_top_5(yeshuyot):
     counter = 0
     tmp_dic = {}
@@ -308,7 +306,6 @@ def get_top_5(yeshuyot):
         tmp_dic[yeshut] = yeshuyot[yeshut]
     return tmp_dic
 
-# todo: check more problems
 # def check___(list, path):
 #     for x in list:
 #         print(getTop5Yeshuyot(x,path))

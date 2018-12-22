@@ -72,7 +72,6 @@ def __extractLANG():
             else:
                 current_LANG = current_LANG[0].upper() + current_LANG[1:]
                 if current_LANG not in lang_list:
-                    #todo: remove punctuations from term first and last chars. just for the next one
                     lang_list.append(current_LANG)
     except:
         current_LANG=''
