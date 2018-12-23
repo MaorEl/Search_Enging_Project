@@ -1,7 +1,7 @@
 
 
 def create_dictionary_from_free_text_query(text):
-     return {'1': text}
+     return {'999': text}
 
 def __cleanFromSpaces(param):
     text_list = param.split()

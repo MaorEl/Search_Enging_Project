@@ -433,7 +433,7 @@ class GUI:
             messagebox.showwarning("Error", "Please enter a query OR choose file (not both) !")
         elif not bool_text_query:
             self.message_on_bottom("Please Wait.. the result will be shown in 15-30 seconds")
-            self.queries_result = Controller.controlQueriesOfFreeText(self.query_text.get(), self.list_of_cities_to_filter)
+            self.queries_result = Controller.controlQueriesOfFreeText(self.query_text.get(), bool_semantic, self.list_of_cities_to_filter)
             self.reset_filters_cities()
             self.open_result_window()
         elif not bool_files_query:
@@ -441,7 +441,7 @@ class GUI:
                 messagebox.showwarning("Error", "Your queries file path is not exists. \n Please check it out")
             else:
                 self.message_on_bottom("Please Wait.. the result will be shown in 15-30 seconds")
-                self.queries_result = Controller.controlQueriesOfFile(self.queries_file_path.get(), self.list_of_cities_to_filter)
+                self.queries_result = Controller.controlQueriesOfFile(self.queries_file_path.get(), bool_semantic, self.list_of_cities_to_filter)
                 self.reset_filters_cities()
                 self.open_result_window()
 

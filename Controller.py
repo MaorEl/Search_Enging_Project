@@ -1,9 +1,11 @@
+import json
 import os
 import pathlib
 import pickle
 import shutil
 import time
 import collections
+import urllib.request
 
 import ReadFile
 import Parser
@@ -227,22 +229,59 @@ def getLangList():
         return ReadFile.lang_list
 
 
-def controlQueriesOfFreeText(text, list_of_cities = None):
+def controlQueriesOfFreeText(text, semantic, list_of_cities = None):
     global __stem_suffix, __index_path, __results
+    start = time.time()
+    dic_after_parse_by_addons = None
     dictionary_of_queries = ReadQuery.create_dictionary_from_free_text_query(text)
     dic_after_parse = Parser.parse(dictionary_of_queries, "Query")# { term : { query : tf_in_query } }
+    if semantic == True:
+        dictionary_of_queries_by_addons = semanticCare(dictionary_of_queries)
+        dic_after_parse_by_addons = Parser.parse(dictionary_of_queries_by_addons, "Query")  # { term : { query : tf_in_query } }
     searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix, __index_path, ReadFile.city_dictionary)
     searcher.set_cities_filter_list(list_of_cities)
-    searcher.search(dic_after_parse)
+    searcher.search(dic_after_parse, dic_after_parse_by_addons)
     __results = searcher.get_final_result()
+    print(time.time() - start)
     return __results
     #reset("Queries")
 
-def controlQueriesOfFile(path_of_queries_file, list_of_cities = None):
+
+def semanticCare(dictionary_of_queries_by_title, dictionary_of_queries_by_addons = None):
+    ########relevant for only free text query##########
+    if dictionary_of_queries_by_addons == None:
+        dictionary_of_queries_by_addons = {}
+        for query in dictionary_of_queries_by_title:
+            dictionary_of_queries_by_addons[query] = ''
+    ###################################################
+    for query in dictionary_of_queries_by_title:
+        text = dictionary_of_queries_by_title[query]
+        list = text.split()
+        for term in list:
+            url = 'http://api.datamuse.com/words?rel_syn=' + str(term)
+            with urllib.request.urlopen(url) as url1:
+                x = url1.read()
+                json_result = json.loads(x)
+                counter = 0
+                for dic in json_result:
+                    try:
+                        if counter == 5:
+                            break
+                        dictionary_of_queries_by_addons[query] += ' ' + str(dic['word'])
+                        counter += 1
+                    except KeyError:
+                        print('no result in json for term: ' + term + ' semantic care function')
+    return dictionary_of_queries_by_addons
+    pass
+
+
+def controlQueriesOfFile(path_of_queries_file, semantic, list_of_cities = None):
     global __stem_suffix, __index_path, __results
     start = time.time()
     dictionary_of_queries_by_title, dictionary_of_queries_by_addons = ReadQuery.create_dictionary_of_file(path_of_queries_file)
     dic_after_parse_by_title = Parser.parse(dictionary_of_queries_by_title, "Query") # { term : { query : tf_in_query } }
+    if semantic == True:
+        dictionary_of_queries_by_addons = semanticCare(dictionary_of_queries_by_title, dictionary_of_queries_by_addons)
     dic_after_parse_by_addons = Parser.parse(dictionary_of_queries_by_addons, "Query") # { term : { query : tf_in_query } }
     searcher = Searcher(ReadFile.docs_dictionary, Indexer.main_dictionary, __avdl,__stem_suffix ,__index_path, ReadFile.city_dictionary)
     searcher.set_cities_filter_list(list_of_cities)

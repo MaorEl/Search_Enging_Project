@@ -38,7 +38,7 @@ class Searcher:
                 self.remove_not_relevant_docs()
             ranked_docs = self.__ranker.rank(query_dict)
             self.__ranker.final_result = ranked_docs
-            self.__ranker.final_result["1"] = self.__ranker.get_top_50("1")
+            self.__ranker.final_result["999"] = self.__ranker.get_top_50("999")
 
     def get_final_result(self):
         return self.__ranker.final_result
