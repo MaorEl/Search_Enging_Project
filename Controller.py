@@ -343,26 +343,6 @@ def get_top_5(yeshuyot):
         tmp_dic[yeshut] = yeshuyot[yeshut]
     return tmp_dic
 
-# def check___(list, path):
-#     for x in list:
-#         print(getTop5Yeshuyot(x,path))
 
-
-# __stopwords_path = "C:\Retrieval_folder\\full_corpus" + "\\stop_words.txt"
-# Parser.set_stop_words_file(__stopwords_path)
-# path = "C:\Retrieval_folder\index"
-# loadDictionariesFromDisk(True,path)
-# setStemForPartB(True)
-# start = time.time()
-# #controlQueriesOfFreeText("Identify documents that discuss the building of paris pillow", ["PARIS", "BERLIN"])
-# #controlQueriesOfFile("C:\Retrieval_folder\queries.txt" , ["PARIS", "BERLIN", "HOHHOT", "TEL", "LONDON"])
-# start2 = time.time()
-# x=ReadFile.docs_dictionary
-# list = ['FBIS3-8','FBIS3-9','FBIS3-10','FBIS3-11','FBIS3-12']
-# check___(list, path)
-# getTop5Yeshuyot('FBIS3-30599',path)
-# print ("get yeshuiot: " + str(time.time() - start2))
-# print ("total: " + str(time.time() - start))
-#
 def getCitiesList():
     return list(ReadFile.city_dictionary.keys())
