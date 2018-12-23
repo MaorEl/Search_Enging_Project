@@ -233,7 +233,6 @@ def parse(dictionary, mode="Docs"):
     global stem
     global counter_of_words
     docs = ReadFile.docs_dictionary
-    x=stem
     one_file_dictionary = {} # contains : key = term , value = {docID : frequency in doc}
     for doc in dictionary:
         text = dictionary[doc]
@@ -251,6 +250,9 @@ def parse(dictionary, mode="Docs"):
             length_of_splited_text = len(splited)
             while index < length_of_splited_text:
                 try:
+
+
+
                     shouleBeStemmed = False #for each word we will decide wether to stem or not
                     new_term =""
                     original_term = splited[index]

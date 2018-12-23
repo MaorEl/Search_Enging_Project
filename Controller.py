@@ -169,7 +169,6 @@ def reset(param=None):
     global __corpus_path,__index_path, __stem_suffix
     if param == "Queries":
         Parser.reset()
-        __stem_suffix = ''
         __corpus_path = ""
     else:
         ReadFile.reset()
@@ -190,6 +189,8 @@ def loadDictionariesFromDisk(to_stem, ip):
     __index_path = ip
     if to_stem == True:
         __stem_suffix = '_stem'
+    else:
+        __stem_suffix = ''
     main_dic_path = __index_path +  '/' + 'main_dictionary' + __stem_suffix
     with open(main_dic_path, 'rb') as file:
         Indexer.main_dictionary = pickle.load(file)
@@ -210,7 +211,7 @@ def loadDictionariesFromDisk(to_stem, ip):
     with open(stop_words_path, 'rb') as file:
         Parser.stop_words_dict = pickle.load(file)
         file.close()
-    lang_list_path = __index_path + '/' + 'languages'
+    lang_list_path = __index_path + '/' + 'languages' + __stem_suffix
     with open(lang_list_path, 'rb') as file:
         ReadFile.lang_list = pickle.load(file)
         file.close()
@@ -231,7 +232,6 @@ def getLangList():
 
 def controlQueriesOfFreeText(text, semantic, list_of_cities = None):
     global __stem_suffix, __index_path, __results
-    start = time.time()
     dic_after_parse_by_addons = None
     dictionary_of_queries = ReadQuery.create_dictionary_from_free_text_query(text)
     dic_after_parse = Parser.parse(dictionary_of_queries, "Query")# { term : { query : tf_in_query } }
@@ -242,7 +242,6 @@ def controlQueriesOfFreeText(text, semantic, list_of_cities = None):
     searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse, dic_after_parse_by_addons)
     __results = searcher.get_final_result()
-    print(time.time() - start)
     return __results
     #reset("Queries")
 
@@ -277,7 +276,6 @@ def semanticCare(dictionary_of_queries_by_title, dictionary_of_queries_by_addons
 
 def controlQueriesOfFile(path_of_queries_file, semantic, list_of_cities = None):
     global __stem_suffix, __index_path, __results
-    start = time.time()
     dictionary_of_queries_by_title, dictionary_of_queries_by_addons = ReadQuery.create_dictionary_of_file(path_of_queries_file)
     dic_after_parse_by_title = Parser.parse(dictionary_of_queries_by_title, "Query") # { term : { query : tf_in_query } }
     if semantic == True:
@@ -287,7 +285,6 @@ def controlQueriesOfFile(path_of_queries_file, semantic, list_of_cities = None):
     searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse_by_title, dic_after_parse_by_addons)
     __results = searcher.get_final_result()
-    print(time.time() - start)
     return __results
     #reset("Queries") #for cleaning Parser structres
 
