@@ -67,7 +67,7 @@ class Searcher:
                     else: #exists in result -> merge
                         result[term.upper()] = self.mergi_mergi(result[term.upper()], value)
                 else:
-                    print (term + " not exists in main dic at all")
+                    #print (term + " not exists in main dic at all")
                     if term not in result:
                         result[term] = query_dict[term]
                     else:

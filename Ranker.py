@@ -100,7 +100,7 @@ class Ranker:
             if term not in self.__term_grades_in_doc:
                 self.__term_grades_in_doc[term] = {}
                 if term not in self.main_dictionary:
-                    print (term + " not found in dictionary !!!")
+                    #print (term + " not found in dictionary !!!")
                     continue #no coalculation is needed because the term not exists in corpus
                 else:
                     mone = self.N + 0.5 - self.main_dictionary[term].get_df()

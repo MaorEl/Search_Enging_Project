@@ -12,7 +12,6 @@ stop_words_dict = {}
 stemmed_terms = {} # will contain the actual term of the dictionary
 stemmer = PorterStemmer.PorterStemmer()
 one_file_dictionary = {}
-terms_to_avoid = {'P=105', 'TYPE:BFN', 'AFP', 'P=106', 'BFN'} #todo: improve this list
 stem=False
 
 #counters to update document information, will be initalize every time
@@ -232,6 +231,8 @@ def parse(dictionary, mode="Docs"):
     global one_file_dictionary
     global stem
     global counter_of_words
+
+    terms_to_avoid = ['P=105', 'TYPE:BFN', 'AFP', 'P=106', 'BFN']  # todo: improve this list
     docs = ReadFile.docs_dictionary
     one_file_dictionary = {} # contains : key = term , value = {docID : frequency in doc}
     for doc in dictionary:
@@ -258,7 +259,7 @@ def parse(dictionary, mode="Docs"):
                     original_term = splited[index]
                     term = clean_term_from_punctuations(original_term)
 
-                    if len(term) == 0 or term =='' or term in terms_to_avoid:
+                    if len(term) == 0 or term =='' or term.upper() in terms_to_avoid:
                         index = index + 1
                         continue
                     if isNumeric(term): #for numbers , pruces, percentage, dates
