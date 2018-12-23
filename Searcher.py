@@ -73,7 +73,6 @@ class Searcher:
                     else:
                         result[term] = self.mergi_mergi(result[term], query_dict[term])
                     #not exists in the main dictionary
-                    #todo: or semantic care or nothing
             else:
                 if term not in result:
                     result[term] = query_dict[term]
