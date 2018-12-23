@@ -286,16 +286,42 @@
 #     Question(window.inner, "Quanto fa {} + {} ?".format(one, two), str(one + two))
 #
 # root.mainloop()
-
+import gensim
 from gensim.test.utils import common_texts, get_tmpfile
 from gensim.models import Word2Vec
 
-path = get_tmpfile("word2vec.model")
-model = Word2Vec(common_texts, size=100, window=5, min_count=1, workers=4)
-model.save("word2vec.model")
-vector = model.wv['computer']
+def x():
+    list_big = []
+    with open ("C:\\Users\\maor\\Desktop\\x.txt", 'r') as f:
+        for i, line in enumerate(f):
+            list =  gensim.utils.simple_preprocess(line)
+            list_big.append(list)
 
-sentences = [["cat", "say", "meow"], ["dog", "say", "woof"]]
-model = Word2Vec(sentences, min_count=1)
 
-print (vector)
+    model = gensim.models.Word2Vec(
+        list_big,
+        size=150,
+        window=10,
+        min_count=2,
+        workers=10)
+
+    print("finish model")
+    model.train(list_big, total_examples=len(list_big), epochs=10)
+
+    print("finish training")
+
+
+    print(model.wv.most_similar(positive= "behavior"))
+
+x()
+
+
+# path = get_tmpfile("word2vec.model")
+# model = Word2Vec(common_texts, size=100, window=5, min_count=1, workers=4)
+# model.save("word2vec.model")
+# vector = model.wv['computer']
+#
+# sentences = [["cat", "say", "meow"], ["dog", "say", "woof"]]
+# model = Word2Vec(sentences, min_count=1)
+#
+# print (vector)

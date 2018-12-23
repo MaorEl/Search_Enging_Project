@@ -487,6 +487,7 @@ class GUI:
         self.window.update()
 
     def save_result_command(self):
+        #todo: to open folder dialog to make user option to choose where to save it
         path = os.path.dirname(self.queries_file_path.get())
         Controller.saveResults(path)
         messagebox.showinfo("Saved !",'Results was saved in the indexing directory', parent = self.save_button_result)
