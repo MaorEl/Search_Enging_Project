@@ -286,34 +286,37 @@
 #     Question(window.inner, "Quanto fa {} + {} ?".format(one, two), str(one + two))
 #
 # root.mainloop()
-import gensim
-from gensim.test.utils import common_texts, get_tmpfile
-from gensim.models import Word2Vec
-
-def x():
-    list_big = []
-    with open ("C:\\Users\\maor\\Desktop\\x.txt", 'r') as f:
-        for i, line in enumerate(f):
-            list =  gensim.utils.simple_preprocess(line)
-            list_big.append(list)
-
-
-    model = gensim.models.Word2Vec(
-        list_big,
-        size=150,
-        window=10,
-        min_count=2,
-        workers=10)
-
-    print("finish model")
-    model.train(list_big, total_examples=len(list_big), epochs=10)
-
-    print("finish training")
-
-
-    print(model.wv.most_similar(positive= "behavior"))
-
-x()
+import json
+import time
+#
+# import gensim
+# from gensim.test.utils import common_texts, get_tmpfile
+# from gensim.models import Word2Vec
+#
+# def x():
+#     list_big = []
+#     with open ("C:\\Users\\maor\\Desktop\\x.txt", 'r') as f:
+#         for i, line in enumerate(f):
+#             list =  gensim.utils.simple_preprocess(line)
+#             list_big.append(list)
+#
+#
+#     model = gensim.models.Word2Vec(
+#         list_big,
+#         size=150,
+#         window=10,
+#         min_count=2,
+#         workers=10)
+#
+#     print("finish model")
+#     model.train(list_big, total_examples=len(list_big), epochs=10)
+#
+#     print("finish training")
+#
+#
+#     print(model.wv.most_similar(positive= "behavior"))
+#
+# x()
 
 
 # path = get_tmpfile("word2vec.model")
@@ -325,3 +328,49 @@ x()
 # model = Word2Vec(sentences, min_count=1)
 #
 # print (vector)
+import urllib.request
+
+start = time.time()
+try:
+    list = 'happy dog in germany'.split()
+
+    for word in list:
+        url = 'http://api.datamuse.com/words?rel_com=' + str(word)
+        with urllib.request.urlopen(url) as url1:
+            x= url1.read()
+            json_res = json.loads(x)
+            #print ("m")
+        url = 'http://api.datamuse.com/words?rel_trg=' + str(word)
+        with urllib.request.urlopen(url) as url1:
+            x = url1.read()
+            json_res = json.loads(x)
+            #print("m")
+        url = 'http://api.datamuse.com/words?rel_syn=' + str(word)
+        with urllib.request.urlopen(url) as url1:
+            x = url1.read()
+            json_res = json.loads(x)
+            #print("m")
+        url = 'http://api.datamuse.com/words?rel_par=' + str(word)
+        with urllib.request.urlopen(url) as url1:
+            x = url1.read()
+            json_res = json.loads(x)
+            #print("m")
+        url = 'http://api.datamuse.com/words?rel_jja=' + str(word)
+        with urllib.request.urlopen(url) as url1:
+            x = url1.read()
+            json_res = json.loads(x)
+            #print("m")
+except:
+    print ("problem")
+print (time.time() - start)
+
+
+
+
+
+
+
+
+
+
+

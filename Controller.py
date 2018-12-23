@@ -240,6 +240,7 @@ def controlQueriesOfFreeText(text, list_of_cities = None):
 
 def controlQueriesOfFile(path_of_queries_file, list_of_cities = None):
     global __stem_suffix, __index_path, __results
+    start = time.time()
     dictionary_of_queries_by_title, dictionary_of_queries_by_addons = ReadQuery.create_dictionary_of_file(path_of_queries_file)
     dic_after_parse_by_title = Parser.parse(dictionary_of_queries_by_title, "Query") # { term : { query : tf_in_query } }
     dic_after_parse_by_addons = Parser.parse(dictionary_of_queries_by_addons, "Query") # { term : { query : tf_in_query } }
@@ -247,6 +248,7 @@ def controlQueriesOfFile(path_of_queries_file, list_of_cities = None):
     searcher.set_cities_filter_list(list_of_cities)
     searcher.search(dic_after_parse_by_title, dic_after_parse_by_addons)
     __results = searcher.get_final_result()
+    print(time.time() - start)
     return __results
     #reset("Queries") #for cleaning Parser structres
 

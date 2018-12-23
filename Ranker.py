@@ -69,6 +69,12 @@ class Ranker:
         :param ranked_addons: { query : { doc : grade} }
         :return: the final grade by 2 weights
         '''
+        if len(ranked_addons) == 0:
+            self.final_result = ranked_title
+            for query in self.final_result:
+                self.final_result[query] = collections.OrderedDict(sorted(self.final_result[query].items(), key=lambda x: x[1], reverse=True))
+                self.final_result[query] = self.get_top_50(query)
+            return
         for query in ranked_addons:
             self.final_result[query] = {}
             for doc in ranked_addons[query]:
