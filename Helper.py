@@ -61,7 +61,7 @@ class Result:
 
 
         for doc in self.doc_rank_dic:
-            res = tk.BOTTOM
+            res = tk.TOP
             label = Doc_Button(doc, self.labelframe)
             label.button.pack(side=res)
 
