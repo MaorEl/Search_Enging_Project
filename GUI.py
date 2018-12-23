@@ -427,6 +427,16 @@ class GUI:
             bool_semantic = True
         else:
             bool_semantic = False
+
+        if self.state_of_stem.get() == 1:
+            bool_stem = True
+        else:
+            bool_stem = False
+        stem_suffix = ''
+        if bool_stem == True:
+            stem_suffix = '_stem'
+        Controller.setStemForPartB(bool_stem)
+
         bool_text_query = len(self.query_text.get()) == 0
         bool_files_query = len(self.queries_file_path.get()) == 0
         if (bool_text_query and bool_files_query) or (not bool_text_query and not bool_files_query):
