@@ -232,7 +232,7 @@ def parse(dictionary, mode="Docs"):
     global stem
     global counter_of_words
 
-    terms_to_avoid = ['P=105', 'TYPE:BFN', 'AFP', 'P=106', 'BFN']  # todo: improve this list
+    terms_to_avoid = ['P=105', 'TYPE:BFN', 'AFP', 'P=106', 'BFN']
     docs = ReadFile.docs_dictionary
     one_file_dictionary = {} # contains : key = term , value = {docID : frequency in doc}
     for doc in dictionary:
