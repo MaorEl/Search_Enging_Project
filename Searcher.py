@@ -38,7 +38,7 @@ class Searcher:
                 self.remove_not_relevant_docs()
             ranked_docs = self.__ranker.rank(query_dict)
             self.__ranker.final_result = ranked_docs
-            self.__ranker.final_result["999"] = self.__ranker.get_top_50("999")
+            self.__ranker.final_result["999"] = self.__ranker.get_top_docs("999")
 
     def get_final_result(self):
         return self.__ranker.final_result
@@ -116,44 +116,5 @@ class Searcher:
             city_docs = list(set(list(self.__city_dictionary[city_name].dic_doc_index.keys()) + city_docs))
         city_docs = {key : None for key in city_docs} #now, city_docs is dictionary for faster result
         self.__ranker.city_docs = city_docs
-
-
-
-
-
-
-        # print("merge: " + str(time.time() - start))
-        # new_temp_posting = {}
-        # start = time.time()
-        # for term in posting_file:
-        #     new_temp_posting[term] = {}
-        #     for doc in posting_file[term]:
-        #         if doc in city_docs:
-        #             new_temp_posting[term][doc] = posting_file[term][doc]
-        # self.__ranker.mini_posting = new_temp_posting
-        # print("remove: " + str(time.time() - start))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

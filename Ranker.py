@@ -1,12 +1,8 @@
 
-
-
 # helper function for parse result of queries file
 import collections
 import pickle
-import time
 from math import log2
-
 
 def invertDictionaryForQueries(dict):
     '''
@@ -73,7 +69,7 @@ class Ranker:
             self.final_result = ranked_title
             for query in self.final_result:
                 self.final_result[query] = collections.OrderedDict(sorted(self.final_result[query].items(), key=lambda x: x[1], reverse=True))
-                self.final_result[query] = self.get_top_50(query)
+                self.final_result[query] = self.get_top_docs(query)
             return
         for query in ranked_addons:
             self.final_result[query] = {}
@@ -86,7 +82,7 @@ class Ranker:
                 else:
                     self.final_result[query][doc] += (self.weight_title) * ranked_title[query][doc]
             self.final_result[query] = collections.OrderedDict(sorted(self.final_result[query].items(), key=lambda x: x[1], reverse=True))
-            self.final_result[query] = self.get_top_50(query)
+            self.final_result[query] = self.get_top_docs(query)
 
     def calc_bm_25(self, term_tf_dict, query_id):
         '''
@@ -152,24 +148,19 @@ class Ranker:
     def fill_mini_posting_file(self, list_of_terms):
         for term in list_of_terms:
             if term not in self.main_dictionary:
-                print(term + " not found in dictionary !!!")
+                #print(term + " not found in dictionary !!!")
                 continue  # no coalculation is needed because the term not exists in corpus
             else:
                 if term not in self.mini_posting:
                     self.open_posting_file(term)
                     self.mini_posting[term] = self.__currentPostingFile[term]
 
-    def get_top_50(self, query):
+    def get_top_docs(self, query):
         counter = 0
         tmp_dic = {}
         for doc in self.final_result[query]:
-            if counter == 50:
+            if counter == self.max_top_docs_to_retrieve:
                 break
             counter += 1
             tmp_dic[doc] = self.final_result[query][doc]
         return tmp_dic
-
-
-
-
-

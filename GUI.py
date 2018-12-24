@@ -468,7 +468,7 @@ class GUI:
         self.result_window = Toplevel(self.window)
         self.scrolled_frame = ScrolledFrame(self.result_window)
         size_of_window = len(self.queries_result) * 100
-        if size_of_window < 300:
+        if size_of_window <= 500:
             size_of_window = str(300)
         elif size_of_window > 1000:
             size_of_window = str(1000)

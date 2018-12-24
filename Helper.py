@@ -75,7 +75,7 @@ class Doc_Button:
         message = 'Top 5 Yeshuyot of ' + doc + ':' + '\n'
         counter = 1
         for yeshut in yeshuyot_dic:
-            message = message + str(counter) + ')  ' + str(yeshut) +'\n'
+            message = message + str(counter) + ')  ' + str(yeshut) + '    Rank: ' + str(yeshuyot_dic[yeshut]) +'\n'
             counter += 1
         messagebox.showinfo("Don't Worry! I'm good message", message, parent = self.button)
         pass
