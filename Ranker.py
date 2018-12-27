@@ -59,6 +59,12 @@ class Ranker:
         self.__term_grades_in_doc_bm25 = {}  # { term : {doc:grade}}
         self.__term_grades_in_doc_cosSim = {}  # { term : {doc:grade}}
 
+        #another try of bm25
+        self.k1 = 1.2
+        self.k2 = 0
+        self.r=0
+        self.R=0
+
         self.mini_posting = {}
         self.city_docs = {}
 
@@ -130,6 +136,48 @@ class Ranker:
         sorted_dic = collections.OrderedDict(sorted(self.result_bm_25[query_id].items(), key=lambda x: x[1], reverse=True))
         return sorted_dic
 
+    def calc_bm_25_david(self, term_tf_dict, query_id):
+        '''
+        calculate the grades of all docs of one query in dict.
+        update result dictionary for all terms in query
+        :param { term : tf_in_query } sorted by term
+        :param: query id
+        '''
+        self.result_bm_25[query_id] = {}
+        for term in term_tf_dict: # of one query
+            if term not in self.__term_grades_in_doc_bm25:
+                self.__term_grades_in_doc_bm25[term] = {}
+                if term not in self.main_dictionary:
+                    #print (term + " not found in dictionary !!!")
+                    continue #no coalculation is needed because the term not exists in corpus
+                else:
+                    self.__currentPostingFile = self.mini_posting[term]
+                    n_i = self.main_dictionary[term].get_df()
+                    for doc in self.__currentPostingFile:  # for each doc that includes this term
+                        if len(self.city_docs) != 0 and doc not in self.city_docs:
+                            continue
+                        tf_in_doc = self.mini_posting[term][doc];
+                        doc_len = self.docs_dictionary[doc].number_of_words
+
+                        second_part_mechane = self.k1*((1-self.b) + self.b*(doc_len/self.avdl))+ tf_in_doc
+                        second_part_mone = (self.k1+1)*tf_in_doc
+                        second_part = second_part_mone/second_part_mechane
+                        first_part_mone = (self.r+0.5)/(self.R-self.r+0.5)
+                        first_part_mechane = (n_i-self.r+0.5)/(self.N-n_i-self.R+self.r+0.5)
+                        first_part = log2(first_part_mone/first_part_mechane)
+
+                        self.__term_grades_in_doc_bm25[term][doc] = first_part * second_part  # memoization of term in doc
+                        if doc not in self.result_bm_25[query_id]:
+                            self.result_bm_25[query_id][doc] = 0
+                        self.result_bm_25[query_id][doc] += self.__term_grades_in_doc_bm25[term][doc] * term_tf_dict[term]  # final grade for doc by query
+            else:  # the term already calculated for all docs
+                for doc in self.__term_grades_in_doc_bm25[term]:
+                    if doc not in self.result_bm_25[query_id]:
+                        self.result_bm_25[query_id][doc] = 0
+                    self.result_bm_25[query_id][doc] += self.__term_grades_in_doc_bm25[term][doc] * term_tf_dict[term]  # final grade for doc by query
+        sorted_dic = collections.OrderedDict(sorted(self.result_bm_25[query_id].items(), key=lambda x: x[1], reverse=True))
+        return sorted_dic
+
     # def calc_cosSim(self, term_tf_dict, query_id):
     #     '''
     #     calculate the grades of all docs of one query in dict.
@@ -175,7 +223,8 @@ class Ranker:
         self.result_bm_25 = {} #initialize
         query_term_tf_dict = invertDictionaryForQueries(query_dict) # dict of {Query: { Term: tf_ in query}
         for query in query_term_tf_dict:
-            self.result_bm_25[query] = self.calc_bm_25(query_term_tf_dict[query], query) #override for sorted by grades
+           self.result_bm_25[query] = self.calc_bm_25(query_term_tf_dict[query], query) #override for sorted by grades
+           # self.result_bm_25[query] = self.calc_bm_25_david(query_term_tf_dict[query], query) #override for sorted by grades
         return self.result_bm_25
 
     def open_posting_file(self, term):
